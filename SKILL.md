@@ -330,6 +330,7 @@ Use the files in `templates/` for copy-paste outputs and CSV trackers:
 
 - `templates/agent-experience-audit.md`
 - `templates/agent-readiness-audit.md`
+- `templates/agent-interpretation-test.md`
 - `templates/agentic-commerce-checklist.md`
 - `templates/ai-citation-audit.md`
 - `templates/ai-crawler-policy-matrix.csv`
@@ -344,6 +345,8 @@ Use the files in `templates/` for copy-paste outputs and CSV trackers:
 - `templates/daily-report.md`
 - `templates/earned-media-entity-map.csv`
 - `templates/evidence-container-scorecard.csv`
+- `templates/for-ai-json.json`
+- `templates/for-ai-page.md`
 - `templates/ga4-ai-source-regex.txt`
 - `templates/geo-red-team-checklist.md`
 - `templates/grounding-query-map.csv`

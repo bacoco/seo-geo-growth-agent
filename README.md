@@ -4,6 +4,36 @@ A combined SEO/GEO skill package for auditing, planning, and operating a search 
 
 This package merges the **strategy layer** from the Gingiris `gingiris-seo-geo` dataset with the **execution SOP layer** from `gingiris-seo-geo-agent`, then adds practical output formats, measurement guardrails, and research-derived cautions about AI-search claims.
 
+## Install
+
+Clone and install for Codex:
+
+```bash
+git clone https://github.com/bacoco/seo-geo-growth-agent.git
+cd seo-geo-growth-agent
+./scripts/install.sh codex
+```
+
+Install for Claude Code:
+
+```bash
+./scripts/install.sh claude
+```
+
+Install to a custom skill directory:
+
+```bash
+./scripts/install.sh /absolute/path/to/skills/seo-geo-growth-agent
+```
+
+Validate the repository before publishing changes:
+
+```bash
+python3 scripts/validate_skill.py
+```
+
+The install script copies only the runtime skill package: `SKILL.md`, `manifest.json`, `LICENSE`, `references/`, and `templates/`. Repository files such as `.github/`, `.gitignore`, and validation scripts stay outside the installed skill folder.
+
 ## What changed in v1.1
 
 - Added a **source-led research policy** so official platform docs outrank hype, GitHub experiments, and Reddit claims.
@@ -15,6 +45,7 @@ This package merges the **strategy layer** from the Gingiris `gingiris-seo-geo` 
 - Added an **agentic commerce readiness addendum** for ecommerce, local, booking, quote, and product-flow sites.
 - Added a **red-team checklist** against manipulative GEO, fake mentions, thin scaled pages, unsupported stats, and crawler-policy mistakes.
 - Added a plain-English guide to the Ethan Mollick GEO pattern for AI agents and institutional content.
+- Added reusable `/for-ai`, `/for-ai.json`, and agent interpretation test templates.
 - Fixed the v1 file tree references to match the actual `references/` and `templates/` directory names.
 
 ## Files
@@ -26,6 +57,9 @@ seo-geo-growth-agent-skill-v2/
 ├── CHANGELOG.md
 ├── LICENSE
 ├── manifest.json
+├── scripts/
+│   ├── install.sh
+│   └── validate_skill.py
 ├── references/
 │   ├── 00-owner-setup.md
 │   ├── 01-keyword-funnel.md
@@ -53,6 +87,7 @@ seo-geo-growth-agent-skill-v2/
 └── templates/
     ├── agent-experience-audit.md
     ├── agent-readiness-audit.md
+    ├── agent-interpretation-test.md
     ├── agentic-commerce-checklist.md
     ├── ai-citation-audit.md
     ├── ai-crawler-policy-matrix.csv
@@ -67,6 +102,8 @@ seo-geo-growth-agent-skill-v2/
     ├── daily-report.md
     ├── earned-media-entity-map.csv
     ├── evidence-container-scorecard.csv
+    ├── for-ai-json.json
+    ├── for-ai-page.md
     ├── ga4-ai-source-regex.txt
     ├── geo-red-team-checklist.md
     ├── grounding-query-map.csv

@@ -7,6 +7,8 @@
 - Source-led research policy and source register.
 - AI crawler policy matrix and selective robots.txt template.
 - Plain-English guide to the Ethan Mollick GEO pattern for AI agents and institutional articles.
+- Reusable `/for-ai`, `/for-ai.json`, and agent interpretation test templates.
+- Simple `scripts/install.sh` installer for Codex, Claude Code, and custom skill directories.
 - Agent-friendly UX audit for DOM, accessibility tree, semantic controls, labels, and stable layout.
 - Google Search Console generative AI report template.
 - Bing AI Performance report template.

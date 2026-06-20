@@ -1,0 +1,65 @@
+{
+  "content_type": "institutional_article",
+  "source_disclosure": {
+    "source_type": "<official | promotional | institutional_announcement | report | archive | correction | practical_information>",
+    "publisher": "<institution or brand name>",
+    "canonical_human_url": "https://[DOMAIN]/[PATH]",
+    "last_updated": "<YYYY-MM-DD>",
+    "verification_contact": "<public contact URL or email>"
+  },
+  "title": "<exact title>",
+  "canonical_url": "https://[DOMAIN]/[PATH]",
+  "summary": {
+    "short": "<two to four factual sentences>",
+    "status": "<announcement | update | correction | archive | report | practical_information>"
+  },
+  "facts": [
+    {
+      "fact": "<verified fact>",
+      "source": "<source URL or document>",
+      "date_verified": "<YYYY-MM-DD>"
+    }
+  ],
+  "official_position": [
+    "<official framing or institutional position, clearly separated from facts>"
+  ],
+  "agent_reader_fit": {
+    "use_when": [
+      "<user intent where this source is appropriate>"
+    ],
+    "do_not_use_as": [
+      "<unsupported use or misleading interpretation>"
+    ]
+  },
+  "recommended_use": [
+    "<when an AI assistant may summarize, cite, or surface this source>"
+  ],
+  "do_not": [
+    "<what should not be inferred, generalized, or claimed>"
+  ],
+  "transaction_or_action_boundaries": {
+    "actions_available": [
+      "<purchase | registration | booking | donation | application | download | contact | none>"
+    ],
+    "assistant_rules": [
+      "summarize the consequence of the action",
+      "show the official link",
+      "ask the user before initiating or submitting anything",
+      "do not imply endorsement beyond verified facts"
+    ]
+  },
+  "citation_guidance": {
+    "preferred_citation": "<official wording>",
+    "must_include": [
+      "publisher or institution name",
+      "publication or update date",
+      "canonical URL"
+    ]
+  },
+  "freshness": {
+    "date_published": "<YYYY-MM-DD>",
+    "date_modified": "<YYYY-MM-DD>",
+    "review_after": "<YYYY-MM-DD>",
+    "superseded_by": null
+  }
+}
