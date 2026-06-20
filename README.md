@@ -14,23 +14,23 @@ Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.1.2/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.0/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.1.2/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.0/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.1.2/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.0/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.1.2 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.2.0 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -51,6 +51,10 @@ Custom paths must end with `seo-geo-growth-agent`. Existing installs are moved t
 
 ```text
 Use seo-geo-growth-agent to audit this site for SEO/GEO and rank the P0 fixes.
+```
+
+```text
+Use seo-geo-growth-agent on this site and generate a dynamic HTML audit report served locally with screenshot evidence when browser tools are available.
 ```
 
 ```text
@@ -79,6 +83,8 @@ It helps an agent produce:
 - `/for-ai`, `/for-ai.json`, `/for-ai.txt`, and `llms.txt` structures;
 - crawler and robots.txt policy matrices;
 - claim ledgers and citation-safe source registers;
+- dynamic HTML audit reports with local serving and visual evidence;
+- public-vs-owner-only measurement matrices for traffic, Search Console, GA4, logs, and AI visibility;
 - daily and weekly SEO/GEO reports;
 - agent-readiness checks for DOM, accessibility tree, checkout, booking, and action flows.
 
@@ -137,9 +143,12 @@ references/
 templates/
 runbooks/
 evals/
+scripts/generate_html_audit_report.py
+scripts/serve_report.py
+scripts/capture_report_screenshots.mjs
 ```
 
-Repository maintenance files such as `.github/`, `.gitignore`, and validation scripts are not copied into the installed skill folder.
+Repository maintenance files such as `.github/`, `.gitignore`, `scripts/install.sh`, and `scripts/validate_skill.py` are not copied into the installed skill folder.
 
 The installer refuses ambiguous custom destinations and only installs into a folder named `seo-geo-growth-agent`.
 

@@ -21,9 +21,9 @@ REQUIRED_ROOT_FILES = [
 ]
 
 INTERNAL_PATH_PATTERN = re.compile(
-    r"(?<![\w./-])((?:references|templates|runbooks|evals)/[A-Za-z0-9][A-Za-z0-9._/-]*\.[A-Za-z0-9]+)"
+    r"(?<![\w./-])((?:references|templates|runbooks|evals|scripts)/[A-Za-z0-9][A-Za-z0-9._/-]*\.[A-Za-z0-9]+)"
 )
-TEXT_SUFFIXES = {".md", ".txt", ".json", ".jsonl"}
+TEXT_SUFFIXES = {".md", ".txt", ".json", ".jsonl", ".py", ".sh", ".mjs"}
 
 
 def fail(message: str) -> None:
@@ -94,6 +94,17 @@ def check_manifest_paths(manifest: dict) -> None:
                 fail(f"manifest.{key} contains a non-string path: {rel!r}")
             if not (ROOT / rel).is_file():
                 fail(f"manifest.{key} path not found: {rel}")
+
+    scripts = manifest.get("scripts", {})
+    if not isinstance(scripts, dict):
+        fail("manifest.scripts must be an object")
+    for name, rel in scripts.items():
+        if not isinstance(name, str) or not name:
+            fail(f"manifest.scripts contains an invalid key: {name!r}")
+        if not isinstance(rel, str) or not rel:
+            fail(f"manifest.scripts.{name} must be a non-empty string path")
+        if not (ROOT / rel).is_file():
+            fail(f"manifest.scripts.{name} path not found: {rel}")
 
 
 def check_manifest_directory_sync(manifest: dict) -> None:
@@ -224,10 +235,13 @@ def check_install_script() -> None:
             "templates",
             "runbooks",
             "evals",
+            "scripts/generate_html_audit_report.py",
+            "scripts/serve_report.py",
+            "scripts/capture_report_screenshots.mjs",
         ):
             if not (safe_dest / rel).exists():
                 fail(f"install smoke test did not copy expected path: {rel}")
-        for rel in (".github", ".gitignore", "assets", "scripts"):
+        for rel in (".github", ".gitignore", "assets", "scripts/install.sh", "scripts/validate_skill.py"):
             if (safe_dest / rel).exists():
                 fail(f"install smoke test copied maintenance path unexpectedly: {rel}")
 
@@ -254,6 +268,28 @@ def check_install_script() -> None:
         )
         if unsafe.returncode == 0:
             fail("install script accepted a custom destination not named seo-geo-growth-agent")
+
+
+def check_runtime_script_syntax(manifest: dict) -> None:
+    scripts = manifest.get("scripts", {})
+    for rel in scripts.values():
+        path = ROOT / rel
+        if path.suffix == ".py":
+            result = subprocess.run(
+                [sys.executable, "-m", "py_compile", str(path)],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                fail(f"{rel} has invalid Python syntax:\n{result.stderr.strip()}")
+        if path.suffix == ".mjs":
+            result = subprocess.run(
+                ["node", "--check", str(path)],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                fail(f"{rel} has invalid JavaScript syntax:\n{result.stderr.strip()}")
 
 
 def check_no_obvious_secrets() -> None:
@@ -283,6 +319,7 @@ def main() -> None:
     check_jsonl_files()
     check_internal_file_references()
     check_reference_heading_numbers()
+    check_runtime_script_syntax(manifest)
     check_install_script()
     check_no_obvious_secrets()
     print("OK: skill repository validation passed")

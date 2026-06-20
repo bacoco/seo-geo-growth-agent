@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.2.0 — Visual HTML audit reports
+
+### Added
+
+- Dynamic HTML audit report generator from explicit `audit.json` evidence.
+- Readiness scorecards inspired by health-dashboard workflows.
+- Public-vs-owner-only measurement access runbook and reusable matrix.
+- Local report server with port fallback and browser-open option.
+- Chrome/DevTools screenshot fallback for desktop and mobile visual evidence when Agent Browser is unavailable.
+- Visual HTML audit runbook covering Agent Browser-first screenshot workflow and evidence rules.
+- Validation and install smoke tests for runtime report scripts.
+
+### Changed
+
+- Runtime installs now include only the report-generation scripts needed by the installed skill.
+- Bootstrap offers visual HTML audit as a first-class starting mode.
+- README and install protocol describe browser-readable reports and screenshot evidence.
+
 ## 1.1.2 — Agent-safe temporary install path
 
 ### Changed

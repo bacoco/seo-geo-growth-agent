@@ -32,9 +32,11 @@ Collect or infer only from supplied evidence:
 | Mode | Use when | First outputs |
 |---|---|---|
 | Audit | The user has an existing site or page | P0/P1/P2 fixes, evidence table, next actions |
+| Visual HTML audit | The user wants a browser-readable report, local server, screenshots, or visual proof | `audit.json`, `index.html`, local URL, screenshot evidence |
 | `/for-ai` package | The page is important enough to be cited by agents | `/for-ai`, `/for-ai.json`, `/for-ai.txt`, `llms.txt` plan |
 | Content brief | The user wants to create or rewrite a strategic page | keyword map, brief, outline, claim ledger |
 | Crawler and measurement policy | The user asks about AI bots, robots.txt, visibility, or reporting | crawler matrix, robots draft, measurement plan |
+| Public measurement access | The user asks what analytics or traffic data can be obtained publicly or with site ownership | public vs owner-only matrix, setup plan |
 
 ## Execution Rules
 
@@ -45,11 +47,19 @@ Collect or infer only from supplied evidence:
 5. Never claim a metric, citation, source, customer, ranking, date, or crawler rule without evidence.
 6. Treat `llms.txt` as optional and never as a Google ranking factor.
 7. Show what cannot be concluded from the available data.
+8. For visual HTML audits, read `runbooks/visual-html-audit.md` and generate the report from an explicit `audit.json` evidence file.
+9. For analytics or traffic data questions, read `runbooks/public-measurement-access.md` and never confuse public estimates with owner analytics.
 
 ## First Useful Prompt
 
 ```text
 Use seo-geo-growth-agent on [URL or page]. Start with an evidence-led SEO/GEO audit, rank P0 fixes, and mark missing data as unknown.
+```
+
+For a browser-readable visual audit:
+
+```text
+Use seo-geo-growth-agent on [URL]. Generate a dynamic HTML audit report, serve it locally, capture desktop/mobile evidence if browser tools are available, and mark missing data as unknown.
 ```
 
 For an institutional article:

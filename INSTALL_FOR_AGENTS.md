@@ -18,7 +18,7 @@ If both Codex and Claude Code are present and the user did not specify a host, a
 
 ```bash
 INSTALL_TMP="$(mktemp -d)"
-git clone --depth 1 --branch v1.1.2 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
+git clone --depth 1 --branch v1.2.0 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
 cd "$INSTALL_TMP/seo-geo-growth-agent"
 ```
 
@@ -69,17 +69,21 @@ references/
 templates/
 runbooks/
 evals/
+scripts/generate_html_audit_report.py
+scripts/serve_report.py
+scripts/capture_report_screenshots.mjs
 ```
 
-It must not contain repository maintenance files such as `.github/`, `.gitignore`, `assets/`, or `scripts/`.
+It must not contain repository maintenance files such as `.github/`, `.gitignore`, `assets/`, `scripts/install.sh`, or `scripts/validate_skill.py`.
 
 ## Step 6: First Use
 
-Read `runbooks/bootstrap.md` from the installed folder and offer the user one of four starting modes:
+Read `runbooks/bootstrap.md` from the installed folder and offer the user one of five starting modes:
 
 1. SEO/GEO audit
-2. `/for-ai` package
-3. content brief
-4. crawler and measurement policy
+2. visual HTML audit
+3. `/for-ai` package
+4. content brief
+5. crawler and measurement policy
 
 Then tell the user: `seo-geo-growth-agent is installed. Restart the agent session if skills are not auto-refreshed.`

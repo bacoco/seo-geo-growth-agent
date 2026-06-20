@@ -1,8 +1,8 @@
 ---
 name: seo-geo-growth-agent
 description: |-
-  SEO + GEO Growth Agent Skill v1.1.2. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
-  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
+  SEO + GEO Growth Agent Skill v1.2.0. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, dynamic HTML audit reports, browser-readable reports, screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
+  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, HTML audit report, visual audit, local audit server, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
 ---
 
 # SEO + GEO Growth Agent Skill
@@ -25,6 +25,7 @@ Use this skill whenever the user asks to:
 - create or prioritize keywords, fan-out queries, grounding queries, content briefs, comparison pages, topic clusters, BOFU/MOFU/TOFU maps, CTA blocks, or internal links;
 - generate or validate structured data, JSON-LD, robots.txt, sitemap, IndexNow, llms.txt, AI crawler access policies, or WAF allowlists;
 - produce daily/weekly/monthly SEO reports from Google Search Console, GA4, Bing Webmaster Tools, DataForSEO, Ahrefs, Semrush, SerpApi, server logs, or supplied CSV exports;
+- generate a dynamic HTML audit report, serve it locally, or include desktop/mobile screenshot evidence from Agent Browser or a browser fallback;
 - run an “SEO agent”, “SEO patrol”, “GEO patrol”, “AI visibility patrol”, or autonomous daily operating loop;
 - make a site more usable by browser agents through semantic HTML, accessibility tree clarity, stable UI, and machine-readable commerce or booking flows.
 

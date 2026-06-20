@@ -1,7 +1,7 @@
 {
   "name": "seo-geo-growth-agent",
-  "version": "1.1.2",
-  "description": "Agent-ready SEO + GEO skill for auditing, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
+  "version": "1.2.0",
+  "description": "Agent-ready SEO + GEO skill for auditing, visual HTML reports, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
   "install_protocol": "INSTALL_FOR_AGENTS.md",
   "license": "MIT",
@@ -24,10 +24,20 @@
     "ai-crawler-policy",
     "agent-friendly-ux",
     "accessibility-tree",
-    "agentic-commerce"
+    "agentic-commerce",
+    "html-report",
+    "visual-audit",
+    "screenshots"
   ],
   "runbooks": {
-    "bootstrap": "runbooks/bootstrap.md"
+    "bootstrap": "runbooks/bootstrap.md",
+    "visual_html_audit": "runbooks/visual-html-audit.md",
+    "public_measurement_access": "runbooks/public-measurement-access.md"
+  },
+  "scripts": {
+    "generate_html_audit_report": "scripts/generate_html_audit_report.py",
+    "serve_report": "scripts/serve_report.py",
+    "capture_report_screenshots": "scripts/capture_report_screenshots.mjs"
   },
   "routing_evals": [
     "evals/routing-eval.jsonl"
@@ -61,6 +71,7 @@
     "templates/llms-full.txt",
     "templates/llms-generation-checklist.md",
     "templates/llms.txt",
+    "templates/measurement-access-matrix.csv",
     "templates/owner-checklist.md",
     "templates/query-fanout-map.csv",
     "templates/robots-ai-selective.txt",
