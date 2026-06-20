@@ -19,6 +19,16 @@ The HTML report is a presentation layer. It must not create facts. All metrics, 
 
 Screenshots are evidence for the audited site, not for the report. Capture the site or page being audited, analyze those screenshots, and feed the visual verdict back into `audit.json` before generating the report.
 
+If the user asks to improve, score, or screenshot the report UI itself, capture the
+generated `index.html` in desktop and mobile viewports after regeneration. Treat
+those report screenshots as QA evidence for the presentation layer, not as site
+audit evidence.
+
+This workflow is mandatory for normal domain/URL audits. Do not stop at a prose
+answer when the user asked to use the skill on a site. If screenshot capture
+fails, continue: create `audit.json`, include `screenshot_status`, generate
+`index.html`, and serve or validate the report.
+
 ## Required Inputs
 
 Collect or infer from evidence:
@@ -26,6 +36,7 @@ Collect or infer from evidence:
 | Field | Requirement |
 |---|---|
 | `site` | Domain or page being audited |
+| `report_language` | Language used by the user, such as `fr` or `en` |
 | `generated_at` | ISO timestamp |
 | `summary.headline` | One-sentence finding |
 | `summary.status` | `ok`, `partial`, `missing`, or `unknown` |
@@ -42,15 +53,17 @@ Optional:
 - `analysis_cohorts[]`
 - `design_watch`
 - `site_visual_evidence[]`
+- `responsive_study`
+- `screenshot_status`
 - `public_measurements[]`
 - `action_plan[]`
 
 ## Workflow
 
 1. Run the normal SEO/GEO audit first.
-2. Capture desktop and mobile screenshots of the audited URL.
-3. Analyze the screenshots and write a `design_watch` verdict.
-4. Convert the audit into `audit.json`.
+2. Capture desktop and mobile screenshots of the audited URL and run a dynamic responsive study. If this fails, record why in `screenshot_status`.
+3. Analyze the screenshots and write a `design_watch` verdict. Analyze mobile/desktop rendering and write `responsive_study`. If screenshots are unavailable, write lower-confidence blocks based only on rendered/HTML evidence and state the limit.
+4. Convert the audit into `audit.json` in the user's language. Set `report_language` to the language of the user's request.
 5. Generate the dynamic HTML report:
 
 ```bash
@@ -70,6 +83,28 @@ python scripts/serve_report.py \
 
 If the preferred port is busy, the server chooses a nearby free port and prints the URL.
 
+7. When report UI quality is in scope, screenshot the served report itself in
+desktop and mobile viewports, review the resulting images, and iterate on the
+presentation layer until text hierarchy, spacing, wrapping, tabs, and visual
+evidence are clean.
+
+## Completion Checklist
+
+Before finalizing, verify that all applicable deliverables exist:
+
+| Deliverable | Required |
+|---|---:|
+| `audit.json` | yes |
+| `index.html` | yes |
+| local report URL or exact `index.html` path | yes |
+| desktop and mobile site screenshots | yes, unless unavailable |
+| `responsive_study` for mobile and desktop | yes |
+| `screenshot_status` reason when screenshots are missing | yes, if screenshots failed |
+| `design_watch` | yes |
+| `analysis_cohorts[]` | yes for global reports |
+| `report_language` matching the user's language | yes |
+| report desktop/mobile screenshots | yes, when UI quality is requested |
+
 ## Design Watch From Site Screenshots
 
 Prefer Agent Browser when the runtime exposes it.
@@ -78,8 +113,10 @@ Use Agent Browser to:
 
 - open the audited site, not the generated report;
 - capture desktop and mobile screenshots of the audited URL;
+- run a dynamic responsive study of at least the homepage in mobile and desktop viewports;
 - inspect first impression, visible hierarchy, brand trust, content clarity, mobile wrapping, horizontal overflow, broken images, and topic fit;
 - write a `design_watch` object with score, verdict, observed facts, inferred risks, and recommended fixes;
+- write a `responsive_study` object with method, pass/warning status, viewport metrics, issues, and a short verdict;
 - add only observed visual facts to `site_visual_evidence[]`;
 - regenerate the report after adding screenshot entries.
 
@@ -89,10 +126,13 @@ If Agent Browser is unavailable, use the Chrome/DevTools fallback:
 node scripts/capture_site_screenshots.mjs \
   --url https://example.com/ \
   --output-dir reports/<site-slug>/<YYYY-MM-DD>/site-screenshots \
-  --evidence-out reports/<site-slug>/<YYYY-MM-DD>/site-visual-evidence.json
+  --evidence-out reports/<site-slug>/<YYYY-MM-DD>/site-visual-evidence.json \
+  --study-out reports/<site-slug>/<YYYY-MM-DD>/responsive-study.json
 ```
 
-Then copy the relevant entries into `audit.json` under `site_visual_evidence[]`, add `design_watch`, and regenerate the HTML report.
+Then copy the relevant entries into `audit.json` under `site_visual_evidence[]`, copy `responsive-study.json` under `responsive_study`, add `design_watch`, and regenerate the HTML report.
+
+For the responsive study, read `templates/responsive-dynamic-study.md`.
 
 Use this scoring frame:
 
@@ -126,6 +166,7 @@ Each cohort should include `name`, `score`, `status`, `what_it_checks`,
 ```json
 {
   "site": "example.com",
+  "report_language": "en",
   "generated_at": "2026-06-20T18:00:00+02:00",
   "summary": {
     "headline": "Make example.com easier for agents to cite.",
@@ -186,6 +227,32 @@ Each cohort should include `name`, `score`, `status`, `what_it_checks`,
     "observed": ["Desktop and mobile screenshots show readable body content."],
     "inferred": ["The visual identity may reduce perceived authority before the article is read."],
     "recommended": ["Replace generic imagery with topic-specific editorial identity."]
+  },
+  "responsive_study": {
+    "method": "Agent Browser",
+    "summary": {
+      "status": "pass",
+      "verdict": "Homepage responds correctly on tested mobile and desktop viewports.",
+      "confidence": "medium"
+    },
+    "viewports": [
+      {
+        "label": "Mobile",
+        "viewport": "390x1400",
+        "status": "pass",
+        "issues": [],
+        "metrics": {
+          "title": "Example",
+          "horizontalOverflow": false,
+          "scrollWidth": 390,
+          "documentHeight": 1400,
+          "hasViewportMeta": true,
+          "h1Count": 1,
+          "h1Text": ["Example"],
+          "missingImages": 0
+        }
+      }
+    ]
   },
   "site_visual_evidence": [
     {

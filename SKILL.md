@@ -1,8 +1,8 @@
 ---
 name: seo-geo-growth-agent
 description: |-
-  SEO + GEO Growth Agent Skill v1.2.1. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, Design Watch screenshot analysis, first-impression scoring, analysis cohorts, dynamic HTML audit reports, browser-readable reports, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
-  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, Design Watch, design audit, first impression audit, analysis cohorts, HTML audit report, visual audit, local audit server, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
+  SEO + GEO Growth Agent Skill v1.2.2. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, Design Watch screenshot analysis, dynamic responsive study, first-impression scoring, analysis cohorts, dynamic HTML audit reports, browser-readable reports, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
+  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, Design Watch, design audit, responsive audit, responsive study, mobile homepage audit, dynamic responsive study, first impression audit, analysis cohorts, HTML audit report, visual audit, local audit server, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
 ---
 
 # SEO + GEO Growth Agent Skill
@@ -29,9 +29,41 @@ Use this skill whenever the user asks to:
 - run an “SEO agent”, “SEO patrol”, “GEO patrol”, “AI visibility patrol”, or autonomous daily operating loop;
 - make a site more usable by browser agents through semantic HTML, accessibility tree clarity, stable UI, and machine-readable commerce or booking flows.
 
+## Default site-audit contract
+
+When the user gives a domain or URL and asks to audit, analyze, run, use, or test this skill, default to a **visual HTML audit** unless the user explicitly asks for a chat-only answer or no files.
+
+Required deliverables:
+
+1. `reports/<site-slug>/<YYYY-MM-DD>/audit.json`
+2. `reports/<site-slug>/<YYYY-MM-DD>/index.html`
+3. a local report URL from `scripts/serve_report.py`
+4. desktop and mobile screenshots of the audited site, or a clear `screenshot_status` explanation if the runtime cannot capture them
+5. `responsive_study` for at least homepage mobile and desktop rendering
+6. `design_watch` and `analysis_cohorts[]` in `audit.json`
+7. `report_language` set from the user's language, with the audit content written in that language
+
+Do not stop at prose for a site audit. If screenshot capture fails because Agent Browser, Chrome, network, permissions, or a hostile WAF is unavailable, still generate `audit.json`, generate `index.html`, start the report server when possible, and mark screenshots as unavailable with the reason.
+
+Use this sequence:
+
+1. Read `runbooks/visual-html-audit.md`.
+2. Gather public evidence from the audited URL, robots.txt, sitemap, HTML, and available public measurement sources.
+3. Capture site screenshots and responsive study with Agent Browser or `node scripts/capture_site_screenshots.mjs --study-out ...`.
+4. Analyze screenshots with `templates/design-watch-audit.md` and responsive evidence with `templates/responsive-dynamic-study.md`.
+5. Write `audit.json` in the user's language, with `report_language`, findings, Design Watch, responsive study, cohorts, sources, and missing-data notes.
+6. Run `python scripts/generate_html_audit_report.py --input ... --output-dir ...`.
+7. Run `python scripts/serve_report.py --dir ... --port 8766 --open` or `--check` if serving is impossible.
+8. Final response must include the report URL or exact `index.html` path, plus screenshot status.
+
+If the user asks for screenshots of the report UI, capture the served `index.html`
+itself in desktop and mobile viewports after generation and use those screenshots
+to judge the report presentation. Keep this separate from audited-site
+screenshots, which remain evidence for Design Watch.
+
 ## First-use bootstrap
 
-If this skill was just installed, or the user asks how to start, read `runbooks/bootstrap.md` before producing work. Use it to choose one starting mode: audit, `/for-ai` package, content brief, or crawler and measurement policy.
+If this skill was just installed, or the user asks how to start, read `runbooks/bootstrap.md` before producing work. For a site/domain audit, choose visual HTML audit by default.
 
 ## Non-negotiable guardrails
 

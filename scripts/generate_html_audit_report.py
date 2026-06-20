@@ -33,7 +33,12 @@ HTML_TEMPLATE = """<!doctype html>
       --amber-soft: #fff7e6;
       --green: #067647;
       --green-soft: #ecfdf3;
+      --forest: #03251e;
+      --mint: #2ee66b;
+      --violet: #6d5dfc;
+      --rose: #ef476f;
       --shadow: 0 1px 2px rgba(16, 24, 40, .06);
+      --shadow-strong: 0 16px 50px rgba(16, 24, 40, .12);
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -42,7 +47,9 @@ HTML_TEMPLATE = """<!doctype html>
       overflow-x: hidden;
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
-      background: var(--paper);
+      background:
+        linear-gradient(180deg, #ffffff 0, #ffffff 118px, var(--paper) 118px),
+        var(--paper);
       font-size: 14px;
       line-height: 1.48;
     }
@@ -57,19 +64,20 @@ HTML_TEMPLATE = """<!doctype html>
     }
     .wrap { width: calc(100% - 36px); max-width: 1180px; margin: 0 auto; }
     header {
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, .96);
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      background: var(--forest);
+      color: #fff;
     }
     .hero {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 320px;
       gap: 28px;
       align-items: end;
-      padding: 26px 0 22px;
+      padding: 34px 0 28px;
     }
     .eyebrow {
       margin: 0 0 8px;
-      color: var(--blue);
+      color: var(--mint);
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0;
@@ -78,7 +86,7 @@ HTML_TEMPLATE = """<!doctype html>
     h1 {
       max-width: 780px;
       margin: 0;
-      font-size: clamp(24px, 2.6vw, 34px);
+      font-size: 32px;
       line-height: 1.08;
       letter-spacing: 0;
       overflow-wrap: anywhere;
@@ -86,28 +94,60 @@ HTML_TEMPLATE = """<!doctype html>
     .subtitle {
       max-width: 780px;
       margin: 10px 0 0;
-      color: var(--muted);
+      color: rgba(255, 255, 255, .74);
       font-size: 15px;
     }
     .meta-box {
       justify-self: end;
       width: 100%;
       padding: 13px;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255,255,255,.18);
       border-radius: 8px;
-      background: #fff;
-      box-shadow: var(--shadow);
+      background: rgba(255,255,255,.08);
+      box-shadow: none;
+      backdrop-filter: blur(10px);
     }
     .meta-row {
       display: flex;
       justify-content: space-between;
       gap: 12px;
       padding: 6px 0;
-      border-bottom: 1px solid #eef1f5;
+      border-bottom: 1px solid rgba(255,255,255,.14);
     }
     .meta-row:last-child { border-bottom: 0; }
-    .meta-row span:first-child { color: var(--faint); }
+    .meta-row span:first-child { color: rgba(255,255,255,.62); }
+    .tab-shell {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(246, 247, 249, .88);
+      backdrop-filter: blur(14px);
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 9px 0;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex: 0 0 auto;
+      border-color: transparent;
+      background: transparent;
+      color: #344054;
+    }
+    .tab[aria-selected="true"] {
+      color: #fff;
+      background: var(--forest);
+      border-color: var(--forest);
+      box-shadow: 0 8px 24px rgba(3, 37, 30, .18);
+    }
     main { padding: 22px 0 56px; }
+    .tab-panel {
+      animation: riseIn .32s ease both;
+    }
     section { margin: 16px 0; }
     .panel, .metric, .finding, .visual-card, .score-card {
       background: var(--panel);
@@ -120,7 +160,20 @@ HTML_TEMPLATE = """<!doctype html>
     .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .grid.sidebar { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: start; }
-    .metric { padding: 14px; min-height: 92px; }
+    .metric {
+      padding: 15px;
+      min-height: 96px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric:before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mint), var(--blue), var(--violet));
+    }
     .metric strong { display: block; margin-bottom: 5px; font-size: 19px; line-height: 1.12; }
     .metric span { color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; }
     .metric p { margin-top: 7px; }
@@ -231,20 +284,197 @@ HTML_TEMPLATE = """<!doctype html>
       padding: 12px 14px;
       border-radius: 7px;
     }
+    .overview-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
+      align-items: stretch;
+      overflow: hidden;
+      border-radius: 8px;
+      padding: 22px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 78% 16%, rgba(46, 230, 107, .22), transparent 28%),
+        linear-gradient(135deg, var(--forest), #091827 62%, #11123a);
+      box-shadow: var(--shadow-strong);
+    }
+    .overview-stage h2 {
+      max-width: 760px;
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: 26px;
+      line-height: 1.08;
+    }
+    .overview-stage p { color: rgba(255,255,255,.76); }
+    .overview-stage .section-kicker {
+      margin: 0 0 8px;
+      color: var(--mint);
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    .overview-stage .proof-pill {
+      color: #fff;
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.16);
+    }
+    .signal-panel {
+      min-height: 280px;
+      padding: 17px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+    }
+    .signal-panel h3 { color: #fff; }
+    .signal-ring {
+      --score: 0;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 148px;
+      aspect-ratio: 1;
+      margin: 6px auto 18px;
+      border-radius: 50%;
+      background:
+        conic-gradient(var(--mint) calc(var(--score) * 1%), rgba(255,255,255,.16) 0),
+        rgba(255,255,255,.08);
+      animation: signalPop .72s ease both;
+    }
+    .signal-ring::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      background: #071d1a;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+    .signal-value {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 2px;
+      place-items: center;
+      color: #fff;
+      font-weight: 850;
+      font-size: 30px;
+      line-height: 1;
+    }
+    .signal-value span {
+      color: rgba(255,255,255,.62);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .signal-bars { display: grid; gap: 10px; }
+    .signal-bar {
+      display: grid;
+      grid-template-columns: minmax(92px, .5fr) minmax(0, 1fr) auto;
+      gap: 9px;
+      align-items: center;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+    }
+    .signal-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+    }
+    .signal-fill {
+      width: var(--bar);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--mint), #8ec5ff);
+      animation: growX .9s ease both;
+      transform-origin: left;
+    }
+    .cohort-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .cohort-card {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .cohort-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .cohort-score {
+      min-width: 54px;
+      text-align: right;
+      color: var(--forest);
+      font-size: 22px;
+      font-weight: 850;
+      line-height: 1;
+    }
+    .cohort-card h3 { font-size: 16px; }
+    .cohort-card .next {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+    .proof-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .proof-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 750;
+      color: #344054;
+    }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes signalPop {
+      from { opacity: 0; transform: scale(.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes growX {
+      from { transform: scaleX(.05); }
+      to { transform: scaleX(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
     @media (max-width: 900px) {
-      .hero, .grid, .grid.two, .grid.four, .grid.sidebar, .visual-grid { grid-template-columns: 1fr; }
+      .hero, .overview-stage, .grid, .grid.two, .grid.four, .grid.sidebar, .visual-grid, .cohort-grid { grid-template-columns: 1fr; }
       .meta-box { justify-self: stretch; }
     }
     @media (max-width: 640px) {
       .wrap { width: calc(100% - 28px); }
       .hero { padding: 22px 0 18px; }
       h1 { font-size: 24px; line-height: 1.1; }
+      .overview-stage h2 { font-size: 22px; line-height: 1.12; }
       .subtitle { font-size: 14px; }
       .panel { padding: 15px; }
       th { display: none; }
       td { display: block; width: 100%; padding: 8px 0; }
       tr { display: block; padding: 9px 0; border-bottom: 1px solid var(--line); }
       .visual-card img { max-height: 360px; }
+      .cohort-card { min-height: 0; }
     }
   </style>
 </head>
@@ -259,22 +489,265 @@ HTML_TEMPLATE = """<!doctype html>
       <aside class="meta-box" id="report-meta"></aside>
     </div>
   </header>
+  <nav class="tab-shell" aria-label="Report pages">
+    <div class="wrap tabs" id="tabs"></div>
+  </nav>
   <main class="wrap" id="app"></main>
   <script id="audit-data" type="application/json">__AUDIT_JSON__</script>
   <script>
     const audit = JSON.parse(document.getElementById('audit-data').textContent);
     const app = document.getElementById('app');
     const priorityState = { value: 'all' };
+    const uiState = { tab: 'overview' };
+    const reportLanguage = normalizeLanguage(audit.report_language || audit.language || audit.locale || 'en');
+    const i18n = {
+      en: {
+        noData: 'No data provided.',
+        eyebrow: 'SEO/GEO audit',
+        overview: 'Overview',
+        visual: 'Visual',
+        findingsTab: 'Findings',
+        technical: 'Technical',
+        actions: 'Actions',
+        sources: 'Sources',
+        auditCockpit: 'Audit cockpit',
+        auditCockpitCopy: 'A fast executive view of what the site needs before deeper SEO/GEO work.',
+        readinessSignal: 'Readiness signal',
+        reviewedEvidence: 'Reviewed evidence',
+        openIssues: 'Open issues',
+        visualProof: 'Visual proof',
+        publicSources: 'Public sources',
+        topCohorts: 'Top cohorts',
+        fallbackSubtitle: 'Evidence-led audit for search engines, AI answer engines, and browser agents.',
+        status: 'Status',
+        confidence: 'Confidence',
+        generated: 'Generated',
+        unknown: 'unknown',
+        unknownSite: 'unknown site',
+        defaultStatusDetail: 'Overall readiness from supplied evidence.',
+        biggestBlocker: 'Biggest blocker',
+        biggestBlockerDetail: 'Highest-impact issue found.',
+        fastestWin: 'Fastest win',
+        fastestWinDetail: 'Best next action.',
+        executiveBrief: 'Executive brief',
+        fallbackDecision: 'Prioritize evidence-led fixes before content scale.',
+        missingAnalytics: 'Missing analytics or logs are marked unknown. Data confidence:',
+        readinessScores: 'Readiness scores',
+        score: 'Score',
+        analysisCohorts: 'Analysis cohorts',
+        cohort: 'Cohort',
+        verdict: 'Verdict',
+        nextAction: 'Next action',
+        noScreenshots: 'No site screenshots supplied.',
+        responsiveStudy: 'Responsive study',
+        noResponsiveStudy: 'No responsive study supplied.',
+        method: 'Method',
+        issue: 'Issue',
+        issues: 'Issues',
+        result: 'Result',
+        pageTitle: 'Page title',
+        h1: 'H1',
+        horizontalOverflow: 'Horizontal overflow',
+        yes: 'yes',
+        no: 'no',
+        documentWidth: 'Document width',
+        documentHeight: 'Document height',
+        missingImages: 'Missing images',
+        siteScreenshot: 'Site screenshot',
+        screenshotFile: 'Screenshot file:',
+        viewport: 'Viewport',
+        designWatch: 'Design Watch',
+        visualUnavailable: 'Visual verdict unavailable',
+        noVisual: 'No visual analysis supplied.',
+        observedScreenshots: 'Observed from screenshots',
+        implication: 'Implication',
+        recommended: 'Recommended',
+        evidence: 'Evidence',
+        noEvidence: 'No evidence links provided.',
+        label: 'Label',
+        source: 'Source',
+        statusNote: 'Status / note',
+        access: 'Access',
+        all: 'All',
+        priorityFindings: 'Priority findings',
+        untitledFinding: 'Untitled finding',
+        observed: 'Observed',
+        inferred: 'Inferred',
+        noFindings: 'No findings match this filter.',
+        technicalSnapshot: 'Technical snapshot',
+        area: 'Area',
+        observedEvidence: 'Observed evidence',
+        measurementAccess: 'Measurement access',
+        metric: 'Metric',
+        limit: 'Limit',
+        noMeasurement: 'No measurement access checks supplied.',
+        actionPlan: 'Action plan',
+        noActionPlan: 'No action plan supplied.',
+        when: 'When',
+        action: 'Action',
+        expectedEvidence: 'Expected evidence',
+        sourcesConsulted: 'Sources consulted',
+        noSources: 'No source list supplied.'
+      },
+      fr: {
+        noData: 'Aucune donnée fournie.',
+        eyebrow: 'Audit SEO/GEO',
+        overview: 'Vue générale',
+        visual: 'Visuel',
+        findingsTab: 'Constats',
+        technical: 'Technique',
+        actions: 'Actions',
+        sources: 'Sources',
+        auditCockpit: 'Cockpit d’audit',
+        auditCockpitCopy: 'Vue dirigeant rapide de ce que le site doit corriger avant d’aller plus loin en SEO/GEO.',
+        readinessSignal: 'Signal de préparation',
+        reviewedEvidence: 'Preuves revues',
+        openIssues: 'Points ouverts',
+        visualProof: 'Preuves visuelles',
+        publicSources: 'Sources publiques',
+        topCohorts: 'Cohortes clés',
+        fallbackSubtitle: 'Audit fondé sur des preuves pour les moteurs de recherche, les moteurs de réponse IA et les agents navigateur.',
+        status: 'Statut',
+        confidence: 'Confiance',
+        generated: 'Généré',
+        unknown: 'inconnu',
+        unknownSite: 'site inconnu',
+        defaultStatusDetail: 'Niveau de préparation global d’après les preuves fournies.',
+        biggestBlocker: 'Blocage principal',
+        biggestBlockerDetail: 'Problème avec le plus fort impact.',
+        fastestWin: 'Gain rapide',
+        fastestWinDetail: 'Meilleure prochaine action.',
+        executiveBrief: 'Synthèse exécutive',
+        fallbackDecision: 'Prioriser les corrections fondées sur des preuves avant de produire plus de contenu.',
+        missingAnalytics: 'Les analytics ou logs manquants sont marqués inconnus. Niveau de confiance :',
+        readinessScores: 'Scores de préparation',
+        score: 'Score',
+        analysisCohorts: 'Cohortes d’analyse',
+        cohort: 'Cohorte',
+        verdict: 'Verdict',
+        nextAction: 'Prochaine action',
+        noScreenshots: 'Aucune capture du site fournie.',
+        responsiveStudy: 'Étude responsive',
+        noResponsiveStudy: 'Aucune étude responsive fournie.',
+        method: 'Méthode',
+        issue: 'Point à corriger',
+        issues: 'Points à corriger',
+        result: 'Résultat',
+        pageTitle: 'Titre de page',
+        h1: 'H1',
+        horizontalOverflow: 'Débordement horizontal',
+        yes: 'oui',
+        no: 'non',
+        documentWidth: 'Largeur du document',
+        documentHeight: 'Hauteur du document',
+        missingImages: 'Images manquantes',
+        siteScreenshot: 'Capture du site',
+        screenshotFile: 'Fichier de capture :',
+        viewport: 'Viewport',
+        designWatch: 'Design Watch',
+        visualUnavailable: 'Verdict visuel indisponible',
+        noVisual: 'Aucune analyse visuelle fournie.',
+        observedScreenshots: 'Observé dans les captures',
+        implication: 'Implication',
+        recommended: 'Recommandé',
+        evidence: 'Preuves',
+        noEvidence: 'Aucun lien de preuve fourni.',
+        label: 'Libellé',
+        source: 'Source',
+        statusNote: 'Statut / note',
+        access: 'Accès',
+        all: 'Tout',
+        priorityFindings: 'Constats prioritaires',
+        untitledFinding: 'Constat sans titre',
+        observed: 'Observé',
+        inferred: 'Inféré',
+        noFindings: 'Aucun constat ne correspond à ce filtre.',
+        technicalSnapshot: 'Instantané technique',
+        area: 'Zone',
+        observedEvidence: 'Preuve observée',
+        measurementAccess: 'Accès aux mesures',
+        metric: 'Métrique',
+        limit: 'Limite',
+        noMeasurement: 'Aucun contrôle d’accès aux mesures fourni.',
+        actionPlan: 'Plan d’action',
+        noActionPlan: 'Aucun plan d’action fourni.',
+        when: 'Quand',
+        action: 'Action',
+        expectedEvidence: 'Preuve attendue',
+        sourcesConsulted: 'Sources consultées',
+        noSources: 'Aucune liste de sources fournie.'
+      }
+    };
+
+    function normalizeLanguage(value) {
+      const normalized = String(value || '').toLowerCase();
+      if (normalized.startsWith('fr')) return 'fr';
+      return 'en';
+    }
+
+    function t(key) {
+      return (i18n[reportLanguage] && i18n[reportLanguage][key]) || i18n.en[key] || key;
+    }
 
     function text(value, fallback = '') {
       if (value === undefined || value === null || value === '') return fallback;
       return String(value);
     }
 
+    function formatDateTime(value) {
+      if (!value) return t('unknown');
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return text(value, t('unknown'));
+      return new Intl.DateTimeFormat(reportLanguage === 'fr' ? 'fr-FR' : 'en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
+    }
+
     function asArray(value) {
       if (Array.isArray(value)) return value;
       if (value === undefined || value === null || value === '') return [];
       return [value];
+    }
+
+    function displayStatus(value) {
+      const raw = text(value, t('unknown'));
+      const normalized = raw.toLowerCase().replaceAll(' ', '_');
+      const labels = {
+        fr: {
+          partial: 'partiel',
+          missing: 'absent',
+          warning: 'à vérifier',
+          unknown: 'inconnu',
+          ok: 'ok',
+          pass: 'ok',
+          passed: 'ok',
+          good: 'bon',
+          failed: 'échec',
+          error: 'erreur',
+          critical: 'critique',
+          medium: 'moyen',
+          public: 'public',
+          private: 'privé',
+          owner_only: 'propriétaire',
+          owner_only_free: 'propriétaire',
+          public_partial: 'public partiel',
+          public_if_enough_traffic: 'public si trafic suffisant'
+        },
+        en: {}
+      };
+      return labels[reportLanguage]?.[normalized] || raw;
+    }
+
+    function displayMethod(value) {
+      const raw = text(value, '');
+      if (reportLanguage === 'fr' && raw.toLowerCase().includes('chrome devtools fallback')) {
+        return 'Fallback Chrome DevTools ; Agent Browser à privilégier quand disponible';
+      }
+      return raw;
     }
 
     function el(tag, attrs = {}, children = []) {
@@ -298,7 +771,7 @@ HTML_TEMPLATE = """<!doctype html>
 
     function list(items) {
       const values = asArray(items);
-      if (!values.length) return el('p', { class: 'empty', text: 'No data provided.' });
+      if (!values.length) return el('p', { class: 'empty', text: t('noData') });
       return el('ul', {}, values.map(item => el('li', { text: text(item) })));
     }
 
@@ -309,7 +782,7 @@ HTML_TEMPLATE = """<!doctype html>
       if (['p1', 'warning', 'partial', 'medium'].includes(normalized)) klass = 'badge p1';
       if (['p2', 'ok', 'pass', 'passed', 'good', 'public'].includes(normalized)) klass = 'badge p2';
       if (['owner_only', 'owner_only_free', 'public_if_enough_traffic', 'public_partial', 'unknown'].includes(normalized)) klass = `badge ${normalized}`;
-      return el('span', { class: klass, text: text(value, 'unknown') });
+      return el('span', { class: klass, text: displayStatus(value) });
     }
 
     function section(title, children, className = 'panel') {
@@ -320,29 +793,109 @@ HTML_TEMPLATE = """<!doctype html>
       return el('div', { class: 'meta-row' }, [el('span', { text: label }), el('strong', { text: text(value, 'unknown') })]);
     }
 
+    function scoreNumber(value) {
+      if (value === undefined || value === null || value === '') return null;
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      const match = String(value).match(/([0-9]+(?:\.[0-9]+)?)/);
+      if (!match) return null;
+      return Number(match[1]);
+    }
+
+    function scoreMax(value, fallback = 10) {
+      const slash = String(value || '').match(/\/\s*([0-9]+(?:\.[0-9]+)?)/);
+      return slash ? Number(slash[1]) : fallback;
+    }
+
+    function readinessScore() {
+      const scorecards = Array.isArray(audit.scorecards) ? audit.scorecards : [];
+      const normalized = scorecards
+        .map(item => {
+          const score = scoreNumber(item.score);
+          const max = Number(item.max || scoreMax(item.score));
+          if (score === null || !max) return null;
+          return Math.max(0, Math.min(10, (score / max) * 10));
+        })
+        .filter(value => value !== null);
+      if (normalized.length) {
+        return normalized.reduce((sum, value) => sum + value, 0) / normalized.length;
+      }
+      const visualScore = scoreNumber(audit.design_watch?.score || audit.first_impression?.score);
+      if (visualScore !== null) {
+        return Math.max(0, Math.min(10, (visualScore / scoreMax(audit.design_watch?.score || audit.first_impression?.score)) * 10));
+      }
+      return 0;
+    }
+
+    function findingCounts() {
+      const findings = Array.isArray(audit.findings) ? audit.findings : [];
+      return {
+        total: findings.length,
+        p0: findings.filter(item => text(item.priority).toUpperCase() === 'P0').length,
+        p1: findings.filter(item => text(item.priority).toUpperCase() === 'P1').length,
+        p2: findings.filter(item => text(item.priority).toUpperCase() === 'P2').length
+      };
+    }
+
+    function evidenceCount() {
+      return [
+        ...(Array.isArray(audit.site_visual_evidence) ? audit.site_visual_evidence : []),
+        ...(Array.isArray(audit.visual_evidence) ? audit.visual_evidence : []),
+        ...(Array.isArray(audit.sources) ? audit.sources : [])
+      ].length;
+    }
+
+    function tabs() {
+      return [
+        { id: 'overview', label: t('overview') },
+        { id: 'visual', label: t('visual') },
+        { id: 'findings', label: t('findingsTab') },
+        { id: 'technical', label: t('technical') },
+        { id: 'actions', label: t('actions') },
+        { id: 'sources', label: t('sources') }
+      ];
+    }
+
+    function renderTabs() {
+      const container = document.getElementById('tabs');
+      container.replaceChildren(...tabs().map(tab => {
+        const button = el('button', {
+          class: 'tab',
+          role: 'tab',
+          'aria-selected': String(uiState.tab === tab.id),
+          text: tab.label
+        });
+        button.addEventListener('click', () => {
+          uiState.tab = tab.id;
+          render();
+        });
+        return button;
+      }));
+    }
+
     function renderHeader() {
       const generated = text(audit.generated_at, new Date().toISOString());
-      const site = text(audit.site, 'unknown site');
+      const site = text(audit.site, t('unknownSite'));
+      document.documentElement.lang = reportLanguage;
       document.title = `Audit SEO/GEO — ${site}`;
-      document.getElementById('eyebrow').textContent = 'SEO/GEO audit';
+      document.getElementById('eyebrow').textContent = t('eyebrow');
       document.getElementById('headline').textContent = `Audit SEO/GEO — ${site}`;
       document.getElementById('subtitle').textContent = text(
         audit.summary?.headline,
-        'Evidence-led audit for search engines, AI answer engines, and browser agents.'
+        t('fallbackSubtitle')
       );
       document.getElementById('report-meta').replaceChildren(
-        metaRow('Status', text(audit.summary?.status, 'unknown')),
-        metaRow('Confidence', text(audit.summary?.data_confidence, 'unknown')),
-        metaRow('Generated', generated)
+        metaRow(t('status'), displayStatus(audit.summary?.status)),
+        metaRow(t('confidence'), text(audit.summary?.data_confidence, t('unknown'))),
+        metaRow(t('generated'), formatDateTime(generated))
       );
     }
 
     function renderMetrics() {
       const metrics = Array.isArray(audit.metrics) ? audit.metrics : [];
       const defaults = [
-        { label: 'Status', value: text(audit.summary?.status, 'unknown'), detail: 'Overall readiness from supplied evidence.' },
-        { label: 'Biggest blocker', value: text(audit.summary?.biggest_blocker, 'unknown'), detail: 'Highest-impact issue found.' },
-        { label: 'Fastest win', value: text(audit.summary?.fastest_win, 'unknown'), detail: 'Best next action.' }
+        { label: t('status'), value: text(audit.summary?.status, t('unknown')), detail: t('defaultStatusDetail') },
+        { label: t('biggestBlocker'), value: text(audit.summary?.biggest_blocker, t('unknown')), detail: t('biggestBlockerDetail') },
+        { label: t('fastestWin'), value: text(audit.summary?.fastest_win, t('unknown')), detail: t('fastestWinDetail') }
       ];
       return el('section', { class: 'grid' }, (metrics.length ? metrics : defaults).map(metric =>
         el('div', { class: 'metric' }, [
@@ -355,24 +908,24 @@ HTML_TEMPLATE = """<!doctype html>
 
     function renderExecutiveBrief() {
       const brief = asArray(audit.executive_brief);
-      return section('Executive brief', [
-        el('p', { text: text(audit.summary?.decision, audit.summary?.headline || 'Prioritize evidence-led fixes before content scale.') }),
+      return section(t('executiveBrief'), [
+        el('p', { text: text(audit.summary?.decision, audit.summary?.headline || t('fallbackDecision')) }),
         brief.length ? el('div', { class: 'callout' }, [list(brief)]) : null,
-        el('p', { class: 'small', text: `Missing analytics or logs are marked unknown. Data confidence: ${text(audit.summary?.data_confidence, 'unknown')}.` })
+        el('p', { class: 'small', text: `${t('missingAnalytics')} ${text(audit.summary?.data_confidence, t('unknown'))}.` })
       ].filter(Boolean));
     }
 
     function renderScorecards() {
       const scorecards = Array.isArray(audit.scorecards) ? audit.scorecards : [];
       if (!scorecards.length) return null;
-      return section('Readiness scores', [
+      return section(t('readinessScores'), [
         el('div', { class: 'grid four' }, scorecards.map(scorecard => {
           const score = Number(scorecard.score ?? 0);
           const max = Number(scorecard.max ?? 10) || 10;
           const clamped = Math.max(0, Math.min(score, max));
           return el('article', { class: 'score-card' }, [
             el('div', { class: 'score-top' }, [
-              el('span', { class: 'small', text: text(scorecard.label, 'Score') }),
+              el('span', { class: 'small', text: text(scorecard.label, t('score')) }),
               el('strong', { text: `${clamped}/${max}` })
             ]),
             el('progress', { value: clamped, max }),
@@ -382,51 +935,117 @@ HTML_TEMPLATE = """<!doctype html>
       ]);
     }
 
-    function renderCohorts() {
+    function renderSignalPanel() {
+      const score = readinessScore();
+      const scoreText = score ? score.toFixed(score % 1 ? 1 : 0) : '0';
+      const percent = Math.max(0, Math.min(100, Math.round(score * 10)));
+      const scorecards = Array.isArray(audit.scorecards) ? audit.scorecards : [];
+      const bars = (scorecards.length ? scorecards : [
+        { label: t('status'), score: score, max: 10, note: text(audit.summary?.status, t('unknown')) }
+      ]).slice(0, 4);
+      return el('aside', { class: 'signal-panel' }, [
+        el('h3', { text: t('readinessSignal') }),
+        el('div', { class: 'signal-ring', style: `--score:${percent}` }, [
+          el('div', { class: 'signal-value' }, [
+            `${scoreText}/10`,
+            el('span', { text: t('score') })
+          ])
+        ]),
+        el('div', { class: 'signal-bars' }, bars.map(item => {
+          const value = scoreNumber(item.score);
+          const max = Number(item.max || scoreMax(item.score));
+          const barPercent = value === null || !max ? percent : Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+          return el('div', { class: 'signal-bar' }, [
+            el('span', { text: text(item.label, t('score')) }),
+            el('div', { class: 'signal-track' }, [
+              el('div', { class: 'signal-fill', style: `--bar:${barPercent}%` })
+            ]),
+            el('strong', { text: `${Math.round(barPercent)}%` })
+          ]);
+        }))
+      ]);
+    }
+
+    function renderOverviewStage() {
+      const counts = findingCounts();
+      const screenshots = [
+        ...(Array.isArray(audit.site_visual_evidence) ? audit.site_visual_evidence : []),
+        ...(Array.isArray(audit.visual_evidence) ? audit.visual_evidence : [])
+      ].length;
+      return el('section', { class: 'overview-stage' }, [
+        el('div', {}, [
+          el('p', { class: 'section-kicker', text: t('auditCockpit') }),
+          el('h2', { text: text(audit.summary?.headline || audit.summary?.decision, t('auditCockpitCopy')) }),
+          el('p', { text: text(audit.summary?.decision, t('auditCockpitCopy')) }),
+          el('div', { class: 'proof-strip' }, [
+            el('span', { class: 'proof-pill', text: `${t('openIssues')}: ${counts.total}` }),
+            el('span', { class: 'proof-pill', text: `P0: ${counts.p0}` }),
+            el('span', { class: 'proof-pill', text: `P1: ${counts.p1}` }),
+            el('span', { class: 'proof-pill', text: `${t('visualProof')}: ${screenshots}` }),
+            el('span', { class: 'proof-pill', text: `${t('publicSources')}: ${Array.isArray(audit.sources) ? audit.sources.length : 0}` })
+          ])
+        ]),
+        renderSignalPanel()
+      ]);
+    }
+
+    function renderOverviewPage() {
+      return [
+        renderOverviewStage(),
+        renderMetrics(),
+        renderScorecards(),
+        cohortCards(3) ? section(t('topCohorts'), [cohortCards(3)]) : null,
+        renderExecutiveBrief()
+      ].filter(Boolean);
+    }
+
+    function cohortCards(limit = null) {
       const cohorts = Array.isArray(audit.analysis_cohorts || audit.cohorts)
         ? (audit.analysis_cohorts || audit.cohorts)
         : [];
-      if (!cohorts.length) return null;
-      return section('Analysis cohorts', [
-        el('table', {}, [
-          el('thead', {}, [el('tr', {}, [
-            el('th', { text: 'Cohort' }),
-            el('th', { text: 'Score' }),
-            el('th', { text: 'Verdict' }),
-            el('th', { text: 'Next action' })
-          ])]),
-          el('tbody', {}, cohorts.map(item => el('tr', {}, [
-            el('td', {}, [
-              el('strong', { text: text(item.name, 'Cohort') }),
-              item.status ? el('p', {}, [badge(item.status)]) : null,
+      const visible = limit ? cohorts.slice(0, limit) : cohorts;
+      if (!visible.length) return null;
+      return el('div', { class: 'cohort-grid' }, visible.map(item =>
+        el('article', { class: 'cohort-card' }, [
+          el('div', { class: 'cohort-head' }, [
+            el('div', {}, [
+              el('h3', { text: text(item.name, t('cohort')) }),
+              item.status ? badge(item.status) : null,
               item.what_it_checks ? el('p', { class: 'small', text: text(item.what_it_checks) }) : null
             ]),
-            el('td', { text: text(item.score, 'n/a') }),
-            el('td', {}, [
-              el('p', { text: text(item.verdict, '') }),
-              item.evidence ? el('p', { class: 'small', text: text(item.evidence) }) : null
-            ]),
-            el('td', { text: text(item.next_action, '') })
-          ])))
-        ])
-      ]);
+            el('div', { class: 'cohort-score', text: text(item.score, 'n/a') })
+          ]),
+          item.verdict ? el('p', { text: text(item.verdict, '') }) : null,
+          item.evidence ? el('p', { class: 'small', text: text(item.evidence) }) : null,
+          el('div', { class: 'next' }, [
+            el('span', { class: 'label', text: t('nextAction') }),
+            el('p', { text: text(item.next_action, '') })
+          ])
+        ].filter(Boolean))
+      ));
+    }
+
+    function renderCohorts() {
+      const cards = cohortCards();
+      if (!cards) return null;
+      return section(t('analysisCohorts'), [cards]);
     }
 
     function visualCards(items) {
       const visuals = Array.isArray(items) ? items : [];
-      if (!visuals.length) return el('p', { class: 'empty', text: 'No site screenshots supplied.' });
+      if (!visuals.length) return el('p', { class: 'empty', text: t('noScreenshots') });
       return el('div', { class: 'visual-grid' }, visuals.map(item => {
-        const image = item.path ? el('img', { src: item.path, alt: text(item.label, 'Site screenshot') }) : null;
+        const image = item.path ? el('img', { src: item.path, alt: text(item.label, t('siteScreenshot')) }) : null;
         if (image) {
           image.addEventListener('error', () => {
-            image.replaceWith(el('div', { class: 'screenshot-missing', text: `Screenshot file: ${item.path}` }));
+            image.replaceWith(el('div', { class: 'screenshot-missing', text: `${t('screenshotFile')} ${item.path}` }));
           });
         }
         return el('article', { class: 'visual-card' }, [
           image,
           el('div', {}, [
-            el('h3', { text: text(item.label, 'Site screenshot') }),
-            el('p', { class: 'small', text: `Viewport: ${text(item.viewport, 'unknown')}` }),
+            el('h3', { text: text(item.label, t('siteScreenshot')) }),
+            el('p', { class: 'small', text: `${t('viewport')}: ${text(item.viewport, t('unknown'))}` }),
             list(item.notes)
           ])
         ]);
@@ -437,22 +1056,22 @@ HTML_TEMPLATE = """<!doctype html>
       const first = audit.design_watch || audit.first_impression || audit.visual_verdict || {};
       const visuals = audit.site_visual_evidence || audit.visual_evidence || [];
       if (!Object.keys(first).length && !visuals.length) return null;
-      return section('Design Watch', [
+      return section(t('designWatch'), [
         el('div', { class: 'grid sidebar' }, [
           el('article', { class: 'panel' }, [
             el('div', { class: 'verdict' }, [
               el('div', { class: 'verdict-score', text: text(first.score, 'n/a') }),
               el('div', {}, [
-                el('h3', { text: text(first.verdict, 'Visual verdict unavailable') }),
-                el('p', { text: text(first.summary, 'No visual analysis supplied.') }),
-                first.confidence ? badge(`confidence: ${first.confidence}`) : null
+                el('h3', { text: text(first.verdict, t('visualUnavailable')) }),
+                el('p', { text: text(first.summary, t('noVisual')) }),
+                first.confidence ? badge(`${t('confidence').toLowerCase()}: ${first.confidence}`) : null
               ])
             ]),
-            el('span', { class: 'label', text: 'Observed from screenshots' }),
+            el('span', { class: 'label', text: t('observedScreenshots') }),
             list(first.observed),
-            el('span', { class: 'label', text: 'Implication' }),
+            el('span', { class: 'label', text: t('implication') }),
             list(first.inferred || first.implications),
-            el('span', { class: 'label', text: 'Recommended' }),
+            el('span', { class: 'label', text: t('recommended') }),
             list(first.recommended)
           ]),
           visualCards(visuals)
@@ -460,16 +1079,58 @@ HTML_TEMPLATE = """<!doctype html>
       ]);
     }
 
+    function renderResponsiveStudy() {
+      const study = audit.responsive_study || audit.dynamic_responsive_study || null;
+      if (!study) return section(t('responsiveStudy'), [el('p', { class: 'empty', text: t('noResponsiveStudy') })]);
+      const viewports = Array.isArray(study.viewports) ? study.viewports : [];
+      const summary = study.summary || {};
+      return section(t('responsiveStudy'), [
+        el('div', { class: 'callout' }, [
+          el('p', {}, [
+            summary.status ? badge(summary.status) : null,
+            ' ',
+            text(summary.verdict, '')
+          ]),
+          study.method ? el('p', { class: 'small', text: `${t('method')}: ${displayMethod(study.method)}` }) : null
+        ]),
+        viewports.length ? el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('viewport') }),
+            el('th', { text: t('result') }),
+            el('th', { text: t('observedEvidence') }),
+            el('th', { text: t('issues') })
+          ])]),
+          el('tbody', {}, viewports.map(item => {
+            const metrics = item.metrics || {};
+            const observed = [
+              `${t('pageTitle')}: ${text(metrics.title, t('unknown'))}`,
+              `${t('h1')}: ${asArray(metrics.h1Text).join(' | ') || t('unknown')}`,
+              `${t('horizontalOverflow')}: ${metrics.horizontalOverflow ? t('yes') : t('no')}`,
+              `${t('documentWidth')}: ${text(metrics.scrollWidth, t('unknown'))}px`,
+              `${t('documentHeight')}: ${text(metrics.documentHeight, t('unknown'))}px`,
+              `${t('missingImages')}: ${text(metrics.missingImages, '0')}`
+            ];
+            return el('tr', {}, [
+              el('td', { text: text(item.viewport || item.label, '') }),
+              el('td', {}, [badge(text(item.status, t('unknown')))]),
+              el('td', {}, [list(observed)]),
+              el('td', {}, [list(item.issues)])
+            ]);
+          }))
+        ]) : el('p', { class: 'empty', text: t('noData') })
+      ]);
+    }
+
     function evidenceTable(items) {
       const values = Array.isArray(items) ? items : [];
-      if (!values.length) return el('p', { class: 'empty', text: 'No evidence links provided.' });
+      if (!values.length) return el('p', { class: 'empty', text: t('noEvidence') });
       const rows = values.map(item => el('tr', {}, [
-        el('td', {}, [text(item.label, 'Evidence')]),
+        el('td', {}, [text(item.label, t('evidence'))]),
         el('td', {}, item.url ? [el('a', { href: item.url, text: item.url })] : [text(item.path || item.value || '')]),
         el('td', {}, [item.status ? badge(item.status) : text(item.note || '')])
       ]));
       return el('table', {}, [
-        el('thead', {}, [el('tr', {}, [el('th', { text: 'Label' }), el('th', { text: 'Source' }), el('th', { text: 'Status / note' })])]),
+        el('thead', {}, [el('tr', {}, [el('th', { text: t('label') }), el('th', { text: t('source') }), el('th', { text: t('statusNote') })])]),
         el('tbody', {}, rows)
       ]);
     }
@@ -477,7 +1138,7 @@ HTML_TEMPLATE = """<!doctype html>
     function renderFindings() {
       const findings = Array.isArray(audit.findings) ? audit.findings : [];
       const buttons = ['all', 'P0', 'P1', 'P2'].map(value => {
-        const button = el('button', { text: value === 'all' ? 'All' : value });
+        const button = el('button', { text: value === 'all' ? t('all') : value });
         button.classList.toggle('active', priorityState.value === value);
         button.addEventListener('click', () => {
           priorityState.value = value;
@@ -487,33 +1148,33 @@ HTML_TEMPLATE = """<!doctype html>
       });
       const filtered = findings.filter(f => priorityState.value === 'all' || text(f.priority).toUpperCase() === priorityState.value);
       return el('section', {}, [
-        el('div', { class: 'toolbar' }, [el('h2', { text: 'Priority findings' }), ...buttons]),
+        el('div', { class: 'toolbar' }, [el('h2', { text: t('priorityFindings') }), ...buttons]),
         ...(filtered.length ? filtered.map(finding => {
           const priority = text(finding.priority, 'P1').toUpperCase();
           return el('article', { class: `finding ${priority.toLowerCase()}-border` }, [
-            el('h3', {}, [badge(priority), ' ', text(finding.title, 'Untitled finding')]),
-            el('span', { class: 'label', text: 'Observed' }),
+            el('h3', {}, [badge(priority), ' ', text(finding.title, t('untitledFinding'))]),
+            el('span', { class: 'label', text: t('observed') }),
             list(finding.observed),
-            el('span', { class: 'label', text: 'Inferred' }),
+            el('span', { class: 'label', text: t('inferred') }),
             list(finding.inferred),
-            el('span', { class: 'label', text: 'Recommended' }),
+            el('span', { class: 'label', text: t('recommended') }),
             list(finding.recommended),
-            finding.evidence ? el('details', {}, [el('summary', { text: 'Evidence' }), evidenceTable(finding.evidence)]) : null
+            finding.evidence ? el('details', {}, [el('summary', { text: t('evidence') }), evidenceTable(finding.evidence)]) : null
           ]);
-        }) : [el('p', { class: 'empty', text: 'No findings match this filter.' })])
+        }) : [el('p', { class: 'empty', text: t('noFindings') })])
       ]);
     }
 
     function renderTechnicalSnapshot() {
       const checks = Array.isArray(audit.technical_checks) ? audit.technical_checks : [];
       if (!checks.length) return null;
-      return section('Technical snapshot', [
+      return section(t('technicalSnapshot'), [
         el('table', {}, [
           el('thead', {}, [el('tr', {}, [
-            el('th', { text: 'Area' }),
-            el('th', { text: 'Status' }),
-            el('th', { text: 'Observed evidence' }),
-            el('th', { text: 'Implication' })
+            el('th', { text: t('area') }),
+            el('th', { text: t('status') }),
+            el('th', { text: t('observedEvidence') }),
+            el('th', { text: t('implication') })
           ])]),
           el('tbody', {}, checks.map(item => el('tr', {}, [
             el('td', { text: text(item.area, '') }),
@@ -527,8 +1188,8 @@ HTML_TEMPLATE = """<!doctype html>
 
     function renderPublicMeasurements() {
       const measurements = Array.isArray(audit.public_measurements) ? audit.public_measurements : [];
-      if (!measurements.length) return section('Measurement access', [
-        el('p', { class: 'empty', text: 'No measurement access checks supplied.' })
+      if (!measurements.length) return section(t('measurementAccess'), [
+        el('p', { class: 'empty', text: t('noMeasurement') })
       ]);
       const rows = measurements.map(item => el('tr', {}, [
         el('td', { text: text(item.source, '') }),
@@ -536,13 +1197,13 @@ HTML_TEMPLATE = """<!doctype html>
         el('td', { text: text(item.metric, '') }),
         el('td', { text: text(item.limit, '') })
       ]));
-      return section('Measurement access', [
+      return section(t('measurementAccess'), [
         el('table', {}, [
           el('thead', {}, [el('tr', {}, [
-            el('th', { text: 'Source' }),
-            el('th', { text: 'Access' }),
-            el('th', { text: 'Metric' }),
-            el('th', { text: 'Limit' })
+            el('th', { text: t('source') }),
+            el('th', { text: t('access') }),
+            el('th', { text: t('metric') }),
+            el('th', { text: t('limit') })
           ])]),
           el('tbody', {}, rows)
         ])
@@ -551,15 +1212,15 @@ HTML_TEMPLATE = """<!doctype html>
 
     function renderActionPlan() {
       const actions = Array.isArray(audit.action_plan) ? audit.action_plan : [];
-      if (!actions.length) return section('Action plan', [el('p', { class: 'empty', text: 'No action plan supplied.' })]);
+      if (!actions.length) return section(t('actionPlan'), [el('p', { class: 'empty', text: t('noActionPlan') })]);
       const rows = actions.map(item => el('tr', {}, [
         el('td', { text: text(item.when || item.day || item.priority, '') }),
         el('td', { text: text(item.action, '') }),
         el('td', { text: text(item.outcome || item.metric, '') })
       ]));
-      return section('Action plan', [
+      return section(t('actionPlan'), [
         el('table', {}, [
-          el('thead', {}, [el('tr', {}, [el('th', { text: 'When' }), el('th', { text: 'Action' }), el('th', { text: 'Expected evidence' })])]),
+          el('thead', {}, [el('tr', {}, [el('th', { text: t('when') }), el('th', { text: t('action') }), el('th', { text: t('expectedEvidence') })])]),
           el('tbody', {}, rows)
         ])
       ]);
@@ -567,26 +1228,54 @@ HTML_TEMPLATE = """<!doctype html>
 
     function renderSources() {
       const sources = Array.isArray(audit.sources) ? audit.sources : [];
-      return section('Sources consulted', [
+      return section(t('sourcesConsulted'), [
         sources.length ? el('ul', {}, sources.map(source =>
           el('li', {}, [source.url ? el('a', { href: source.url, text: text(source.label, source.url) }) : text(source.label || source)])
-        )) : el('p', { class: 'empty', text: 'No source list supplied.' })
+        )) : el('p', { class: 'empty', text: t('noSources') })
       ]);
     }
 
-    function render() {
-      app.replaceChildren(...[
-        renderMetrics(),
-        renderScorecards(),
-        renderCohorts(),
-        renderExecutiveBrief(),
+    function renderVisualPage() {
+      return [
         renderFirstImpression(),
-        renderFindings(),
+        renderResponsiveStudy()
+      ].filter(Boolean);
+    }
+
+    function renderFindingsPage() {
+      return [renderFindings()];
+    }
+
+    function renderTechnicalPage() {
+      return [
         renderTechnicalSnapshot(),
-        renderPublicMeasurements(),
+        renderPublicMeasurements()
+      ].filter(Boolean);
+    }
+
+    function renderActionsPage() {
+      return [
         renderActionPlan(),
-        renderSources()
-      ].filter(Boolean));
+        renderCohorts()
+      ].filter(Boolean);
+    }
+
+    function renderSourcesPage() {
+      return [renderSources()];
+    }
+
+    function activePage() {
+      if (uiState.tab === 'visual') return renderVisualPage();
+      if (uiState.tab === 'findings') return renderFindingsPage();
+      if (uiState.tab === 'technical') return renderTechnicalPage();
+      if (uiState.tab === 'actions') return renderActionsPage();
+      if (uiState.tab === 'sources') return renderSourcesPage();
+      return renderOverviewPage();
+    }
+
+    function render() {
+      renderTabs();
+      app.replaceChildren(el('div', { class: 'tab-panel', role: 'tabpanel' }, activePage()));
     }
 
     renderHeader();

@@ -15,6 +15,7 @@ function parseArgs(argv) {
   const args = {
     outputDir: "screenshots",
     evidenceOut: "",
+    studyOut: "",
     url: "",
   };
   for (let i = 0; i < argv.length; i += 1) {
@@ -22,6 +23,7 @@ function parseArgs(argv) {
     if (arg === "--url") args.url = argv[++i];
     else if (arg === "--output-dir") args.outputDir = argv[++i];
     else if (arg === "--evidence-out") args.evidenceOut = argv[++i];
+    else if (arg === "--study-out") args.studyOut = argv[++i];
     else if (arg === "--help" || arg === "-h") {
       usage();
       process.exit(0);
@@ -34,7 +36,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log(`Usage: node scripts/capture_site_screenshots.mjs --url URL --output-dir DIR [--evidence-out site-visual-evidence.json]`);
+  console.log(`Usage: node scripts/capture_site_screenshots.mjs --url URL --output-dir DIR [--evidence-out site-visual-evidence.json] [--study-out responsive-study.json]`);
 }
 
 function detectChrome() {
@@ -120,13 +122,36 @@ async function captureViewport(send, url, viewport, outputPath) {
   await send("Page.navigate", { url });
   await sleep(1400);
   const layout = await send("Runtime.evaluate", {
-    expression: `JSON.stringify({
-      title: document.title,
-      innerWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-      bodyScrollWidth: document.body.scrollWidth,
-      horizontalOverflow: document.documentElement.scrollWidth > innerWidth || document.body.scrollWidth > innerWidth
-    })`,
+    expression: `JSON.stringify((() => {
+      const doc = document.documentElement;
+      const body = document.body || {};
+      const headings = Array.from(document.querySelectorAll("h1"))
+        .map((node) => (node.innerText || node.textContent || "").trim())
+        .filter(Boolean)
+        .slice(0, 5);
+      const navLinks = Array.from(document.querySelectorAll("nav a, [role='navigation'] a, header a"))
+        .map((node) => (node.innerText || node.textContent || "").trim())
+        .filter(Boolean);
+      const images = Array.from(document.images || []);
+      const missingImages = images.filter((img) => !img.complete || img.naturalWidth === 0).length;
+      return {
+        title: document.title,
+        innerWidth,
+        innerHeight,
+        scrollWidth: doc.scrollWidth,
+        bodyScrollWidth: body.scrollWidth || 0,
+        horizontalOverflow: doc.scrollWidth > innerWidth || (body.scrollWidth || 0) > innerWidth,
+        documentHeight: Math.max(doc.scrollHeight, body.scrollHeight || 0),
+        hasViewportMeta: Boolean(document.querySelector("meta[name='viewport']")),
+        h1Count: headings.length,
+        h1Text: headings,
+        navLinkCount: navLinks.length,
+        imageCount: images.length,
+        missingImages,
+        visibleTextLength: (body.innerText || "").trim().length,
+        textSample: (body.innerText || "").trim().replace(/\\s+/g, " ").slice(0, 240)
+      };
+    })())`,
     returnByValue: true,
   });
   const screenshot = await send("Page.captureScreenshot", {
@@ -136,6 +161,42 @@ async function captureViewport(send, url, viewport, outputPath) {
   });
   writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));
   return JSON.parse(layout.result.value);
+}
+
+function analyzeViewport(layout) {
+  const issues = [];
+  if (layout.horizontalOverflow) issues.push("Horizontal overflow detected.");
+  if (!layout.hasViewportMeta) issues.push("Missing viewport meta tag.");
+  if (!layout.title) issues.push("Missing document title.");
+  if (layout.h1Count === 0) issues.push("No visible H1 detected.");
+  if (layout.h1Count > 2) issues.push(`Multiple H1 elements detected (${layout.h1Count}).`);
+  if (layout.missingImages > 0) issues.push(`${layout.missingImages} image(s) did not load.`);
+  if (layout.visibleTextLength < 120) issues.push("Very little visible text detected.");
+  return {
+    status: issues.length ? "warning" : "pass",
+    issues,
+  };
+}
+
+function summarizeStudy(viewports) {
+  const issueCount = viewports.reduce((sum, item) => sum + item.issues.length, 0);
+  const hasMobileOverflow = viewports.some((item) => item.label === "Mobile" && item.metrics.horizontalOverflow);
+  if (issueCount === 0) {
+    return {
+      status: "pass",
+      verdict: "Homepage responds correctly on tested mobile and desktop viewports.",
+    };
+  }
+  if (hasMobileOverflow) {
+    return {
+      status: "warning",
+      verdict: "Homepage has responsive issues on mobile that should be fixed before relying on visual/agent readability.",
+    };
+  }
+  return {
+    status: "warning",
+    verdict: "Homepage renders on tested viewports, but browser evidence found issues to review.",
+  };
 }
 
 async function main() {
@@ -166,9 +227,11 @@ async function main() {
       { label: "Mobile", file: "mobile.png", width: 390, height: 1400, mobile: true },
     ];
     const evidence = [];
+    const responsiveViewports = [];
     for (const viewport of viewports) {
       const outputPath = join(args.outputDir, viewport.file);
       const layout = await captureViewport(send, args.url, viewport, outputPath);
+      const analysis = analyzeViewport(layout);
       evidence.push({
         label: `${viewport.label} screenshot`,
         path: viewport.file,
@@ -179,11 +242,30 @@ async function main() {
           `Document width: ${layout.scrollWidth}px`,
         ],
       });
+      responsiveViewports.push({
+        label: viewport.label,
+        viewport: `${viewport.width}x${viewport.height}`,
+        status: analysis.status,
+        issues: analysis.issues,
+        metrics: layout,
+      });
       console.log(`Wrote ${outputPath}`);
     }
     if (args.evidenceOut) {
       writeFileSync(args.evidenceOut, `${JSON.stringify(evidence, null, 2)}\n`);
       console.log(`Wrote ${args.evidenceOut}`);
+    }
+    if (args.studyOut) {
+      const summary = summarizeStudy(responsiveViewports);
+      const study = {
+        url: args.url,
+        generated_at: new Date().toISOString(),
+        method: "Chrome DevTools fallback; prefer Agent Browser when available",
+        summary,
+        viewports: responsiveViewports,
+      };
+      writeFileSync(args.studyOut, `${JSON.stringify(study, null, 2)}\n`);
+      console.log(`Wrote ${args.studyOut}`);
     }
     socket.close();
   } finally {

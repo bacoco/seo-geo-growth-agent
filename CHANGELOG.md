@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.2 — Mandatory visual reports and localized HTML
+
+### Changed
+
+- Domain/URL audits now default to the visual HTML audit workflow unless the user explicitly asks for chat-only output.
+- The skill now requires `audit.json`, `index.html`, a report URL or path, Design Watch, analysis cohorts, and site screenshot status for normal site audits.
+- Dynamic responsive study now checks at least homepage mobile and desktop rendering, including overflow, title/H1, visible text, image load status, and viewport metadata.
+- Generated reports now use tabbed pages with a stronger executive overview, animated readiness signal, and scannable cohort cards.
+- HTML report labels now follow `report_language`, so reports can be rendered in the language used by the user.
+- Visual audit instructions now require the audit content itself to be written in the user's language.
+
 ## 1.2.1 — Design Watch and analysis cohorts
 
 ### Added

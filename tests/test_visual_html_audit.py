@@ -73,6 +73,29 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                                 "notes": ["No horizontal overflow detected"],
                             }
                         ],
+                        "responsive_study": {
+                            "method": "Chrome DevTools fallback",
+                            "summary": {
+                                "status": "pass",
+                                "verdict": "Homepage responds correctly on tested mobile and desktop viewports.",
+                            },
+                            "viewports": [
+                                {
+                                    "label": "Mobile",
+                                    "viewport": "390x1400",
+                                    "status": "pass",
+                                    "issues": [],
+                                    "metrics": {
+                                        "title": "Example",
+                                        "scrollWidth": 390,
+                                        "documentHeight": 1400,
+                                        "horizontalOverflow": False,
+                                        "h1Text": ["Example"],
+                                        "missingImages": 0,
+                                    },
+                                }
+                            ],
+                        },
                         "public_measurements": [
                             {
                                 "source": "Chrome UX Report",
@@ -111,9 +134,13 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
             self.assertIn("Missing agent-readable package", html)
             self.assertIn("Design Watch", html)
             self.assertIn("Analysis cohorts", html)
+            self.assertIn("tab-shell", html)
+            self.assertIn("Readiness signal", html)
             self.assertIn("Readable but visually under-positioned", html)
             self.assertIn("Clear content, weak first impression", html)
             self.assertIn("site-screenshots/mobile.png", html)
+            self.assertIn("Responsive study", html)
+            self.assertIn("Homepage responds correctly", html)
             self.assertIn("Readiness scores", html)
             self.assertIn("Measurement access", html)
             self.assertIn("Chrome UX Report", html)
@@ -137,6 +164,73 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("Report directory OK", result.stdout)
+
+    def test_generate_html_report_uses_requested_language(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            audit_path = tmp_path / "audit.json"
+            output_dir = tmp_path / "report"
+            audit_path.write_text(
+                json.dumps(
+                    {
+                        "site": "example.fr",
+                        "report_language": "fr",
+                        "summary": {
+                            "headline": "Audit rédigé en français.",
+                            "status": "partiel",
+                            "data_confidence": "moyenne",
+                        },
+                        "analysis_cohorts": [
+                            {
+                                "name": "Design Watch",
+                                "score": "6/10",
+                                "status": "partiel",
+                                "verdict": "Lisible mais perfectible",
+                                "next_action": "Clarifier la première impression",
+                            }
+                        ],
+                        "design_watch": {
+                            "score": "6/10",
+                            "verdict": "Première impression moyenne",
+                            "summary": "La page est lisible.",
+                        },
+                        "responsive_study": {
+                            "summary": {
+                                "status": "pass",
+                                "verdict": "La page d’accueil répond correctement en mobile et desktop.",
+                            },
+                            "viewports": [],
+                        },
+                        "findings": [],
+                        "sources": [],
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts" / "generate_html_audit_report.py"),
+                    "--input",
+                    str(audit_path),
+                    "--output-dir",
+                    str(output_dir),
+                ],
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            html = (output_dir / "index.html").read_text(encoding="utf-8")
+            self.assertIn('document.documentElement.lang = reportLanguage', html)
+            self.assertIn("Synthèse exécutive", html)
+            self.assertIn("Cohortes d’analyse", html)
+            self.assertIn("Étude responsive", html)
+            self.assertIn("Constats prioritaires", html)
+            self.assertIn("Sources consultées", html)
+            self.assertIn("Audit rédigé en français.", html)
 
 
 if __name__ == "__main__":

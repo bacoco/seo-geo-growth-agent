@@ -1,4 +1,4 @@
-{"input":"Use seo-geo-growth-agent to audit this site for SEO and GEO readiness, then rank the P0 fixes.","should_trigger":true,"expected_mode":"audit"}
+{"input":"Use seo-geo-growth-agent to audit this site for SEO and GEO readiness, then rank the P0 fixes.","should_trigger":true,"expected_mode":"visual_html_audit"}
 {"input":"Create a /for-ai page, /for-ai.json, /for-ai.txt, and llms.txt plan for this institutional article.","should_trigger":true,"expected_mode":"for_ai_package"}
 {"input":"Build a bottom-funnel keyword map, content brief, and claim ledger for this product page.","should_trigger":true,"expected_mode":"content_brief"}
 {"input":"Draft a safe robots.txt policy for search crawlers, AI search bots, user-triggered fetchers, and training crawlers.","should_trigger":true,"expected_mode":"crawler_policy"}
@@ -8,6 +8,7 @@
 {"input":"Turn this article into a citation-safe institutional page with facts, limitations, source links, and do-not-extrapolate guidance.","should_trigger":true,"expected_mode":"institutional_article"}
 {"input":"Generate a dynamic SEO/GEO HTML report for this site, serve it locally, capture desktop and mobile screenshots of the site, run Design Watch, and add analysis cohorts.","should_trigger":true,"expected_mode":"visual_html_audit"}
 {"input":"Use the screenshots of deeplearning.fr to score first impression, visual trust, hierarchy, topic fit, and mobile readability.","should_trigger":true,"expected_mode":"design_watch"}
+{"input":"Add a dynamic responsive study for the homepage and tell me if it responds correctly on mobile and desktop with an Agent Browser summary.","should_trigger":true,"expected_mode":"visual_html_audit"}
 {"input":"Apply the GStack and GBrain improvement ideas to the SEO/GEO skill, update evals, and run the installed skill doctor.","should_trigger":true,"expected_mode":"skill_optimization"}
 {"input":"Tell me which traffic, search, AI citation, and visit metrics are publicly accessible versus owner-only for this site.","should_trigger":true,"expected_mode":"public_measurement_access"}
 {"input":"Make the logo bigger in the navbar and change the button color.","should_trigger":false,"expected_mode":"not_seo_geo"}
