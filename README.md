@@ -10,7 +10,23 @@ Search is no longer just a list of blue links. AI assistants now read, summarize
 
 ## Install
 
-For Codex:
+Paste this into Codex or Claude Code:
+
+```text
+Install the SEO + GEO Growth Agent skill from https://github.com/bacoco/seo-geo-growth-agent, then tell me when it is ready to use.
+```
+
+Or run it directly from a CLI:
+
+```bash
+codex "Install the SEO + GEO Growth Agent skill from https://github.com/bacoco/seo-geo-growth-agent"
+```
+
+```bash
+claude "Install the SEO + GEO Growth Agent skill from https://github.com/bacoco/seo-geo-growth-agent"
+```
+
+Manual fallback:
 
 ```bash
 git clone https://github.com/bacoco/seo-geo-growth-agent.git
@@ -18,13 +34,11 @@ cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
 
-For Claude Code:
-
 ```bash
 ./scripts/install.sh claude
 ```
 
-For any custom skills folder:
+For a custom skills folder:
 
 ```bash
 ./scripts/install.sh /absolute/path/to/skills/seo-geo-growth-agent
