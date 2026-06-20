@@ -11,6 +11,7 @@
 {"input":"Add a dynamic responsive study for the homepage and tell me if it responds correctly on mobile and desktop with an Agent Browser summary.","should_trigger":true,"expected_mode":"visual_html_audit"}
 {"input":"Apply the GStack and GBrain improvement ideas to the SEO/GEO skill, update evals, and run the installed skill doctor.","should_trigger":true,"expected_mode":"skill_optimization"}
 {"input":"Tell me which traffic, search, AI citation, and visit metrics are publicly accessible versus owner-only for this site.","should_trigger":true,"expected_mode":"public_measurement_access"}
+{"input":"The audit says the site is missing llms.txt and /for-ai; generate downloadable files I can publish.","should_trigger":true,"expected_mode":"for_ai_package"}
 {"input":"Make the logo bigger in the navbar and change the button color.","should_trigger":false,"expected_mode":"not_seo_geo"}
 {"input":"Write a generic motivational LinkedIn post about productivity.","should_trigger":false,"expected_mode":"not_seo_geo"}
 {"input":"Create a database migration for user accounts.","should_trigger":false,"expected_mode":"not_seo_geo"}

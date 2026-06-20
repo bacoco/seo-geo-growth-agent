@@ -440,6 +440,42 @@ HTML_TEMPLATE = """<!doctype html>
       font-weight: 750;
       color: #344054;
     }
+    .download-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ffffff, #f1fbf5);
+    }
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      color: #fff;
+      background: var(--forest);
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .download-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .download-card {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .download-card strong { display: block; margin-bottom: 4px; }
     @keyframes riseIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
@@ -460,8 +496,9 @@ HTML_TEMPLATE = """<!doctype html>
       }
     }
     @media (max-width: 900px) {
-      .hero, .overview-stage, .grid, .grid.two, .grid.four, .grid.sidebar, .visual-grid, .cohort-grid { grid-template-columns: 1fr; }
+      .hero, .overview-stage, .grid, .grid.two, .grid.four, .grid.sidebar, .visual-grid, .cohort-grid, .download-list, .download-hero { grid-template-columns: 1fr; }
       .meta-box { justify-self: stretch; }
+      .download-button { justify-self: start; }
     }
     @media (max-width: 640px) {
       .wrap { width: calc(100% - 28px); }
@@ -510,6 +547,7 @@ HTML_TEMPLATE = """<!doctype html>
         technical: 'Technical',
         actions: 'Actions',
         sources: 'Sources',
+        downloads: 'Downloads',
         auditCockpit: 'Audit cockpit',
         auditCockpitCopy: 'A fast executive view of what the site needs before deeper SEO/GEO work.',
         readinessSignal: 'Readiness signal',
@@ -587,7 +625,14 @@ HTML_TEMPLATE = """<!doctype html>
         action: 'Action',
         expectedEvidence: 'Expected evidence',
         sourcesConsulted: 'Sources consulted',
-        noSources: 'No source list supplied.'
+        noSources: 'No source list supplied.',
+        aiLayerPackage: 'AI layer package',
+        aiLayerPackageCopy: 'Ready-to-publish files for llms.txt, /for-ai, structured JSON, plain text, and JSON-LD when the audited site is missing an AI-readable layer.',
+        downloadZip: 'Download ZIP',
+        generatedFiles: 'Generated files',
+        file: 'File',
+        purpose: 'Purpose',
+        noDownloads: 'No downloadable AI layer package supplied.'
       },
       fr: {
         noData: 'Aucune donnée fournie.',
@@ -598,6 +643,7 @@ HTML_TEMPLATE = """<!doctype html>
         technical: 'Technique',
         actions: 'Actions',
         sources: 'Sources',
+        downloads: 'Téléchargements',
         auditCockpit: 'Cockpit d’audit',
         auditCockpitCopy: 'Vue dirigeant rapide de ce que le site doit corriger avant d’aller plus loin en SEO/GEO.',
         readinessSignal: 'Signal de préparation',
@@ -675,7 +721,14 @@ HTML_TEMPLATE = """<!doctype html>
         action: 'Action',
         expectedEvidence: 'Preuve attendue',
         sourcesConsulted: 'Sources consultées',
-        noSources: 'Aucune liste de sources fournie.'
+        noSources: 'Aucune liste de sources fournie.',
+        aiLayerPackage: 'Pack couche IA',
+        aiLayerPackageCopy: 'Fichiers prêts à publier pour llms.txt, /for-ai, JSON structuré, texte compact et JSON-LD quand le site audité n’a pas encore de couche lisible par IA.',
+        downloadZip: 'Télécharger le ZIP',
+        generatedFiles: 'Fichiers générés',
+        file: 'Fichier',
+        purpose: 'Rôle',
+        noDownloads: 'Aucun pack couche IA téléchargeable fourni.'
       }
     };
 
@@ -851,6 +904,7 @@ HTML_TEMPLATE = """<!doctype html>
         { id: 'findings', label: t('findingsTab') },
         { id: 'technical', label: t('technical') },
         { id: 'actions', label: t('actions') },
+        { id: 'downloads', label: t('downloads') },
         { id: 'sources', label: t('sources') }
       ];
     }
@@ -1235,6 +1289,34 @@ HTML_TEMPLATE = """<!doctype html>
       ]);
     }
 
+    function renderAiLayerPackage() {
+      const packageData = audit.ai_layer_package || null;
+      if (!packageData) {
+        return section(t('aiLayerPackage'), [el('p', { class: 'empty', text: t('noDownloads') })]);
+      }
+      const files = Array.isArray(packageData.files) ? packageData.files : [];
+      return section(t('aiLayerPackage'), [
+        el('div', { class: 'download-hero' }, [
+          el('div', {}, [
+            el('h3', { text: t('aiLayerPackage') }),
+            el('p', { text: t('aiLayerPackageCopy') }),
+            packageData.status ? badge(packageData.status) : null
+          ].filter(Boolean)),
+          packageData.zip_path ? el('a', { class: 'download-button', href: packageData.zip_path, text: t('downloadZip') }) : null
+        ].filter(Boolean)),
+        el('h3', { text: t('generatedFiles') }),
+        files.length ? el('div', { class: 'download-list' }, files.map(item =>
+          el('article', { class: 'download-card' }, [
+            el('strong', {}, [
+              item.path ? el('a', { href: item.path, text: text(item.label, item.path) }) : text(item.label, t('file'))
+            ]),
+            el('p', { class: 'small', text: text(item.path, '') }),
+            el('p', { text: text(item.purpose, '') })
+          ])
+        )) : el('p', { class: 'empty', text: t('noData') })
+      ]);
+    }
+
     function renderVisualPage() {
       return [
         renderFirstImpression(),
@@ -1264,11 +1346,16 @@ HTML_TEMPLATE = """<!doctype html>
       return [renderSources()];
     }
 
+    function renderDownloadsPage() {
+      return [renderAiLayerPackage()];
+    }
+
     function activePage() {
       if (uiState.tab === 'visual') return renderVisualPage();
       if (uiState.tab === 'findings') return renderFindingsPage();
       if (uiState.tab === 'technical') return renderTechnicalPage();
       if (uiState.tab === 'actions') return renderActionsPage();
+      if (uiState.tab === 'downloads') return renderDownloadsPage();
       if (uiState.tab === 'sources') return renderSourcesPage();
       return renderOverviewPage();
     }

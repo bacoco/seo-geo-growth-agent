@@ -243,6 +243,7 @@ def check_install_script() -> None:
             "runbooks",
             "evals",
             "scripts/generate_html_audit_report.py",
+            "scripts/generate_ai_layer_package.py",
             "scripts/serve_report.py",
             "scripts/capture_site_screenshots.mjs",
             "scripts/skill_doctor.py",

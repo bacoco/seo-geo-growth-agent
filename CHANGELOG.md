@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.3 — Downloadable AI-layer packages
+
+### Added
+
+- Runtime generator for downloadable AI-layer publication packs when a site is missing `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, or aligned JSON-LD.
+- HTML report Downloads tab with ZIP and per-file links for generated AI-layer files.
+- Skill contract, runbook, install protocol, doctor, validation, and routing eval coverage for AI-layer package generation.
+
 ## 1.2.2 — Mandatory visual reports and localized HTML
 
 ### Changed

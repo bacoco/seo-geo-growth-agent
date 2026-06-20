@@ -104,6 +104,22 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                                 "limit": "No visit counts",
                             }
                         ],
+                        "ai_layer_package": {
+                            "status": "generated",
+                            "zip_path": "ai-layer-package.zip",
+                            "files": [
+                                {
+                                    "label": "llms.txt",
+                                    "path": "ai-layer-package/llms.txt",
+                                    "purpose": "Site-level AI assistant index",
+                                },
+                                {
+                                    "label": "/for-ai",
+                                    "path": "ai-layer-package/for-ai/index.html",
+                                    "purpose": "Agent-readable page context",
+                                },
+                            ],
+                        },
                         "sources": [{"label": "Homepage", "url": "https://example.com/"}],
                     },
                     indent=2,
@@ -144,6 +160,9 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
             self.assertIn("Readiness scores", html)
             self.assertIn("Measurement access", html)
             self.assertIn("Chrome UX Report", html)
+            self.assertIn("AI layer package", html)
+            self.assertIn("ai-layer-package.zip", html)
+            self.assertIn("ai-layer-package/llms.txt", html)
 
     def test_serve_report_check_mode_validates_report_directory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

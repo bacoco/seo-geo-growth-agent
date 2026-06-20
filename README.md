@@ -14,23 +14,23 @@ Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.2/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.3/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.2/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.3/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.2/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.3/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.2.2 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.2.3 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -81,6 +81,7 @@ It helps an agent produce:
 - keyword, fan-out, and grounding-query maps;
 - direct-answer and evidence-led content briefs;
 - `/for-ai`, `/for-ai.json`, `/for-ai.txt`, and `llms.txt` structures;
+- downloadable AI-layer packages with `/llms.txt`, `/for-ai`, JSON, TXT, JSON-LD, and an owner install checklist when those files are missing;
 - crawler and robots.txt policy matrices;
 - claim ledgers and citation-safe source registers;
 - tabbed dynamic HTML audit reports with local serving, executive overview, animated readiness signal, responsive mobile/desktop study, site screenshot analysis, Design Watch scoring, and analysis cohorts;
@@ -144,6 +145,7 @@ templates/
 runbooks/
 evals/
 scripts/generate_html_audit_report.py
+scripts/generate_ai_layer_package.py
 scripts/serve_report.py
 scripts/capture_site_screenshots.mjs
 scripts/skill_doctor.py

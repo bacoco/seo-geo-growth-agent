@@ -10,6 +10,8 @@ Produce an evidence-led report that can be opened in a browser:
 reports/<site-slug>/<YYYY-MM-DD>/
 ├── audit.json
 ├── index.html
+├── ai-layer-package.zip
+├── ai-layer-package/
 └── screenshots/
     ├── desktop.png
     └── mobile.png
@@ -57,6 +59,7 @@ Optional:
 - `screenshot_status`
 - `public_measurements[]`
 - `action_plan[]`
+- `ai_layer_package`
 
 ## Workflow
 
@@ -64,7 +67,16 @@ Optional:
 2. Capture desktop and mobile screenshots of the audited URL and run a dynamic responsive study. If this fails, record why in `screenshot_status`.
 3. Analyze the screenshots and write a `design_watch` verdict. Analyze mobile/desktop rendering and write `responsive_study`. If screenshots are unavailable, write lower-confidence blocks based only on rendered/HTML evidence and state the limit.
 4. Convert the audit into `audit.json` in the user's language. Set `report_language` to the language of the user's request.
-5. Generate the dynamic HTML report:
+5. If `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, or aligned JSON-LD are missing or recommended, generate the downloadable AI-layer publication pack:
+
+```bash
+python scripts/generate_ai_layer_package.py \
+  --input reports/<site-slug>/<YYYY-MM-DD>/audit.json \
+  --output-dir reports/<site-slug>/<YYYY-MM-DD> \
+  --update-audit
+```
+
+6. Generate the dynamic HTML report:
 
 ```bash
 python scripts/generate_html_audit_report.py \
@@ -72,7 +84,7 @@ python scripts/generate_html_audit_report.py \
   --output-dir reports/<site-slug>/<YYYY-MM-DD>
 ```
 
-6. Start the local server:
+7. Start the local server:
 
 ```bash
 python scripts/serve_report.py \
@@ -83,7 +95,7 @@ python scripts/serve_report.py \
 
 If the preferred port is busy, the server chooses a nearby free port and prints the URL.
 
-7. When report UI quality is in scope, screenshot the served report itself in
+8. When report UI quality is in scope, screenshot the served report itself in
 desktop and mobile viewports, review the resulting images, and iterate on the
 presentation layer until text hierarchy, spacing, wrapping, tabs, and visual
 evidence are clean.
@@ -103,6 +115,7 @@ Before finalizing, verify that all applicable deliverables exist:
 | `design_watch` | yes |
 | `analysis_cohorts[]` | yes for global reports |
 | `report_language` matching the user's language | yes |
+| downloadable AI-layer package | yes, when AI-readable layers are missing or recommended |
 | report desktop/mobile screenshots | yes, when UI quality is requested |
 
 ## Design Watch From Site Screenshots
@@ -277,6 +290,17 @@ Each cohort should include `name`, `score`, `status`, `what_it_checks`,
       "outcome": "No known server errors in sampled sitemap URLs"
     }
   ],
+  "ai_layer_package": {
+    "status": "generated",
+    "zip_path": "ai-layer-package.zip",
+    "files": [
+      {
+        "label": "llms.txt",
+        "path": "ai-layer-package/llms.txt",
+        "purpose": "Site-level AI assistant index"
+      }
+    ]
+  },
   "sources": [
     {
       "label": "Homepage",
