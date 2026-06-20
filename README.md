@@ -14,6 +14,7 @@ This package merges the **strategy layer** from the Gingiris `gingiris-seo-geo` 
 - Added **earned-media/entity strategy** for authentic third-party sources, review surfaces, directories, community evidence, and brand consistency.
 - Added an **agentic commerce readiness addendum** for ecommerce, local, booking, quote, and product-flow sites.
 - Added a **red-team checklist** against manipulative GEO, fake mentions, thin scaled pages, unsupported stats, and crawler-policy mistakes.
+- Added a plain-English guide to the Ethan Mollick GEO pattern for AI agents and institutional content.
 - Fixed the v1 file tree references to match the actual `references/` and `templates/` directory names.
 
 ## Files
@@ -47,6 +48,7 @@ seo-geo-growth-agent-skill-v2/
 │   ├── 18-agent-experience-ax.md
 │   ├── 19-evidence-based-geo-experiments.md
 │   ├── 20-crawler-policy-matrix.md
+│   ├── 21-mollick-geo-for-ai-agents.md
 │   └── 99-source-register.md
 └── templates/
     ├── agent-experience-audit.md
@@ -86,6 +88,8 @@ seo-geo-growth-agent-skill-v2/
 ## How to use
 
 Place this folder wherever your agent or skill runner expects skills. The important root file is `SKILL.md`.
+
+For a plain-English explanation of GEO through the Ethan Mollick `Co-Existence` case and an institutional article blueprint, read [`references/21-mollick-geo-for-ai-agents.md`](references/21-mollick-geo-for-ai-agents.md).
 
 Example prompts:
 
