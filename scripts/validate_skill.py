@@ -15,14 +15,15 @@ REQUIRED_ROOT_FILES = [
     "SKILL.md",
     "README.md",
     "CHANGELOG.md",
+    "INSTALL_FOR_AGENTS.md",
     "LICENSE",
     "manifest.json",
 ]
 
 INTERNAL_PATH_PATTERN = re.compile(
-    r"(?<![\w./-])((?:references|templates)/[A-Za-z0-9][A-Za-z0-9._/-]*\.[A-Za-z0-9]+)"
+    r"(?<![\w./-])((?:references|templates|runbooks|evals)/[A-Za-z0-9][A-Za-z0-9._/-]*\.[A-Za-z0-9]+)"
 )
-TEXT_SUFFIXES = {".md", ".txt", ".json"}
+TEXT_SUFFIXES = {".md", ".txt", ".json", ".jsonl"}
 
 
 def fail(message: str) -> None:
@@ -69,7 +70,22 @@ def check_manifest_paths(manifest: dict) -> None:
     if not (ROOT / entrypoint).is_file():
         fail(f"manifest entrypoint not found: {entrypoint}")
 
-    for key in ("templates", "references"):
+    install_protocol = manifest.get("install_protocol")
+    if not isinstance(install_protocol, str) or not install_protocol:
+        fail("manifest.install_protocol must be a non-empty string")
+    if not (ROOT / install_protocol).is_file():
+        fail(f"manifest install_protocol not found: {install_protocol}")
+
+    runbooks = manifest.get("runbooks", {})
+    if not isinstance(runbooks, dict):
+        fail("manifest.runbooks must be an object")
+    bootstrap = runbooks.get("bootstrap")
+    if not isinstance(bootstrap, str) or not bootstrap:
+        fail("manifest.runbooks.bootstrap must be a non-empty string")
+    if not (ROOT / bootstrap).is_file():
+        fail(f"manifest runbooks.bootstrap not found: {bootstrap}")
+
+    for key in ("templates", "references", "routing_evals"):
         values = manifest.get(key, [])
         if not isinstance(values, list):
             fail(f"manifest.{key} must be a list")
@@ -81,8 +97,18 @@ def check_manifest_paths(manifest: dict) -> None:
 
 
 def check_manifest_directory_sync(manifest: dict) -> None:
-    for key, dirname in (("templates", "templates"), ("references", "references")):
-        declared = {Path(p).as_posix() for p in manifest.get(key, [])}
+    manifest_runbooks = manifest.get("runbooks", {})
+    declared_runbooks = set(manifest_runbooks.values()) if isinstance(manifest_runbooks, dict) else set()
+
+    sync_targets = (
+        ("templates", "templates", set(manifest.get("templates", []))),
+        ("references", "references", set(manifest.get("references", []))),
+        ("routing_evals", "evals", set(manifest.get("routing_evals", []))),
+        ("runbooks", "runbooks", declared_runbooks),
+    )
+
+    for key, dirname, declared_raw in sync_targets:
+        declared = {Path(p).as_posix() for p in declared_raw}
         actual = {
             p.relative_to(ROOT).as_posix()
             for p in (ROOT / dirname).glob("**/*")
@@ -104,6 +130,37 @@ def check_json_files() -> None:
             json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             fail(f"{rel} is invalid JSON: {exc}")
+
+
+def check_jsonl_files() -> None:
+    for path, rel in repo_files():
+        if path.suffix != ".jsonl":
+            continue
+        lines = path.read_text(encoding="utf-8").splitlines()
+        if not lines:
+            fail(f"{rel} is empty")
+        saw_true = False
+        saw_false = False
+        for index, line in enumerate(lines, start=1):
+            try:
+                data = json.loads(line)
+            except json.JSONDecodeError as exc:
+                fail(f"{rel}:{index} is invalid JSONL: {exc}")
+            for key in ("input", "should_trigger", "expected_mode"):
+                if key not in data:
+                    fail(f"{rel}:{index} is missing required key: {key}")
+            if not isinstance(data["input"], str) or not data["input"].strip():
+                fail(f"{rel}:{index} input must be a non-empty string")
+            if not isinstance(data["should_trigger"], bool):
+                fail(f"{rel}:{index} should_trigger must be boolean")
+            if not isinstance(data["expected_mode"], str) or not data["expected_mode"].strip():
+                fail(f"{rel}:{index} expected_mode must be a non-empty string")
+            saw_true = saw_true or data["should_trigger"]
+            saw_false = saw_false or not data["should_trigger"]
+        if len(lines) < 8:
+            fail(f"{rel} must contain at least 8 routing cases")
+        if not saw_true or not saw_false:
+            fail(f"{rel} must include both positive and negative routing cases")
 
 
 def check_internal_file_references() -> None:
@@ -158,7 +215,16 @@ def check_install_script() -> None:
         if result.returncode != 0:
             fail(f"install smoke test failed:\n{result.stderr.strip() or result.stdout.strip()}")
 
-        for rel in ("SKILL.md", "LICENSE", "manifest.json", "references", "templates"):
+        for rel in (
+            "SKILL.md",
+            "INSTALL_FOR_AGENTS.md",
+            "LICENSE",
+            "manifest.json",
+            "references",
+            "templates",
+            "runbooks",
+            "evals",
+        ):
             if not (safe_dest / rel).exists():
                 fail(f"install smoke test did not copy expected path: {rel}")
         for rel in (".github", ".gitignore", "assets", "scripts"):
@@ -214,6 +280,7 @@ def main() -> None:
     check_manifest_paths(manifest)
     check_manifest_directory_sync(manifest)
     check_json_files()
+    check_jsonl_files()
     check_internal_file_references()
     check_reference_heading_numbers()
     check_install_script()

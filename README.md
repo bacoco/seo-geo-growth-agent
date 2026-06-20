@@ -13,23 +13,24 @@ Search is no longer just a list of blue links. AI assistants now read, summarize
 Paste this into Codex or Claude Code:
 
 ```text
-Install the SEO + GEO Growth Agent skill from https://github.com/bacoco/seo-geo-growth-agent, then tell me when it is ready to use.
+Retrieve and follow the installation instructions at:
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.1.1/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Install the SEO + GEO Growth Agent skill from https://github.com/bacoco/seo-geo-growth-agent"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.1.1/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Install the SEO + GEO Growth Agent skill from https://github.com/bacoco/seo-geo-growth-agent"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.1.1/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.1.1 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -129,10 +130,13 @@ references/21-mollick-geo-for-ai-agents.md
 
 ```text
 SKILL.md
+INSTALL_FOR_AGENTS.md
 manifest.json
 LICENSE
 references/
 templates/
+runbooks/
+evals/
 ```
 
 Repository maintenance files such as `.github/`, `.gitignore`, and validation scripts are not copied into the installed skill folder.
@@ -147,7 +151,7 @@ Before publishing changes to the repo:
 python3 scripts/validate_skill.py
 ```
 
-The validator checks that required files exist, `manifest.json` points to real templates and references, and obvious secret patterns are not present.
+The validator checks required files, manifest paths, internal references, JSON/JSONL files, reference numbering, install smoke tests, backup behavior, and obvious secret patterns.
 
 ## Attribution
 

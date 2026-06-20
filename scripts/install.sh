@@ -61,10 +61,13 @@ fi
 mkdir -p "$DEST"
 
 cp "$ROOT/SKILL.md" "$DEST/"
+cp "$ROOT/INSTALL_FOR_AGENTS.md" "$DEST/"
 cp "$ROOT/LICENSE" "$DEST/"
 cp "$ROOT/manifest.json" "$DEST/"
 cp -R "$ROOT/references" "$DEST/"
 cp -R "$ROOT/templates" "$DEST/"
+cp -R "$ROOT/runbooks" "$DEST/"
+cp -R "$ROOT/evals" "$DEST/"
 
 echo "Installed seo-geo-growth-agent skill to: $DEST"
 echo "Restart your agent session if it does not auto-refresh installed skills."

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1 — Agent-first install and skillpack quality fixtures
+
+### Added
+
+- Agent-readable `INSTALL_FOR_AGENTS.md` protocol for pinned installs.
+- First-use bootstrap runbook for choosing the initial SEO/GEO workflow.
+- Routing eval fixtures for positive and negative trigger cases.
+
+### Changed
+
+- Runtime installs now include the install protocol, runbooks, and eval fixtures.
+- README install path now points agents to a versioned raw protocol.
+- Validation now checks runbook and routing-eval manifest entries.
+
 ## 1.1.0 — Source-led SEO/GEO + agentic readiness update
 
 ### Added

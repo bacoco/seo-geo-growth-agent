@@ -1,8 +1,9 @@
 {
   "name": "seo-geo-growth-agent",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Agent-ready SEO + GEO skill for auditing, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
+  "install_protocol": "INSTALL_FOR_AGENTS.md",
   "license": "MIT",
   "attribution": "Adapted from Gingiris/gingiris-seo-geo and Gingiris/gingiris-seo-geo-agent under the MIT License, Copyright (c) 2026 Gingiris (Iris Wei).",
   "tags": [
@@ -24,6 +25,12 @@
     "agent-friendly-ux",
     "accessibility-tree",
     "agentic-commerce"
+  ],
+  "runbooks": {
+    "bootstrap": "runbooks/bootstrap.md"
+  },
+  "routing_evals": [
+    "evals/routing-eval.jsonl"
   ],
   "templates": [
     "templates/agent-experience-audit.md",
@@ -85,6 +92,7 @@
     "references/19-evidence-based-geo-experiments.md",
     "references/20-crawler-policy-matrix.md",
     "references/21-mollick-geo-for-ai-agents.md",
+    "references/22-agent-first-skillpack-quality.md",
     "references/99-source-register.md"
   ]
 }

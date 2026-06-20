@@ -1,0 +1,11 @@
+{"input":"Use seo-geo-growth-agent to audit this site for SEO and GEO readiness, then rank the P0 fixes.","should_trigger":true,"expected_mode":"audit"}
+{"input":"Create a /for-ai page, /for-ai.json, /for-ai.txt, and llms.txt plan for this institutional article.","should_trigger":true,"expected_mode":"for_ai_package"}
+{"input":"Build a bottom-funnel keyword map, content brief, and claim ledger for this product page.","should_trigger":true,"expected_mode":"content_brief"}
+{"input":"Draft a safe robots.txt policy for search crawlers, AI search bots, user-triggered fetchers, and training crawlers.","should_trigger":true,"expected_mode":"crawler_policy"}
+{"input":"Measure AI search visibility using Search Console, Bing Webmaster Tools, GA4 referrals, server logs, and prompt panels.","should_trigger":true,"expected_mode":"measurement"}
+{"input":"Check whether the checkout and booking flow is readable by browser agents through semantic HTML and the accessibility tree.","should_trigger":true,"expected_mode":"agent_experience"}
+{"input":"Red-team this GEO plan for fake citations, hidden prompts, unsupported claims, and spam risk.","should_trigger":true,"expected_mode":"risk_red_team"}
+{"input":"Turn this article into a citation-safe institutional page with facts, limitations, source links, and do-not-extrapolate guidance.","should_trigger":true,"expected_mode":"institutional_article"}
+{"input":"Make the logo bigger in the navbar and change the button color.","should_trigger":false,"expected_mode":"not_seo_geo"}
+{"input":"Write a generic motivational LinkedIn post about productivity.","should_trigger":false,"expected_mode":"not_seo_geo"}
+{"input":"Create a database migration for user accounts.","should_trigger":false,"expected_mode":"not_seo_geo"}

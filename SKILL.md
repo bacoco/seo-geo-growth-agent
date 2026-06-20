@@ -1,7 +1,7 @@
 ---
 name: seo-geo-growth-agent
 description: |-
-  SEO + GEO Growth Agent Skill v1.1. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
+  SEO + GEO Growth Agent Skill v1.1.1. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
   Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
 ---
 
@@ -27,6 +27,10 @@ Use this skill whenever the user asks to:
 - produce daily/weekly/monthly SEO reports from Google Search Console, GA4, Bing Webmaster Tools, DataForSEO, Ahrefs, Semrush, SerpApi, server logs, or supplied CSV exports;
 - run an “SEO agent”, “SEO patrol”, “GEO patrol”, “AI visibility patrol”, or autonomous daily operating loop;
 - make a site more usable by browser agents through semantic HTML, accessibility tree clarity, stable UI, and machine-readable commerce or booking flows.
+
+## First-use bootstrap
+
+If this skill was just installed, or the user asks how to start, read `runbooks/bootstrap.md` before producing work. Use it to choose one starting mode: audit, `/for-ai` package, content brief, or crawler and measurement policy.
 
 ## Non-negotiable guardrails
 
@@ -324,6 +328,7 @@ Use the files in `references/` for the full workflow:
 - `references/19-evidence-based-geo-experiments.md`
 - `references/20-crawler-policy-matrix.md`
 - `references/21-mollick-geo-for-ai-agents.md`
+- `references/22-agent-first-skillpack-quality.md`
 - `references/99-source-register.md`
 
 Use the files in `templates/` for copy-paste outputs and CSV trackers:
@@ -363,3 +368,5 @@ Use the files in `templates/` for copy-paste outputs and CSV trackers:
 - `templates/server-log-ai-bot-audit.md`
 - `templates/source-led-deepresearch.md`
 - `templates/weekly-report.md`
+
+Use `runbooks/bootstrap.md` for first project onboarding. Use `evals/routing-eval.jsonl` as the routing contract for future validator or host-level skill discovery tests.
