@@ -1,0 +1,8 @@
+{
+  "host": "[DOMAIN]",
+  "key": "[INDEXNOW_KEY]",
+  "keyLocation": "https://[DOMAIN]/[INDEXNOW_KEY].txt",
+  "urlList": [
+    "https://[DOMAIN]/[CANONICAL_PATH]"
+  ]
+}

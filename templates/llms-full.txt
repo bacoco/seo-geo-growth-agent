@@ -1,0 +1,51 @@
+# Example llms-full.txt
+
+> Optional machine-readable long-form site summary for agents or internal retrieval workflows.
+> Do not treat this as a Google Search ranking or Google AI Overview requirement.
+> Keep this file consistent with public, crawlable HTML.
+
+# Example Site
+
+Base URL: https://example.com
+Last updated: 2026-06-20
+
+## Product / organization summary
+
+[Short, factual summary of the organization, product, audience, and use cases.]
+
+## Canonical pages
+
+- Homepage: https://example.com/
+- Pricing: https://example.com/pricing
+- Docs: https://example.com/docs
+- Comparisons: https://example.com/compare
+- Contact: https://example.com/contact
+
+## Product facts
+
+| Fact | Value | Source page | Last verified |
+|---|---|---|---|
+| Category | | | |
+| Pricing model | | | |
+| Primary audience | | | |
+| Integrations | | | |
+
+## Important content index
+
+### Category / BOFU pages
+
+- [Page title](https://example.com/page) — one sentence summary.
+
+### Docs / support
+
+- [Page title](https://example.com/docs/page) — one sentence summary.
+
+### Research / data
+
+- [Report title](https://example.com/research/report) — methodology and date.
+
+## Usage notes
+
+- Respect robots.txt and page-level access controls.
+- Do not use stale facts without checking the canonical source page.
+- Do not infer unsupported claims from this summary.

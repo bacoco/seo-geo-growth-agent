@@ -1,0 +1,54 @@
+# robots.txt template — review crawler policy before deploying
+# Goal example: allow public search/AI-search discovery, optionally restrict model-training crawlers.
+# Verify current crawler names and official IP/rDNS/WAF guidance before production deployment.
+
+User-agent: *
+Allow: /
+
+# Traditional search crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: bingbot
+Allow: /
+
+# OpenAI
+# OAI-SearchBot: search/discovery for ChatGPT Search-style experiences.
+User-agent: OAI-SearchBot
+Allow: /
+
+# ChatGPT-User: user-triggered fetches/actions.
+User-agent: ChatGPT-User
+Allow: /
+
+# GPTBot: model-training crawler. Owner/legal decision.
+User-agent: GPTBot
+Disallow: /
+
+# Perplexity
+# PerplexityBot: search/discovery.
+User-agent: PerplexityBot
+Allow: /
+
+# Perplexity-User: user-triggered fetches/actions.
+User-agent: Perplexity-User
+Allow: /
+
+# Anthropic
+# Claude-SearchBot: search/discovery quality.
+User-agent: Claude-SearchBot
+Allow: /
+
+# Claude-User: user-triggered fetches/actions.
+User-agent: Claude-User
+Allow: /
+
+# ClaudeBot: model-training crawler. Owner/legal decision.
+User-agent: ClaudeBot
+Disallow: /
+
+# Google-Extended: Google AI product/model improvement control, separate from Googlebot indexing.
+User-agent: Google-Extended
+Disallow: /
+
+Sitemap: https://[DOMAIN]/sitemap.xml

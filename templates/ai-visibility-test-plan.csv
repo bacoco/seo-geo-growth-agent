@@ -1,0 +1,1 @@
+date,market,engine,prompt_family,prompt,target_brand,target_url,expected_answer_fact,run_id,search_triggered,brand_mentioned,domain_cited,cited_url,citation_position,selection_score,absorption_score,support_quality,competitor_domains,accuracy_notes,followup_action,confidence

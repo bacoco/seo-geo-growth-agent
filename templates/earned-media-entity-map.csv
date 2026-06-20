@@ -1,0 +1,2 @@
+entity_name,entity_type,canonical_description,owned_url,third_party_surface,third_party_url,status,consistency_issue,action,owner,last_checked
+Example Product,Product,"Short consistent category description",https://example.com,GitHub,https://github.com/example/repo,live,,update README description,marketing,2026-06-20

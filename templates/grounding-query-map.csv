@@ -1,0 +1,2 @@
+grounding_query,source,bing_cited_page,current_citation_count,related_keyword_cluster,user_intent,page_gap,recommended_fix,owner,status
+example grounding phrase,Bing AI Performance,https://example.com/page,5,example cluster,compare options,missing evidence table,add comparison/claim ledger,content,planned

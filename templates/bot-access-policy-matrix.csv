@@ -1,0 +1,12 @@
+vendor,crawler_or_control,type,desired_setting,robots_rule,ip_or_rdns_verification_required,owner_reason,last_verified,notes
+OpenAI,OAI-SearchBot,ai_search_discovery,allow,Allow: /,yes,Eligible for ChatGPT Search discovery,,Verify official docs
+OpenAI,GPTBot,model_training,owner_decision,Allow or Disallow,yes,Training policy,,Verify official docs
+OpenAI,ChatGPT-User,user_triggered_agent,owner_decision,Allow or Disallow,yes,User-directed fetches,,Verify official docs
+Perplexity,PerplexityBot,ai_search_discovery,allow,Allow: /,yes,Perplexity search visibility,,Verify official docs
+Perplexity,Perplexity-User,user_triggered_agent,owner_decision,Allow or Disallow,yes,User-directed fetches,,Verify official docs
+Anthropic,ClaudeBot,model_training,owner_decision,Allow or Disallow,yes,Training policy,,Verify official docs
+Anthropic,Claude-SearchBot,ai_search_discovery,allow,Allow: /,yes,Claude search visibility,,Verify official docs
+Anthropic,Claude-User,user_triggered_agent,owner_decision,Allow or Disallow,yes,User-directed fetches,,Verify official docs
+Google,Googlebot,traditional_search,allow,Allow: /,rDNS,Google Search eligibility,,Verify official docs
+Google,Google-Extended,ai_training_product_improvement_control,owner_decision,Allow or Disallow,n/a,Google AI product improvement policy,,Verify official docs
+Bing,bingbot,traditional_search_ai_discovery,allow,Allow: /,rDNS/IP,Search and Microsoft AI discovery,,Verify official docs

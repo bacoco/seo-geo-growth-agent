@@ -1,0 +1,12 @@
+crawler,vendor,category,default_policy,robots_user_agent,official_doc,ip_verification_url,allowed_paths,disallowed_paths,waf_rule,status_code_observed,last_log_check,owner_decision,notes
+OAI-SearchBot,OpenAI,search-index,allow-if-ChatGPT-search-visibility-desired,OAI-SearchBot,https://developers.openai.com/api/docs/bots,,,/, ,monitor,,,
+GPTBot,OpenAI,training,owner-choice,GPTBot,https://developers.openai.com/api/docs/bots,,, ,/,monitor,,,
+ChatGPT-User,OpenAI,user-triggered,owner-choice,ChatGPT-User,https://developers.openai.com/api/docs/bots,,,/, ,monitor,,,
+PerplexityBot,Perplexity,search-index,allow-if-Perplexity-visibility-desired,PerplexityBot,https://docs.perplexity.ai/docs/resources/perplexity-crawlers,https://www.perplexity.com/perplexitybot.json,,/, ,monitor,,,
+Perplexity-User,Perplexity,user-triggered,owner-choice,Perplexity-User,https://docs.perplexity.ai/docs/resources/perplexity-crawlers,https://www.perplexity.com/perplexitybot.json,,/, ,monitor,,,
+ClaudeBot,Anthropic,training,owner-choice,ClaudeBot,https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler,,, ,/,monitor,,,
+Claude-SearchBot,Anthropic,search-index,allow-if-Claude-search-visibility-desired,Claude-SearchBot,https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler,,,/, ,monitor,,,
+Claude-User,Anthropic,user-triggered,owner-choice,Claude-User,https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler,,,/, ,monitor,,,
+Googlebot,Google,search-index,allow,Googlebot,https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers,,,/, ,monitor,,,
+Google-Extended,Google,ai-use-control,owner-choice,Google-Extended,https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers,,, ,/,monitor,,,
+bingbot,Microsoft,search-index,allow,bingbot,https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a,,,/, ,monitor,,,

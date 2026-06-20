@@ -1,55 +1,68 @@
 # 00 — Owner Setup
 
-Before running the SEO/GEO agent, define the business, conversion goal, measurement access, and risk limits.
+Before the agent can operate, collect the project variables and access boundaries.
 
-## Required owner inputs
+## Project variables
 
-| Field | Why it matters |
-|---|---|
-| Product / domain | Establishes entity and site scope |
-| Primary CTA | Prevents traffic-only SEO |
-| Market / language | Changes query intent and SERP sources |
-| Competitors | Seeds BOFU and comparison opportunities |
-| CMS / stack | Determines implementation path |
-| GSC / GA4 / Bing access | Enables measurement and prioritization |
-| Server logs / WAF access | Enables crawler and AI bot audit |
-| Legal / compliance limits | Prevents unsafe claims |
+| Variable | Value | Notes |
+|---|---:|---|
+| Product / brand | `[PRODUCT]` | Exact spelling and casing |
+| Domain | `[DOMAIN]` | Primary canonical domain |
+| Market/language | `[MARKET]` | Example: `US-en`, `FR-fr`, `Global-en` |
+| Category | `[CATEGORY]` | The entity/category AI engines should understand |
+| Audience | `[AUDIENCE]` | Buyer/user/persona |
+| CTA goal | `[CTA_GOAL]` | Signup, trial, demo, contact, purchase |
+| CTA URL | `[CTA_URL]` | Must be live and UTM-safe |
+| Competitors | `[COMPETITORS]` | 3–10 alternatives |
+| Blog/docs path | `[CONTENT_PATHS]` | `/blog`, `/docs`, `/resources`, etc. |
+| Sitemap URL | `[SITEMAP_URL]` | Usually `https://[DOMAIN]/sitemap.xml` |
+| Brand voice | `[VOICE]` | Founder-led, technical, formal, casual, etc. |
 
-## Initial setup checklist
+## Owner-only checklist
 
-- [ ] Confirm canonical domain and protocol.
-- [ ] Confirm sitemap location.
-- [ ] Confirm robots.txt location.
-- [ ] Confirm GSC property type and access.
-- [ ] Confirm GA4 property and conversion events.
-- [ ] Confirm Bing Webmaster Tools access, if available.
-- [ ] Confirm rank-tracking or SERP API access, if available.
-- [ ] Confirm AI-search tracking method, if available.
-- [ ] Confirm conversion path and owner.
-- [ ] Confirm content owner and publishing workflow.
-- [ ] Confirm dev owner for technical fixes.
-- [ ] Confirm whether the site has ecommerce, booking, quote, or checkout flows that agents may need to operate.
+The agent should not pretend to complete these if it lacks access.
 
-## Minimum measurement events
+### Search and analytics
 
-For most commercial sites, track:
+- [ ] Add and verify `[DOMAIN]` in Google Search Console.
+- [ ] Submit sitemap in Google Search Console.
+- [ ] Create or confirm GA4 property and web stream.
+- [ ] Define `[CTA_GOAL]` as a GA4 conversion event.
+- [ ] Create an AI-source exploration/report or channel group in GA4.
+- [ ] Export or connect GSC query/page data.
+- [ ] Export or connect GA4 landing-page and conversion data.
 
-- page view;
-- CTA click;
-- form start;
-- form submit;
-- signup;
-- demo booking;
-- purchase / checkout completed;
-- GitHub star, package install, docs signup, or download for OSS/docs products;
-- AI referral source where detectable.
+### Technical access
 
-## Data confidence labels
+- [ ] Confirm the website is live and canonical domain redirects correctly.
+- [ ] Confirm CMS/repo access for page updates.
+- [ ] Confirm deployment pipeline.
+- [ ] Confirm robots.txt and sitemap.xml can be edited.
+- [ ] Confirm schema/JSON-LD can be inserted.
+- [ ] Confirm redirects/canonicals can be modified.
 
-Use:
+### SEO/GEO data sources
 
-- `High`: direct platform data, logs, or verified crawl.
-- `Medium`: partial export, sampled data, or inferred from multiple consistent sources.
-- `Low`: public-only audit or no direct measurement access.
+- [ ] Choose a keyword/rank data source.
+- [ ] Confirm whether AI Overview or SERP-feature data is available.
+- [ ] Confirm whether crawl data is available.
+- [ ] Confirm whether competitor rank/backlink data is available.
 
-Never present inferred data as measured data.
+### Product truth sources
+
+- [ ] Approved product description.
+- [ ] Pricing and packaging facts.
+- [ ] Feature list and limitations.
+- [ ] Customer proof, case studies, numbers, testimonials.
+- [ ] Legal/compliance claims that need approval.
+- [ ] Competitor-claim approval process.
+
+## Agent handoff prompt
+
+```text
+You are the SEO/GEO Growth Agent for [PRODUCT]. Use the attached skill package.
+Your north-star is qualified organic visibility that leads to [CTA_GOAL].
+Start with a baseline audit, create the keyword-to-page map, identify P0 fixes,
+and produce the first 7-day execution plan. Do not invent missing metrics; mark
+unknowns and list owner tasks.
+```

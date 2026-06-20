@@ -1,0 +1,1 @@
+(?i)(chatgpt|searchgpt|openai|oai|perplexity|claude|anthropic|copilot|bing.*chat|gemini|bard|deepseek|qwen|poe|you\.com|phind|kagi|mistral|lechat|meta\.ai|grok|x\.com.*grok|pi\.ai|inflection|cohere|openrouter|together\.ai|fireworks\.ai)
