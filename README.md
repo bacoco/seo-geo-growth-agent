@@ -1,12 +1,12 @@
-# SEO + GEO Growth Agent Skill v1.1
+# SEO + GEO Growth Agent
 
-A combined SEO/GEO skill package for auditing, planning, and operating a search growth workflow across traditional search engines, AI answer engines, and emerging browser/commerce agents.
+Make your AI agent turn any website or institutional page into content that search engines can crawl, AI systems can understand, and assistants can cite without inventing facts.
 
-This package merges the **strategy layer** from the Gingiris `gingiris-seo-geo` dataset with the **execution SOP layer** from `gingiris-seo-geo-agent`, then adds practical output formats, measurement guardrails, and research-derived cautions about AI-search claims.
+Search is no longer just a list of blue links. AI assistants now read, summarize, compare, recommend, and sometimes act. This skill gives your agent a reusable operating system for that new layer: SEO fundamentals, GEO structure, agent-facing pages, crawler policy, measurement, templates, and hard guardrails against fake metrics or manipulative prompt tricks.
 
 ## Install
 
-Clone and install for Codex:
+For Codex:
 
 ```bash
 git clone https://github.com/bacoco/seo-geo-growth-agent.git
@@ -14,151 +14,123 @@ cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
 
-Install for Claude Code:
+For Claude Code:
 
 ```bash
 ./scripts/install.sh claude
 ```
 
-Install to a custom skill directory:
+For any custom skills folder:
 
 ```bash
 ./scripts/install.sh /absolute/path/to/skills/seo-geo-growth-agent
 ```
 
-Validate the repository before publishing changes:
+Then restart your agent session if installed skills are not auto-refreshed.
+
+## Use It
+
+```text
+Use seo-geo-growth-agent to audit this site for SEO/GEO and rank the P0 fixes.
+```
+
+```text
+Create a /for-ai page, /for-ai.json, and llms.txt plan for this institutional article.
+```
+
+```text
+Build a BOFU keyword map, claim ledger, and content brief for this product.
+```
+
+```text
+Write a safe robots.txt policy for search crawlers, AI search bots, user-triggered fetchers, and training crawlers.
+```
+
+## What It Solves
+
+Most SEO playbooks stop at humans and Google. Most GEO advice is vague, hype-heavy, or dangerously close to prompt injection.
+
+This skill solves the practical problem: how to publish content that is simultaneously useful to people, crawlable by search engines, readable by AI agents, and safe to cite.
+
+It helps an agent produce:
+
+- search and AI-readiness audits;
+- keyword, fan-out, and grounding-query maps;
+- direct-answer and evidence-led content briefs;
+- `/for-ai`, `/for-ai.json`, `/for-ai.txt`, and `llms.txt` structures;
+- crawler and robots.txt policy matrices;
+- claim ledgers and citation-safe source registers;
+- daily and weekly SEO/GEO reports;
+- agent-readiness checks for DOM, accessibility tree, checkout, booking, and action flows.
+
+## Why This One
+
+It is opinionated where it matters and flexible where it should be.
+
+- **No fake data:** unknown metrics stay unknown.
+- **No hidden prompts:** agent-facing pages explain; they do not manipulate.
+- **No SEO spam:** no fake authority, fake citations, fake reviews, doorway pages, or decorative schema.
+- **Reusable templates:** every recommendation can become a file, table, checklist, or operating routine.
+- **Agent-aware:** it treats AI systems as readers, recommenders, citation engines, and action intermediaries.
+- **Verifiable:** the repository ships with a validation script and CI workflow.
+
+## The Core Pattern
+
+For important pages, the skill encourages a layered publication model:
+
+```text
+/article-or-page
+/article-or-page/for-ai
+/article-or-page/for-ai.json
+/article-or-page/for-ai.txt
+/llms.txt
+JSON-LD in the HTML
+```
+
+The human page persuades and informs. The agent page clarifies context, fit, limits, and citation guidance. The JSON and TXT versions reduce ambiguity. `llms.txt` gives assistants a site map. JSON-LD keeps standard structured data aligned with visible content.
+
+## Make It Yours
+
+After installing, start with:
+
+1. `templates/owner-checklist.md` to collect access, sources, and constraints.
+2. `templates/content-brief.md` for the first strategic page.
+3. `templates/for-ai-page.md` and `templates/for-ai-json.json` for agent-facing content.
+4. `templates/agent-interpretation-test.md` to test whether AI models preserve facts and limits.
+5. `templates/claim-ledger.csv` to stop unsupported claims before they ship.
+
+For the GEO idea behind `/for-ai`, read:
+
+```text
+references/21-mollick-geo-for-ai-agents.md
+```
+
+## What Gets Installed
+
+`scripts/install.sh` copies only the runtime skill package:
+
+```text
+SKILL.md
+manifest.json
+LICENSE
+references/
+templates/
+```
+
+Repository maintenance files such as `.github/`, `.gitignore`, and validation scripts are not copied into the installed skill folder.
+
+## Validate Changes
+
+Before publishing changes to the repo:
 
 ```bash
 python3 scripts/validate_skill.py
 ```
 
-The install script copies only the runtime skill package: `SKILL.md`, `manifest.json`, `LICENSE`, `references/`, and `templates/`. Repository files such as `.github/`, `.gitignore`, and validation scripts stay outside the installed skill folder.
-
-## What changed in v1.1
-
-- Added a **source-led research policy** so official platform docs outrank hype, GitHub experiments, and Reddit claims.
-- Added an **AI crawler policy module** that separates search/indexing bots, training bots, user-triggered fetchers, and ads/validation bots.
-- Added **agent-friendly UX checks** for DOM, accessibility tree, semantic controls, stable layouts, labels, and checkout/booking flows.
-- Added **AI-search measurement v2** covering Google Search Console generative AI impressions, Bing Webmaster Tools AI Performance, GA4 AI referrals, server logs, and fixed prompt panels.
-- Added a **claim ledger and citability framework** so statistics, comparisons, and “best” claims are visible, sourced, and safe to quote.
-- Added **earned-media/entity strategy** for authentic third-party sources, review surfaces, directories, community evidence, and brand consistency.
-- Added an **agentic commerce readiness addendum** for ecommerce, local, booking, quote, and product-flow sites.
-- Added a **red-team checklist** against manipulative GEO, fake mentions, thin scaled pages, unsupported stats, and crawler-policy mistakes.
-- Added a plain-English guide to the Ethan Mollick GEO pattern for AI agents and institutional content.
-- Added reusable `/for-ai`, `/for-ai.json`, and agent interpretation test templates.
-- Fixed the v1 file tree references to match the actual `references/` and `templates/` directory names.
-
-## Files
-
-```text
-seo-geo-growth-agent-skill-v2/
-├── SKILL.md
-├── README.md
-├── CHANGELOG.md
-├── LICENSE
-├── manifest.json
-├── scripts/
-│   ├── install.sh
-│   └── validate_skill.py
-├── references/
-│   ├── 00-owner-setup.md
-│   ├── 01-keyword-funnel.md
-│   ├── 02-technical-seo-geo.md
-│   ├── 03-content-production-sop.md
-│   ├── 04-operations-sop.md
-│   ├── 05-measurement.md
-│   ├── 06-schema-templates.md
-│   ├── 07-local-seo-addendum.md
-│   ├── 08-source-led-research-policy.md
-│   ├── 09-ai-crawler-policy.md
-│   ├── 10-agent-friendly-ux.md
-│   ├── 11-ai-search-measurement-v2.md
-│   ├── 12-citability-and-claim-ledger.md
-│   ├── 13-earned-media-entity-strategy.md
-│   ├── 14-agentic-commerce-readiness.md
-│   ├── 15-risk-red-team.md
-│   ├── 16-deep-research-upgrades-2026.md
-│   ├── 17-ai-search-controls-measurement.md
-│   ├── 18-agent-experience-ax.md
-│   ├── 19-evidence-based-geo-experiments.md
-│   ├── 20-crawler-policy-matrix.md
-│   ├── 21-mollick-geo-for-ai-agents.md
-│   └── 99-source-register.md
-└── templates/
-    ├── agent-experience-audit.md
-    ├── agent-readiness-audit.md
-    ├── agent-interpretation-test.md
-    ├── agentic-commerce-checklist.md
-    ├── ai-citation-audit.md
-    ├── ai-crawler-policy-matrix.csv
-    ├── ai-feature-control-decision-matrix.md
-    ├── ai-visibility-test-plan.csv
-    ├── article-outline.md
-    ├── bing-ai-performance-report.md
-    ├── bot-access-policy-matrix.csv
-    ├── claim-ledger.csv
-    ├── comparison-page-outline.md
-    ├── content-brief.md
-    ├── daily-report.md
-    ├── earned-media-entity-map.csv
-    ├── evidence-container-scorecard.csv
-    ├── for-ai-json.json
-    ├── for-ai-page.md
-    ├── ga4-ai-source-regex.txt
-    ├── geo-red-team-checklist.md
-    ├── grounding-query-map.csv
-    ├── gsc-generative-ai-report.md
-    ├── indexnow-request.json
-    ├── keyword-map.csv
-    ├── llms-full.txt
-    ├── llms-generation-checklist.md
-    ├── llms.txt
-    ├── owner-checklist.md
-    ├── query-fanout-map.csv
-    ├── robots-ai-selective.txt
-    ├── robots-ai.txt
-    ├── server-log-ai-bot-audit.md
-    ├── source-led-deepresearch.md
-    └── weekly-report.md
-```
-
-## How to use
-
-Place this folder wherever your agent or skill runner expects skills. The important root file is `SKILL.md`.
-
-For a plain-English explanation of GEO through the Ethan Mollick `Co-Existence` case and an institutional article blueprint, read [`references/21-mollick-geo-for-ai-agents.md`](references/21-mollick-geo-for-ai-agents.md).
-
-Example prompts:
-
-```text
-Audit my SaaS site for SEO/GEO and rank the P0 fixes.
-Run today's SEO/GEO patrol from this GSC export and GA4 export.
-Build a BOFU keyword map and query fan-out map for my product and competitors.
-Create a comparison page brief for [Product] vs [Competitor] with a claim ledger.
-Generate JSON-LD for this article, but only for visible content.
-Write a robots.txt policy that allows AI search crawlers but blocks training crawlers where possible.
-Audit whether my checkout flow is agent-friendly from DOM/accessibility-tree signals.
-Use Bing AI Performance and Google generative AI impressions to prioritize pages.
-```
-
-## Data rules
-
-The skill is intentionally strict about data quality. It should not invent rankings, traffic, conversions, citations, impressions, or AI visibility. If Search Console, GA4, Bing Webmaster Tools, server logs, DataForSEO, or another source is not available, it should say so and produce a best-effort checklist instead of fake metrics.
-
-## Important cautions
-
-- For Google Search generative AI surfaces, treat GEO as SEO fundamentals plus stronger content usefulness, crawlability, and technical clarity. Do not sell `llms.txt`, chunking, or “AI-only writing” as Google visibility hacks.
-- `llms.txt` and `llms-full.txt` are optional artifacts for non-Google agents, docs workflows, or internal retrieval. They are not a substitute for crawlable HTML.
-- Crawler names, IP lists, WAF policies, and AI-search reports change. Verify official docs before deploying production robots.txt or firewall changes.
-- Reddit and GitHub are useful for discovering pain points and tool ideas; they are not proof that a tactic works.
+The validator checks that required files exist, `manifest.json` points to real templates and references, and obvious secret patterns are not present.
 
 ## Attribution
 
-Adapted from:
-
-- `Gingiris/gingiris-seo-geo`
-- `Gingiris/gingiris-seo-geo-agent`
+Adapted from `Gingiris/gingiris-seo-geo` and `Gingiris/gingiris-seo-geo-agent`.
 
 Original source license: MIT License, Copyright (c) 2026 Gingiris (Iris Wei).
-
-This derived package preserves the MIT license notice and adds new structure, guardrails, and templates.
