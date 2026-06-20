@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.2 — Agent-safe temporary install path
+
+### Changed
+
+- Replaced the agent install protocol's fixed `/tmp` cleanup command with a `mktemp -d` workspace, so stricter agent harnesses do not reject the setup as destructive.
+
 ## 1.1.1 — Agent-first install and skillpack quality fixtures
 
 ### Added

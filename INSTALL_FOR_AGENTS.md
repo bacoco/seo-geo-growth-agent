@@ -17,9 +17,9 @@ If both Codex and Claude Code are present and the user did not specify a host, a
 ## Step 2: Clone The Stable Release
 
 ```bash
-rm -rf /tmp/seo-geo-growth-agent-install
-git clone --depth 1 --branch v1.1.1 https://github.com/bacoco/seo-geo-growth-agent.git /tmp/seo-geo-growth-agent-install
-cd /tmp/seo-geo-growth-agent-install
+INSTALL_TMP="$(mktemp -d)"
+git clone --depth 1 --branch v1.1.2 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
+cd "$INSTALL_TMP/seo-geo-growth-agent"
 ```
 
 If the tag is unavailable, stop and tell the user. Do not silently install from an unpinned branch unless the user explicitly approves it.

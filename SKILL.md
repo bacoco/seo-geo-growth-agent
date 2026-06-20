@@ -1,7 +1,7 @@
 ---
 name: seo-geo-growth-agent
 description: |-
-  SEO + GEO Growth Agent Skill v1.1.1. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
+  SEO + GEO Growth Agent Skill v1.1.2. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
   Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
 ---
 

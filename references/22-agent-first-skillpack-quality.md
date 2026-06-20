@@ -9,7 +9,7 @@ These patterns are adapted as original guidance after reviewing Garry Tan's `gst
 | Pattern | Why it matters here | Local implementation |
 |---|---|---|
 | Agent-first install | The fastest user path is a sentence pasted into Codex or Claude Code, not a developer README | `INSTALL_FOR_AGENTS.md` and README raw URL |
-| Pinned install | Installing from a moving branch makes adoption hard to reproduce | versioned Git tags such as `v1.1.1` |
+| Pinned install | Installing from a moving branch makes adoption hard to reproduce | versioned Git tags such as `v1.1.2` |
 | Bootstrap runbook | After installation, the agent needs a first useful action, not a file list | `runbooks/bootstrap.md` |
 | Routing evals | A skill should prove which requests trigger it and which do not | `evals/routing-eval.jsonl` |
 | Thin harness, fat skill | Deterministic code should validate and install; judgment belongs in the skill and references | `scripts/validate_skill.py`, `scripts/install.sh`, `SKILL.md`, `references/` |

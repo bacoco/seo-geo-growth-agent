@@ -1,6 +1,6 @@
 {
   "name": "seo-geo-growth-agent",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Agent-ready SEO + GEO skill for auditing, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
   "install_protocol": "INSTALL_FOR_AGENTS.md",
