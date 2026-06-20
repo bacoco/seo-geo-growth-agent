@@ -1,0 +1,30 @@
+# Changelog
+
+## 1.1.0 — Source-led SEO/GEO + agentic readiness update
+
+### Added
+
+- Source-led research policy and source register.
+- AI crawler policy matrix and selective robots.txt template.
+- Agent-friendly UX audit for DOM, accessibility tree, semantic controls, labels, and stable layout.
+- Google Search Console generative AI report template.
+- Bing AI Performance report template.
+- Query fan-out and grounding-query maps.
+- Claim ledger for citation-worthy content.
+- Server-log AI bot audit template.
+- Earned-media/entity map.
+- Agentic commerce checklist.
+- GEO red-team checklist.
+- Optional `llms-full.txt` template.
+
+### Changed
+
+- Updated `SKILL.md` with evidence tiers, anti-hype rules, crawler-type distinctions, AI measurement v2, and agentic actionability.
+- Fixed README/SKILL file tree references from v1 placeholder names to the actual numbered reference files.
+- Extended priority algorithm with `Agent Actionability` and `Spam/Risk` factors.
+
+### Guardrails strengthened
+
+- No unsupported claims, fake stats, fake citations, fake review/rating schema, or inauthentic mentions.
+- `llms.txt` remains optional and must not be represented as a Google ranking or AI Overview requirement.
+- Robots.txt is treated as a crawler traffic-management signal, not a privacy/security mechanism.
