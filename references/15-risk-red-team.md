@@ -1,4 +1,4 @@
-# GEO Risk Red-Team Checklist
+# 15 — GEO Risk Red-Team Checklist
 
 Use this before publishing major SEO/GEO recommendations, content, schema, robots.txt, or measurement claims.
 

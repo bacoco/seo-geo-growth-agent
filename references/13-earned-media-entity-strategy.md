@@ -1,4 +1,4 @@
-# Earned Media and Entity Strategy
+# 13 — Earned Media and Entity Strategy
 
 AI answer engines often synthesize information from more than the brand’s own site. Strengthen authentic entity consistency and third-party evidence without manufacturing mentions.
 

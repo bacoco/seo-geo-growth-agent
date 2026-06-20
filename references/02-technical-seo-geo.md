@@ -80,4 +80,4 @@ Do not push duplicate, redirected, parameterized, or noindex URLs.
 - Prefer semantic buttons, links, labels, headings, and tables for both accessibility and agent readability.
 - For docs-heavy sites, maintain optional `llms.txt` and `llms-full.txt` from the canonical sitemap/docs source of truth.
 
-Use `references/10-agent-experience-ax.md`, `references/12-crawler-policy-matrix.md`, and the templates in `templates/`.
+Use `references/18-agent-experience-ax.md`, `references/20-crawler-policy-matrix.md`, and the templates in `templates/`.

@@ -25,6 +25,9 @@
 - Updated `SKILL.md` with evidence tiers, anti-hype rules, crawler-type distinctions, AI measurement v2, and agentic actionability.
 - Fixed README/SKILL file tree references from v1 placeholder names to the actual numbered reference files.
 - Extended priority algorithm with `Agent Actionability` and `Spam/Risk` factors.
+- Hardened validation to catch broken internal references, invalid JSON templates, mismatched reference numbers, and installer regressions.
+- Hardened `scripts/install.sh` to refuse ambiguous custom destinations and preserve previous installs as timestamped backups.
+- Aligned late reference headings with their actual file numbers.
 
 ### Guardrails strengthened
 

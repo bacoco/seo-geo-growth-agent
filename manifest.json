@@ -3,7 +3,8 @@
   "version": "1.1.0",
   "description": "Agent-ready SEO + GEO skill for auditing, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
-  "license": "MIT-compatible derivative with attribution",
+  "license": "MIT",
+  "attribution": "Adapted from Gingiris/gingiris-seo-geo and Gingiris/gingiris-seo-geo-agent under the MIT License, Copyright (c) 2026 Gingiris (Iris Wei).",
   "tags": [
     "seo",
     "geo",

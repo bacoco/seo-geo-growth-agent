@@ -44,7 +44,7 @@ For a custom skills folder:
 ./scripts/install.sh /absolute/path/to/skills/seo-geo-growth-agent
 ```
 
-Then restart your agent session if installed skills are not auto-refreshed.
+Custom paths must end with `seo-geo-growth-agent`. Existing installs are moved to a timestamped backup before the new files are copied. Then restart your agent session if installed skills are not auto-refreshed.
 
 ## Use It
 
@@ -136,6 +136,8 @@ templates/
 ```
 
 Repository maintenance files such as `.github/`, `.gitignore`, and validation scripts are not copied into the installed skill folder.
+
+The installer refuses ambiguous custom destinations and only installs into a folder named `seo-geo-growth-agent`.
 
 ## Validate Changes
 

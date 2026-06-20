@@ -1,4 +1,4 @@
-# Agent-Friendly UX Audit
+# 10 — Agent-Friendly UX Audit
 
 AI agents increasingly use more than raw HTML. They may inspect screenshots, DOM structure, and the accessibility tree. This module checks whether important user journeys are understandable and executable by machines as well as people.
 

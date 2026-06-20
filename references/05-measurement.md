@@ -78,4 +78,4 @@ Do not combine these into one metric. They answer different questions:
 - Manual prompt tests = observed answer behavior for a chosen prompt set.
 - Absorption = whether cited content shaped the answer.
 
-Use `references/09-ai-search-controls-measurement.md` and `templates/ai-visibility-test-plan.csv` for the workflow.
+Use `references/17-ai-search-controls-measurement.md` and `templates/ai-visibility-test-plan.csv` for the workflow.

@@ -1,4 +1,4 @@
-# Citability and Claim Ledger
+# 12 — Citability and Claim Ledger
 
 A page is easier for AI systems and humans to cite when claims are explicit, sourced, current, and visible in HTML.
 

@@ -1,4 +1,4 @@
-# Source-Led Research Policy
+# 08 — Source-Led Research Policy
 
 Use this reference whenever the agent is asked to do “deep research”, validate SEO/GEO claims, update crawler policies, review tooling, or add new tactics to the playbook.
 

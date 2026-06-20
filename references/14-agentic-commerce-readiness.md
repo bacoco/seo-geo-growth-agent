@@ -1,4 +1,4 @@
-# Agentic Commerce Readiness
+# 14 — Agentic Commerce Readiness
 
 Use this for ecommerce, marketplaces, booking, local services, lead-gen, and any site where agents may compare, choose, reserve, or buy.
 

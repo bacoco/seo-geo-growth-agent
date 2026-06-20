@@ -1,4 +1,4 @@
-# 08 — Deep Research Upgrades 2026
+# 16 — Deep Research Upgrades 2026
 
 Research date: 2026-06-20
 
