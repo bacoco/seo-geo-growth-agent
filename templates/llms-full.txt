@@ -1,13 +1,13 @@
-# Example llms-full.txt
+# llms-full.txt template
 
 > Optional machine-readable long-form site summary for agents or internal retrieval workflows.
 > Do not treat this as a Google Search ranking or Google AI Overview requirement.
 > Keep this file consistent with public, crawlable HTML.
 
-# Example Site
+# [SITE_OR_PRODUCT_NAME]
 
-Base URL: https://example.com
-Last updated: 2026-06-20
+Base URL: https://[DOMAIN]
+Last updated: [YYYY-MM-DD]
 
 ## Product / organization summary
 
@@ -15,11 +15,11 @@ Last updated: 2026-06-20
 
 ## Canonical pages
 
-- Homepage: https://example.com/
-- Pricing: https://example.com/pricing
-- Docs: https://example.com/docs
-- Comparisons: https://example.com/compare
-- Contact: https://example.com/contact
+- Homepage: https://[DOMAIN]/
+- Pricing: https://[DOMAIN]/pricing
+- Docs: https://[DOMAIN]/docs
+- Comparisons: https://[DOMAIN]/compare
+- Contact: https://[DOMAIN]/contact
 
 ## Product facts
 
@@ -34,15 +34,15 @@ Last updated: 2026-06-20
 
 ### Category / BOFU pages
 
-- [Page title](https://example.com/page) — one sentence summary.
+- [Page title](https://[DOMAIN]/[PATH]) — one sentence summary.
 
 ### Docs / support
 
-- [Page title](https://example.com/docs/page) — one sentence summary.
+- [Page title](https://[DOMAIN]/docs/[PATH]) — one sentence summary.
 
 ### Research / data
 
-- [Report title](https://example.com/research/report) — methodology and date.
+- [Report title](https://[DOMAIN]/research/[PATH]) — methodology and date.
 
 ## Usage notes
 

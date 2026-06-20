@@ -1,2 +1,1 @@
 page_url,section,claim,claim_type,risk_level,source_url,source_type,date_source_published,date_last_verified,visible_on_page,structured_data_matches,owner,action,status,notes
-https://example.com/page,H2 Example,"Example claim",statistic,high,https://source.example,official,2026-01-01,2026-06-20,yes,yes,content,keep,verified,

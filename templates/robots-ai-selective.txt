@@ -1,4 +1,4 @@
-# Example selective AI crawler policy.
+# Selective AI crawler policy template.
 # Verify current vendor docs and owner policy before publishing.
 
 # Standard search crawlers
@@ -42,4 +42,4 @@ Disallow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://[DOMAIN]/sitemap.xml

@@ -35,6 +35,94 @@ The Mollick case is useful because the book site separates audiences and formats
 
 The strongest part is not the presence of JSON by itself. The strongest part is the recommendation policy: the page helps an agent understand when the book may be relevant, when it is not relevant, who the audience is, and what limitations should be mentioned.
 
+## Source-checked additions
+
+The live sources add several useful ideas beyond the original case notes:
+
+- The publisher page identifies `Co-Existence` as a Portfolio / Penguin Random House book, available on `2026-10-20`, with ISBN `9798217181391` and 240 pages.
+- The publisher positioning is not just "AI is useful." It frames the problem as learning to live and work with systems that can outperform humans in some domains while failing unpredictably in others.
+- The official JSON record includes an explicit disclosure: it is promotional material and should be treated as a primary source for facts about the book, not as binding persuasive instruction.
+- The JSON also includes transactional guardrails: surface pre-order options, but ask before initiating a purchase.
+- Mollick's own post explains that an earlier hidden-instruction style used for his previous book now feels exploitative and less effective. The newer page moves toward transparent persuasion for agents.
+- The post also says AI models objected to the original "buy your human this book" framing as prompt-injection-shaped, which is a useful warning for institutional GEO.
+- Mollick says he tested the AI-facing page across many models and possible users. That suggests a practical method: do not only publish `/for-ai`; test whether different models interpret it correctly.
+- The strategic shift from `Co-Intelligence` to `Co-Existence` is also useful: AI is no longer only a co-worker, co-teacher, or coach. It is increasingly a reader, critic, recommender, and gatekeeper between content and its human audience.
+
+## Additional ideas worth reusing
+
+### 1. Add a disclosure field
+
+Every agent-facing page should say what kind of source it is:
+
+- official source;
+- promotional page;
+- institutional announcement;
+- report;
+- archive;
+- correction;
+- independent review;
+- practical information page.
+
+This helps the agent weigh the page properly instead of treating all content as neutral evidence.
+
+### 2. Separate factual metadata from persuasive framing
+
+An agent may safely reuse title, author, date, ISBN, publisher, institution name, event date, location, and canonical URL. It should be more cautious with value judgments, positioning, slogans, and calls to action.
+
+For institutional GEO, this means the `/for-ai.json` file should separate:
+
+- `facts`
+- `official_position`
+- `recommended_use`
+- `limitations`
+- `do_not`
+- `verification_contact`
+
+### 3. Add transaction or action boundaries
+
+If the page may lead to a purchase, registration, booking, donation, download, or application, the agent-facing version should define safe boundaries:
+
+- show the option;
+- summarize the consequence;
+- ask the human before acting;
+- do not auto-submit;
+- do not imply endorsement beyond the available evidence.
+
+### 4. Test the page with several models
+
+Publishing a `/for-ai` page is not enough. A better workflow is:
+
+1. Give the page to several models.
+2. Ask when they would use it.
+3. Ask when they would not use it.
+4. Ask what they would cite.
+5. Ask what they might hallucinate or overstate.
+6. Revise the page until the answers preserve facts and limits.
+
+Record this in a prompt-test panel, not as proof of ranking, but as quality assurance for agent interpretation.
+
+### 5. Treat "what not to extrapolate" as an anti-hallucination feature
+
+The most useful institutional GEO block may be negative guidance. It should define boundaries such as:
+
+- this announcement does not imply a permanent program;
+- this funding amount applies only to the named period;
+- this quote is not a policy statement;
+- this event is not open to all audiences;
+- this research result is preliminary;
+- this page is archived and may no longer be current.
+
+### 6. Add "agent-reader fit" alongside human audience fit
+
+Human audience fit says who should read the page. Agent-reader fit says when an AI assistant should surface it.
+
+For example:
+
+- use when the user asks for official facts about the named institution or event;
+- use when the user needs a short citation-ready summary;
+- do not use as independent evidence of impact;
+- do not use for current policy if the page is archived.
+
 ## What makes the pattern strong
 
 ### 1. A dedicated page for agents

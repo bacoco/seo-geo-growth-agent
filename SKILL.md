@@ -323,6 +323,7 @@ Use the files in `references/` for the full workflow:
 - `references/18-agent-experience-ax.md`
 - `references/19-evidence-based-geo-experiments.md`
 - `references/20-crawler-policy-matrix.md`
+- `references/21-mollick-geo-for-ai-agents.md`
 - `references/99-source-register.md`
 
 Use the files in `templates/` for copy-paste outputs and CSV trackers:

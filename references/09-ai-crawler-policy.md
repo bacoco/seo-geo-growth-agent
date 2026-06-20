@@ -55,7 +55,7 @@ Allow: /
 User-agent: bingbot
 Allow: /
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://[DOMAIN]/sitemap.xml
 ```
 
 ## Important cautions
