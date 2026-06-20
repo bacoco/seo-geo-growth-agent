@@ -1,6 +1,6 @@
 # Visual HTML Audit Runbook
 
-Use this runbook when the user asks for a readable SEO/GEO audit report, a browser-viewable report, screenshots, Agent Browser validation, or a served local report.
+Use this runbook when the user asks for a readable SEO/GEO audit report, a browser-viewable report, screenshots, Agent Browser validation, first-impression analysis, Design Watch scoring, or a served local report.
 
 ## Outcome
 
@@ -16,6 +16,8 @@ reports/<site-slug>/<YYYY-MM-DD>/
 ```
 
 The HTML report is a presentation layer. It must not create facts. All metrics, statuses, sources, screenshots, and recommendations must come from observed evidence or be marked as unknown.
+
+Screenshots are evidence for the audited site, not for the report. Capture the site or page being audited, analyze those screenshots, and feed the visual verdict back into `audit.json` before generating the report.
 
 ## Required Inputs
 
@@ -37,15 +39,19 @@ Optional:
 
 - `metrics[]`
 - `scorecards[]`
-- `visual_evidence[]`
+- `analysis_cohorts[]`
+- `design_watch`
+- `site_visual_evidence[]`
 - `public_measurements[]`
 - `action_plan[]`
 
 ## Workflow
 
 1. Run the normal SEO/GEO audit first.
-2. Convert the audit into `audit.json`.
-3. Generate the dynamic HTML report:
+2. Capture desktop and mobile screenshots of the audited URL.
+3. Analyze the screenshots and write a `design_watch` verdict.
+4. Convert the audit into `audit.json`.
+5. Generate the dynamic HTML report:
 
 ```bash
 python scripts/generate_html_audit_report.py \
@@ -53,7 +59,7 @@ python scripts/generate_html_audit_report.py \
   --output-dir reports/<site-slug>/<YYYY-MM-DD>
 ```
 
-4. Start the local server:
+6. Start the local server:
 
 ```bash
 python scripts/serve_report.py \
@@ -64,28 +70,56 @@ python scripts/serve_report.py \
 
 If the preferred port is busy, the server chooses a nearby free port and prints the URL.
 
-## Visual Evidence
+## Design Watch From Site Screenshots
 
 Prefer Agent Browser when the runtime exposes it.
 
 Use Agent Browser to:
 
-- open the audited site and the generated report;
-- capture desktop and mobile screenshots;
-- inspect visible hierarchy, readability, overlapping text, horizontal overflow, broken images, and mobile wrapping;
-- add only observed visual facts to `visual_evidence[]`;
+- open the audited site, not the generated report;
+- capture desktop and mobile screenshots of the audited URL;
+- inspect first impression, visible hierarchy, brand trust, content clarity, mobile wrapping, horizontal overflow, broken images, and topic fit;
+- write a `design_watch` object with score, verdict, observed facts, inferred risks, and recommended fixes;
+- add only observed visual facts to `site_visual_evidence[]`;
 - regenerate the report after adding screenshot entries.
 
 If Agent Browser is unavailable, use the Chrome/DevTools fallback:
 
 ```bash
-node scripts/capture_report_screenshots.mjs \
-  --url http://127.0.0.1:8766/ \
-  --output-dir reports/<site-slug>/<YYYY-MM-DD>/screenshots \
-  --evidence-out reports/<site-slug>/<YYYY-MM-DD>/visual-evidence.json
+node scripts/capture_site_screenshots.mjs \
+  --url https://example.com/ \
+  --output-dir reports/<site-slug>/<YYYY-MM-DD>/site-screenshots \
+  --evidence-out reports/<site-slug>/<YYYY-MM-DD>/site-visual-evidence.json
 ```
 
-Then copy the relevant entries into `audit.json` under `visual_evidence[]` and regenerate the HTML report.
+Then copy the relevant entries into `audit.json` under `site_visual_evidence[]`, add `design_watch`, and regenerate the HTML report.
+
+Use this scoring frame:
+
+| Dimension | What to judge from screenshots |
+|---|---|
+| First 5 seconds | Is the subject, value, and credibility clear immediately? |
+| Trust signal | Does the visual identity match the claimed expertise? |
+| Information hierarchy | Can the reader or browser agent identify the main content path? |
+| Mobile readability | Are headings, nav, body text, and calls to action readable without friction? |
+| Topic fit | Do imagery, typography, and layout support the site topic instead of distracting? |
+
+## Analysis Cohorts
+
+Add `analysis_cohorts[]` when producing a global report. Cohorts keep the
+analysis readable by separating audiences and systems:
+
+| Cohort | Typical Lens |
+|---|---|
+| Search / crawl | Can Google/Bing fetch, understand, and index the site cleanly? |
+| AI citation | Can answer engines identify source-worthy facts and limits? |
+| Browser agent | Can an agent understand the page state and next action visually/semantically? |
+| Design Watch | Does the first screen create trust and explain the site's value? |
+| Measurement owner | Which claims require GSC, analytics, logs, or private owner data? |
+| Skillpack quality | Did the generated report follow evidence, eval, and install guardrails? |
+
+Each cohort should include `name`, `score`, `status`, `what_it_checks`,
+`verdict`, `evidence`, and `next_action`.
 
 ## Audit JSON Shape
 
@@ -133,10 +167,30 @@ Then copy the relevant entries into `audit.json` under `visual_evidence[]` and r
       ]
     }
   ],
-  "visual_evidence": [
+  "analysis_cohorts": [
+    {
+      "name": "Design Watch",
+      "score": "6/10",
+      "status": "partial",
+      "what_it_checks": "First impression, hierarchy, trust, and mobile readability",
+      "verdict": "Readable but visually under-positioned",
+      "evidence": "Desktop and mobile screenshots reviewed",
+      "next_action": "Replace generic imagery with topic-relevant editorial identity"
+    }
+  ],
+  "design_watch": {
+    "score": "6/10",
+    "verdict": "Readable but visually under-positioned",
+    "summary": "The page is understandable, but the first impression weakens trust for a technical AI audience.",
+    "confidence": "medium",
+    "observed": ["Desktop and mobile screenshots show readable body content."],
+    "inferred": ["The visual identity may reduce perceived authority before the article is read."],
+    "recommended": ["Replace generic imagery with topic-specific editorial identity."]
+  },
+  "site_visual_evidence": [
     {
       "label": "Homepage mobile",
-      "path": "screenshots/mobile.png",
+      "path": "site-screenshots/mobile.png",
       "viewport": "390x1400",
       "notes": ["No horizontal overflow detected"]
     }
@@ -171,4 +225,5 @@ Then copy the relevant entries into `audit.json` under `visual_evidence[]` and r
 - Do not invent traffic, ranking, citation, or conversion metrics.
 - Do not describe a visual issue unless it appears in a screenshot, DOM check, or browser observation.
 - Do not use screenshots as proof of crawl/index status.
+- Do not use screenshots of the generated report as evidence for the audited site.
 - Keep generated reports out of release packages unless the user explicitly asks for an example artifact.

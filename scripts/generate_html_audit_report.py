@@ -18,12 +18,14 @@ HTML_TEMPLATE = """<!doctype html>
   <style>
     :root {
       color-scheme: light;
-      --ink: #1d1d1f;
-      --muted: #6e6e73;
-      --line: #d2d2d7;
-      --paper: #f5f5f7;
+      --ink: #161719;
+      --muted: #62666d;
+      --faint: #8b9098;
+      --line: #e1e5ec;
+      --paper: #f6f7f9;
       --panel: #ffffff;
-      --blue: #0057d9;
+      --soft: #f0f3f7;
+      --blue: #135dd8;
       --blue-soft: #edf4ff;
       --red: #b42318;
       --red-soft: #fff1f0;
@@ -31,151 +33,230 @@ HTML_TEMPLATE = """<!doctype html>
       --amber-soft: #fff7e6;
       --green: #067647;
       --green-soft: #ecfdf3;
+      --shadow: 0 1px 2px rgba(16, 24, 40, .06);
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       overflow-x: hidden;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
       background: var(--paper);
-      line-height: 1.5;
+      font-size: 14px;
+      line-height: 1.48;
     }
     a { color: var(--blue); overflow-wrap: anywhere; text-underline-offset: 3px; }
     code {
       padding: 2px 5px;
       border-radius: 5px;
-      background: #eef1f6;
+      background: var(--soft);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: .92em;
       overflow-wrap: anywhere;
     }
-    .wrap { width: calc(100% - 32px); max-width: 1120px; margin: 0 auto; }
-    header { border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, .92); }
-    .hero { padding: 30px 0 24px; }
+    .wrap { width: calc(100% - 36px); max-width: 1180px; margin: 0 auto; }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .96);
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 28px;
+      align-items: end;
+      padding: 26px 0 22px;
+    }
     .eyebrow {
-      margin: 0 0 12px;
+      margin: 0 0 8px;
       color: var(--blue);
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: 0;
       text-transform: uppercase;
     }
     h1 {
-      max-width: 760px;
+      max-width: 780px;
       margin: 0;
-      font-size: clamp(30px, 3.4vw, 44px);
-      line-height: 1.06;
+      font-size: clamp(24px, 2.6vw, 34px);
+      line-height: 1.08;
       letter-spacing: 0;
       overflow-wrap: anywhere;
     }
-    .subtitle { max-width: 760px; margin: 12px 0 0; color: var(--muted); font-size: 17px; }
-    .report-meta {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 18px;
+    .subtitle {
+      max-width: 780px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
     }
-    main { padding: 28px 0 56px; }
-    section { margin: 22px 0; }
-    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .panel, .metric, .finding, .visual-card {
+    .meta-box {
+      justify-self: end;
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid #eef1f5;
+    }
+    .meta-row:last-child { border-bottom: 0; }
+    .meta-row span:first-child { color: var(--faint); }
+    main { padding: 22px 0 56px; }
+    section { margin: 16px 0; }
+    .panel, .metric, .finding, .visual-card, .score-card {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
+      box-shadow: var(--shadow);
     }
-    .panel { padding: 22px; }
-    .metric { padding: 16px; }
-    .metric strong { display: block; margin-bottom: 6px; font-size: 21px; line-height: 1.12; }
-    .metric span { color: var(--muted); font-size: 14px; }
-    .score {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 136px;
-      padding: 16px;
-    }
-    .score strong { font-size: 34px; line-height: 1; }
-    .score progress { width: 100%; height: 8px; accent-color: var(--blue); }
-    h2 { margin: 0 0 14px; font-size: 22px; line-height: 1.2; letter-spacing: 0; }
-    h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.3; letter-spacing: 0; }
-    p { margin: 0 0 12px; overflow-wrap: anywhere; }
-    ul, ol { margin: 10px 0 0; padding-left: 22px; }
-    li { margin: 6px 0; overflow-wrap: anywhere; }
+    .panel { padding: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid.sidebar { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: start; }
+    .metric { padding: 14px; min-height: 92px; }
+    .metric strong { display: block; margin-bottom: 5px; font-size: 19px; line-height: 1.12; }
+    .metric span { color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; }
+    .metric p { margin-top: 7px; }
+    .score-card { padding: 14px; }
+    .score-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .score-card strong { font-size: 24px; line-height: 1; }
+    .score-card progress { width: 100%; height: 7px; margin: 10px 0 6px; accent-color: var(--blue); }
+    h2 { margin: 0 0 12px; font-size: 18px; line-height: 1.2; letter-spacing: 0; }
+    h3 { margin: 0 0 7px; font-size: 15px; line-height: 1.3; letter-spacing: 0; }
+    p { margin: 0 0 10px; overflow-wrap: anywhere; }
+    ul, ol { margin: 8px 0 0; padding-left: 20px; }
+    li { margin: 5px 0; overflow-wrap: anywhere; }
     .badge {
       display: inline-flex;
       align-items: center;
-      min-height: 24px;
-      padding: 3px 9px;
+      min-height: 22px;
+      padding: 3px 8px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       line-height: 1;
       white-space: nowrap;
     }
-    .p0, .missing { color: var(--red); background: var(--red-soft); }
-    .p1, .partial { color: var(--amber); background: var(--amber-soft); }
-    .p2, .ok { color: var(--green); background: var(--green-soft); }
-    .finding { border-left: 4px solid var(--blue); padding: 16px 18px; margin: 12px 0; }
+    .p0, .missing, .critical, .failed, .error { color: var(--red); background: var(--red-soft); }
+    .p1, .partial, .warning, .medium { color: var(--amber); background: var(--amber-soft); }
+    .p2, .ok, .pass, .passed, .good, .public { color: var(--green); background: var(--green-soft); }
+    .unknown, .owner_only, .private { color: #344054; background: var(--soft); }
+    .finding {
+      border-left: 4px solid var(--blue);
+      padding: 14px 16px;
+      margin: 10px 0;
+    }
     .finding.p0-border { border-left-color: var(--red); }
     .finding.p1-border { border-left-color: var(--amber); }
     .finding.p2-border { border-left-color: var(--green); }
     .label {
       display: block;
-      margin-top: 12px;
+      margin-top: 10px;
       color: #344054;
-      font-size: 13px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 850;
       text-transform: uppercase;
     }
     .toolbar {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       align-items: center;
-      margin: 0 0 14px;
+      margin: 0 0 10px;
     }
+    .toolbar h2 { margin: 0 8px 0 0; }
     button {
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 7px;
       background: #fff;
       color: var(--ink);
       cursor: pointer;
       font: inherit;
+      font-size: 13px;
       font-weight: 750;
-      padding: 8px 12px;
+      padding: 7px 10px;
     }
     button.active { color: #fff; background: var(--blue); border-color: var(--blue); }
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 14px; table-layout: fixed; }
-    th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
-    th { color: #344054; background: #f2f4f7; font-weight: 800; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; table-layout: fixed; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+    th { color: #344054; background: var(--soft); font-weight: 850; }
+    tr:last-child td { border-bottom: 0; }
+    .verdict {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .verdict-score {
+      display: inline-flex;
+      min-width: 68px;
+      min-height: 68px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 850;
+    }
+    .visual-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
     .visual-card { overflow: hidden; }
-    .visual-card img { display: block; width: 100%; height: auto; background: #f2f4f7; border-bottom: 1px solid var(--line); }
-    .visual-card div { padding: 14px; }
-    .screenshot-missing { padding: 18px; color: var(--muted); background: #f2f4f7; border-bottom: 1px solid var(--line); }
-    .small { color: var(--muted); font-size: 13px; }
+    .visual-card img {
+      display: block;
+      width: 100%;
+      max-height: 460px;
+      object-fit: cover;
+      object-position: top center;
+      background: var(--soft);
+      border-bottom: 1px solid var(--line);
+    }
+    .visual-card div { padding: 12px; }
+    .screenshot-missing { padding: 18px; color: var(--muted); background: var(--soft); border-bottom: 1px solid var(--line); }
+    .small { color: var(--muted); font-size: 12px; }
     .empty { color: var(--muted); font-style: italic; }
-    @media (max-width: 820px) {
+    .callout {
+      border-left: 4px solid var(--blue);
+      background: #fbfdff;
+      padding: 12px 14px;
+      border-radius: 7px;
+    }
+    @media (max-width: 900px) {
+      .hero, .grid, .grid.two, .grid.four, .grid.sidebar, .visual-grid { grid-template-columns: 1fr; }
+      .meta-box { justify-self: stretch; }
+    }
+    @media (max-width: 640px) {
       .wrap { width: calc(100% - 28px); }
-      .hero { padding: 34px 0 26px; }
-      h1 { font-size: 27px; line-height: 1.08; }
-      .subtitle { font-size: 16px; }
-      .grid, .grid.two, .grid.four { grid-template-columns: 1fr; }
+      .hero { padding: 22px 0 18px; }
+      h1 { font-size: 24px; line-height: 1.1; }
+      .subtitle { font-size: 14px; }
+      .panel { padding: 15px; }
       th { display: none; }
-      td { display: block; width: 100%; padding: 9px 0; }
-      tr { display: block; padding: 10px 0; border-bottom: 1px solid var(--line); }
+      td { display: block; width: 100%; padding: 8px 0; }
+      tr { display: block; padding: 9px 0; border-bottom: 1px solid var(--line); }
+      .visual-card img { max-height: 360px; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap hero">
-      <p class="eyebrow" id="eyebrow"></p>
-      <h1 id="headline"></h1>
-      <p class="subtitle" id="subtitle"></p>
-      <div class="report-meta" id="report-meta"></div>
+      <div>
+        <p class="eyebrow" id="eyebrow"></p>
+        <h1 id="headline"></h1>
+        <p class="subtitle" id="subtitle"></p>
+      </div>
+      <aside class="meta-box" id="report-meta"></aside>
     </div>
   </header>
   <main class="wrap" id="app"></main>
@@ -188,6 +269,12 @@ HTML_TEMPLATE = """<!doctype html>
     function text(value, fallback = '') {
       if (value === undefined || value === null || value === '') return fallback;
       return String(value);
+    }
+
+    function asArray(value) {
+      if (Array.isArray(value)) return value;
+      if (value === undefined || value === null || value === '') return [];
+      return [value];
     }
 
     function el(tag, attrs = {}, children = []) {
@@ -210,17 +297,18 @@ HTML_TEMPLATE = """<!doctype html>
     }
 
     function list(items) {
-      const values = Array.isArray(items) ? items : (items ? [items] : []);
+      const values = asArray(items);
       if (!values.length) return el('p', { class: 'empty', text: 'No data provided.' });
       return el('ul', {}, values.map(item => el('li', { text: text(item) })));
     }
 
     function badge(value) {
-      const normalized = text(value, 'unknown').toLowerCase();
-      let klass = 'badge partial';
+      const normalized = text(value, 'unknown').toLowerCase().replaceAll(' ', '_');
+      let klass = `badge ${normalized}`;
       if (['p0', 'error', 'missing', 'failed', 'critical'].includes(normalized)) klass = 'badge p0';
-      if (['p1', 'warning', 'partial'].includes(normalized)) klass = 'badge p1';
-      if (['p2', 'ok', 'pass', 'passed', 'good'].includes(normalized)) klass = 'badge p2';
+      if (['p1', 'warning', 'partial', 'medium'].includes(normalized)) klass = 'badge p1';
+      if (['p2', 'ok', 'pass', 'passed', 'good', 'public'].includes(normalized)) klass = 'badge p2';
+      if (['owner_only', 'owner_only_free', 'public_if_enough_traffic', 'public_partial', 'unknown'].includes(normalized)) klass = `badge ${normalized}`;
       return el('span', { class: klass, text: text(value, 'unknown') });
     }
 
@@ -228,20 +316,24 @@ HTML_TEMPLATE = """<!doctype html>
       return el('section', { class: className }, [el('h2', { text: title }), ...children]);
     }
 
+    function metaRow(label, value) {
+      return el('div', { class: 'meta-row' }, [el('span', { text: label }), el('strong', { text: text(value, 'unknown') })]);
+    }
+
     function renderHeader() {
       const generated = text(audit.generated_at, new Date().toISOString());
       const site = text(audit.site, 'unknown site');
       document.title = `Audit SEO/GEO — ${site}`;
-      document.getElementById('eyebrow').textContent = 'SEO + GEO audit';
+      document.getElementById('eyebrow').textContent = 'SEO/GEO audit';
       document.getElementById('headline').textContent = `Audit SEO/GEO — ${site}`;
       document.getElementById('subtitle').textContent = text(
         audit.summary?.headline,
-        'Evidence-led audit report for search engines, AI answer engines, and browser agents.'
+        'Evidence-led audit for search engines, AI answer engines, and browser agents.'
       );
       document.getElementById('report-meta').replaceChildren(
-        badge(text(audit.summary?.status, 'unknown')),
-        el('span', { class: 'badge partial', text: `Confidence: ${text(audit.summary?.data_confidence, 'unknown')}` }),
-        el('span', { class: 'badge partial', text: generated })
+        metaRow('Status', text(audit.summary?.status, 'unknown')),
+        metaRow('Confidence', text(audit.summary?.data_confidence, 'unknown')),
+        metaRow('Generated', generated)
       );
     }
 
@@ -254,18 +346,20 @@ HTML_TEMPLATE = """<!doctype html>
       ];
       return el('section', { class: 'grid' }, (metrics.length ? metrics : defaults).map(metric =>
         el('div', { class: 'metric' }, [
-          el('strong', { text: text(metric.value, 'unknown') }),
           el('span', { text: text(metric.label, '') }),
+          el('strong', { text: text(metric.value, 'unknown') }),
           metric.detail ? el('p', { class: 'small', text: metric.detail }) : null
         ])
       ));
     }
 
-    function renderDecision() {
-      return section('Decision', [
+    function renderExecutiveBrief() {
+      const brief = asArray(audit.executive_brief);
+      return section('Executive brief', [
         el('p', { text: text(audit.summary?.decision, audit.summary?.headline || 'Prioritize evidence-led fixes before content scale.') }),
-        el('p', { class: 'small', text: `Data confidence: ${text(audit.summary?.data_confidence, 'unknown')}. Missing analytics or logs must remain unknown.` })
-      ]);
+        brief.length ? el('div', { class: 'callout' }, [list(brief)]) : null,
+        el('p', { class: 'small', text: `Missing analytics or logs are marked unknown. Data confidence: ${text(audit.summary?.data_confidence, 'unknown')}.` })
+      ].filter(Boolean));
     }
 
     function renderScorecards() {
@@ -276,13 +370,93 @@ HTML_TEMPLATE = """<!doctype html>
           const score = Number(scorecard.score ?? 0);
           const max = Number(scorecard.max ?? 10) || 10;
           const clamped = Math.max(0, Math.min(score, max));
-          return el('article', { class: 'metric score' }, [
-            el('span', { text: text(scorecard.label, 'Score') }),
-            el('strong', { text: `${clamped}/${max}` }),
+          return el('article', { class: 'score-card' }, [
+            el('div', { class: 'score-top' }, [
+              el('span', { class: 'small', text: text(scorecard.label, 'Score') }),
+              el('strong', { text: `${clamped}/${max}` })
+            ]),
             el('progress', { value: clamped, max }),
             el('p', { class: 'small', text: text(scorecard.note, '') })
           ]);
         }))
+      ]);
+    }
+
+    function renderCohorts() {
+      const cohorts = Array.isArray(audit.analysis_cohorts || audit.cohorts)
+        ? (audit.analysis_cohorts || audit.cohorts)
+        : [];
+      if (!cohorts.length) return null;
+      return section('Analysis cohorts', [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: 'Cohort' }),
+            el('th', { text: 'Score' }),
+            el('th', { text: 'Verdict' }),
+            el('th', { text: 'Next action' })
+          ])]),
+          el('tbody', {}, cohorts.map(item => el('tr', {}, [
+            el('td', {}, [
+              el('strong', { text: text(item.name, 'Cohort') }),
+              item.status ? el('p', {}, [badge(item.status)]) : null,
+              item.what_it_checks ? el('p', { class: 'small', text: text(item.what_it_checks) }) : null
+            ]),
+            el('td', { text: text(item.score, 'n/a') }),
+            el('td', {}, [
+              el('p', { text: text(item.verdict, '') }),
+              item.evidence ? el('p', { class: 'small', text: text(item.evidence) }) : null
+            ]),
+            el('td', { text: text(item.next_action, '') })
+          ])))
+        ])
+      ]);
+    }
+
+    function visualCards(items) {
+      const visuals = Array.isArray(items) ? items : [];
+      if (!visuals.length) return el('p', { class: 'empty', text: 'No site screenshots supplied.' });
+      return el('div', { class: 'visual-grid' }, visuals.map(item => {
+        const image = item.path ? el('img', { src: item.path, alt: text(item.label, 'Site screenshot') }) : null;
+        if (image) {
+          image.addEventListener('error', () => {
+            image.replaceWith(el('div', { class: 'screenshot-missing', text: `Screenshot file: ${item.path}` }));
+          });
+        }
+        return el('article', { class: 'visual-card' }, [
+          image,
+          el('div', {}, [
+            el('h3', { text: text(item.label, 'Site screenshot') }),
+            el('p', { class: 'small', text: `Viewport: ${text(item.viewport, 'unknown')}` }),
+            list(item.notes)
+          ])
+        ]);
+      }));
+    }
+
+    function renderFirstImpression() {
+      const first = audit.design_watch || audit.first_impression || audit.visual_verdict || {};
+      const visuals = audit.site_visual_evidence || audit.visual_evidence || [];
+      if (!Object.keys(first).length && !visuals.length) return null;
+      return section('Design Watch', [
+        el('div', { class: 'grid sidebar' }, [
+          el('article', { class: 'panel' }, [
+            el('div', { class: 'verdict' }, [
+              el('div', { class: 'verdict-score', text: text(first.score, 'n/a') }),
+              el('div', {}, [
+                el('h3', { text: text(first.verdict, 'Visual verdict unavailable') }),
+                el('p', { text: text(first.summary, 'No visual analysis supplied.') }),
+                first.confidence ? badge(`confidence: ${first.confidence}`) : null
+              ])
+            ]),
+            el('span', { class: 'label', text: 'Observed from screenshots' }),
+            list(first.observed),
+            el('span', { class: 'label', text: 'Implication' }),
+            list(first.inferred || first.implications),
+            el('span', { class: 'label', text: 'Recommended' }),
+            list(first.recommended)
+          ]),
+          visualCards(visuals)
+        ])
       ]);
     }
 
@@ -303,7 +477,7 @@ HTML_TEMPLATE = """<!doctype html>
     function renderFindings() {
       const findings = Array.isArray(audit.findings) ? audit.findings : [];
       const buttons = ['all', 'P0', 'P1', 'P2'].map(value => {
-        const button = el('button', { text: value === 'all' ? 'All priorities' : value });
+        const button = el('button', { text: value === 'all' ? 'All' : value });
         button.classList.toggle('active', priorityState.value === value);
         button.addEventListener('click', () => {
           priorityState.value = value;
@@ -330,29 +504,49 @@ HTML_TEMPLATE = """<!doctype html>
       ]);
     }
 
-    function renderVisualEvidence() {
-      const visuals = Array.isArray(audit.visual_evidence) ? audit.visual_evidence : [];
-      if (!visuals.length) return section('Visual evidence', [el('p', { class: 'empty', text: 'No screenshots supplied.' })]);
-      return section('Visual evidence', [
-        el('div', { class: 'grid two' }, visuals.map(item =>
-          {
-            const image = item.path ? el('img', { src: item.path, alt: text(item.label, 'Screenshot') }) : null;
-            if (image) {
-              image.addEventListener('error', () => {
-                image.replaceWith(el('div', { class: 'screenshot-missing', text: `Screenshot file: ${item.path}` }));
-              });
-            }
-            return el('article', { class: 'visual-card' }, [
-              image,
-            el('div', {}, [
-              el('h3', { text: text(item.label, 'Screenshot') }),
-              el('p', { class: 'small', text: `Viewport: ${text(item.viewport, 'unknown')}` }),
-              list(item.notes)
-            ])
-            ]);
-          }
-        ))
-      ], 'panel');
+    function renderTechnicalSnapshot() {
+      const checks = Array.isArray(audit.technical_checks) ? audit.technical_checks : [];
+      if (!checks.length) return null;
+      return section('Technical snapshot', [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: 'Area' }),
+            el('th', { text: 'Status' }),
+            el('th', { text: 'Observed evidence' }),
+            el('th', { text: 'Implication' })
+          ])]),
+          el('tbody', {}, checks.map(item => el('tr', {}, [
+            el('td', { text: text(item.area, '') }),
+            el('td', {}, [badge(text(item.status, 'unknown'))]),
+            el('td', { text: text(item.observed, '') }),
+            el('td', { text: text(item.implication, '') })
+          ])))
+        ])
+      ]);
+    }
+
+    function renderPublicMeasurements() {
+      const measurements = Array.isArray(audit.public_measurements) ? audit.public_measurements : [];
+      if (!measurements.length) return section('Measurement access', [
+        el('p', { class: 'empty', text: 'No measurement access checks supplied.' })
+      ]);
+      const rows = measurements.map(item => el('tr', {}, [
+        el('td', { text: text(item.source, '') }),
+        el('td', {}, [badge(text(item.access, 'unknown'))]),
+        el('td', { text: text(item.metric, '') }),
+        el('td', { text: text(item.limit, '') })
+      ]));
+      return section('Measurement access', [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: 'Source' }),
+            el('th', { text: 'Access' }),
+            el('th', { text: 'Metric' }),
+            el('th', { text: 'Limit' })
+          ])]),
+          el('tbody', {}, rows)
+        ])
+      ]);
     }
 
     function renderActionPlan() {
@@ -371,30 +565,6 @@ HTML_TEMPLATE = """<!doctype html>
       ]);
     }
 
-    function renderPublicMeasurements() {
-      const measurements = Array.isArray(audit.public_measurements) ? audit.public_measurements : [];
-      if (!measurements.length) return section('Public measurements', [
-        el('p', { class: 'empty', text: 'No public measurement checks supplied.' })
-      ]);
-      const rows = measurements.map(item => el('tr', {}, [
-        el('td', { text: text(item.source, '') }),
-        el('td', {}, [badge(text(item.access, 'unknown'))]),
-        el('td', { text: text(item.metric, '') }),
-        el('td', { text: text(item.limit, '') })
-      ]));
-      return section('Public measurements', [
-        el('table', {}, [
-          el('thead', {}, [el('tr', {}, [
-            el('th', { text: 'Source' }),
-            el('th', { text: 'Access' }),
-            el('th', { text: 'Metric' }),
-            el('th', { text: 'Limit' })
-          ])]),
-          el('tbody', {}, rows)
-        ])
-      ]);
-    }
-
     function renderSources() {
       const sources = Array.isArray(audit.sources) ? audit.sources : [];
       return section('Sources consulted', [
@@ -408,9 +578,11 @@ HTML_TEMPLATE = """<!doctype html>
       app.replaceChildren(...[
         renderMetrics(),
         renderScorecards(),
-        renderDecision(),
+        renderCohorts(),
+        renderExecutiveBrief(),
+        renderFirstImpression(),
         renderFindings(),
-        renderVisualEvidence(),
+        renderTechnicalSnapshot(),
         renderPublicMeasurements(),
         renderActionPlan(),
         renderSources()
@@ -449,6 +621,20 @@ def safe_json_for_script(data: dict) -> str:
     return raw.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
 
 
+def copy_visual_sources(audit: dict, output_dir: Path) -> None:
+    for key in ("site_visual_evidence", "visual_evidence"):
+        for visual in audit.get(key, []):
+            source_path = visual.get("source_path")
+            report_path = visual.get("path")
+            if not source_path or not report_path:
+                continue
+            source = Path(source_path)
+            destination = output_dir / report_path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if source.is_file() and source.resolve() != destination.resolve():
+                shutil.copy2(source, destination)
+
+
 def main() -> None:
     args = parse_args()
     audit = load_audit(args.input)
@@ -461,15 +647,7 @@ def main() -> None:
     html_path = args.output_dir / "index.html"
     html_path.write_text(html, encoding="utf-8")
 
-    for visual in audit.get("visual_evidence", []):
-      source_path = visual.get("source_path")
-      report_path = visual.get("path")
-      if source_path and report_path:
-          source = Path(source_path)
-          destination = args.output_dir / report_path
-          destination.parent.mkdir(parents=True, exist_ok=True)
-          if source.is_file() and source.resolve() != destination.resolve():
-              shutil.copy2(source, destination)
+    copy_visual_sources(audit, args.output_dir)
 
     print(f"Wrote {html_path}")
 

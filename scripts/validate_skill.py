@@ -150,6 +150,7 @@ def check_jsonl_files() -> None:
         lines = path.read_text(encoding="utf-8").splitlines()
         if not lines:
             fail(f"{rel} is empty")
+        is_routing_eval = rel.startswith("evals/")
         saw_true = False
         saw_false = False
         for index, line in enumerate(lines, start=1):
@@ -157,6 +158,10 @@ def check_jsonl_files() -> None:
                 data = json.loads(line)
             except json.JSONDecodeError as exc:
                 fail(f"{rel}:{index} is invalid JSONL: {exc}")
+            if not isinstance(data, dict):
+                fail(f"{rel}:{index} JSONL entry must be an object")
+            if not is_routing_eval:
+                continue
             for key in ("input", "should_trigger", "expected_mode"):
                 if key not in data:
                     fail(f"{rel}:{index} is missing required key: {key}")
@@ -168,6 +173,8 @@ def check_jsonl_files() -> None:
                 fail(f"{rel}:{index} expected_mode must be a non-empty string")
             saw_true = saw_true or data["should_trigger"]
             saw_false = saw_false or not data["should_trigger"]
+        if not is_routing_eval:
+            continue
         if len(lines) < 8:
             fail(f"{rel} must contain at least 8 routing cases")
         if not saw_true or not saw_false:
@@ -237,7 +244,8 @@ def check_install_script() -> None:
             "evals",
             "scripts/generate_html_audit_report.py",
             "scripts/serve_report.py",
-            "scripts/capture_report_screenshots.mjs",
+            "scripts/capture_site_screenshots.mjs",
+            "scripts/skill_doctor.py",
         ):
             if not (safe_dest / rel).exists():
                 fail(f"install smoke test did not copy expected path: {rel}")

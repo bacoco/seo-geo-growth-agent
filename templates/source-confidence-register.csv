@@ -1,0 +1,5 @@
+source,label,url,source_type,access_level,date_checked,confidence,known_limits,next_action
+Google Search Console API,Search Analytics,https://developers.google.com/webmaster-tools/v1/searchanalytics/query,official,owner_only,,high,"requires verified property; bounded by API limits","use for clicks impressions CTR position"
+GA4 Data API,Analytics reports,https://developers.google.com/analytics/devguides/reporting/data/v1,official,owner_only,,high,"requires property access and installed tracking","use for sessions events conversions referrals"
+Chrome UX Report,Field Web Vitals,https://developer.chrome.com/docs/crux,official,public_if_enough_traffic,,medium,"performance only; no visits or conversions","use as public field UX signal"
+Microsoft Clarity,Behavior analytics,https://clarity.microsoft.com/,official,owner_only_free,,medium,"requires script/project access; privacy constraints","use for heatmaps session recordings AI visibility"

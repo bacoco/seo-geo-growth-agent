@@ -32,11 +32,12 @@ Collect or infer only from supplied evidence:
 | Mode | Use when | First outputs |
 |---|---|---|
 | Audit | The user has an existing site or page | P0/P1/P2 fixes, evidence table, next actions |
-| Visual HTML audit | The user wants a browser-readable report, local server, screenshots, or visual proof | `audit.json`, `index.html`, local URL, screenshot evidence |
+| Visual HTML audit | The user wants a browser-readable report, local server, site screenshots, Design Watch, analysis cohorts, or visual proof | `audit.json`, `index.html`, local URL, site screenshot evidence, Design Watch verdict |
 | `/for-ai` package | The page is important enough to be cited by agents | `/for-ai`, `/for-ai.json`, `/for-ai.txt`, `llms.txt` plan |
 | Content brief | The user wants to create or rewrite a strategic page | keyword map, brief, outline, claim ledger |
 | Crawler and measurement policy | The user asks about AI bots, robots.txt, visibility, or reporting | crawler matrix, robots draft, measurement plan |
 | Public measurement access | The user asks what analytics or traffic data can be obtained publicly or with site ownership | public vs owner-only matrix, setup plan |
+| Skill optimization | The user asks to apply lessons from GStack/GBrain or improve the skill itself | improvement map, eval updates, doctor checks |
 
 ## Execution Rules
 
@@ -47,8 +48,9 @@ Collect or infer only from supplied evidence:
 5. Never claim a metric, citation, source, customer, ranking, date, or crawler rule without evidence.
 6. Treat `llms.txt` as optional and never as a Google ranking factor.
 7. Show what cannot be concluded from the available data.
-8. For visual HTML audits, read `runbooks/visual-html-audit.md` and generate the report from an explicit `audit.json` evidence file.
+8. For visual HTML audits, read `runbooks/visual-html-audit.md`, capture screenshots of the audited site, run Design Watch, add analysis cohorts when useful, and generate the report from an explicit `audit.json` evidence file.
 9. For analytics or traffic data questions, read `runbooks/public-measurement-access.md` and never confuse public estimates with owner analytics.
+10. For skill improvement work, read `runbooks/gstack-gbrain-improvement-map.md` and `runbooks/skill-optimization.md`.
 
 ## First Useful Prompt
 
@@ -59,7 +61,7 @@ Use seo-geo-growth-agent on [URL or page]. Start with an evidence-led SEO/GEO au
 For a browser-readable visual audit:
 
 ```text
-Use seo-geo-growth-agent on [URL]. Generate a dynamic HTML audit report, serve it locally, capture desktop/mobile evidence if browser tools are available, and mark missing data as unknown.
+Use seo-geo-growth-agent on [URL]. Generate a dynamic HTML audit report, serve it locally, capture desktop/mobile screenshots of the audited site, run Design Watch, add analysis cohorts, and mark missing data as unknown.
 ```
 
 For an institutional article:

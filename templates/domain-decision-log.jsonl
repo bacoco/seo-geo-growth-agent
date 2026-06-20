@@ -1,0 +1,1 @@
+{"timestamp":"2026-06-20T00:00:00Z","domain":"example.com","decision":"Use /for-ai pages only for strategic articles.","rationale":"Avoid thin generated pages and keep agent-facing content citation-safe.","supersedes":null,"owner":"unknown","evidence":["https://example.com/strategic-page"],"review_date":"2026-07-20"}

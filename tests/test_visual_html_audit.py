@@ -36,6 +36,25 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                         "scorecards": [
                             {"label": "SEO", "score": 7, "max": 10, "note": "Crawlable but missing metadata"}
                         ],
+                        "analysis_cohorts": [
+                            {
+                                "name": "Design Watch",
+                                "score": "6/10",
+                                "status": "partial",
+                                "what_it_checks": "First impression, hierarchy, trust, and mobile readability",
+                                "verdict": "Readable but visually under-positioned",
+                                "evidence": "Desktop and mobile screenshots reviewed",
+                                "next_action": "Replace generic imagery with topic-relevant editorial identity",
+                            }
+                        ],
+                        "design_watch": {
+                            "score": "6/10",
+                            "verdict": "Clear content, weak first impression",
+                            "summary": "The page is readable, but the visual identity does not match the expertise implied by the content.",
+                            "observed": ["Homepage screenshot is readable on mobile."],
+                            "inferred": ["The site may lose trust before the article content is evaluated."],
+                            "recommended": ["Replace generic visual assets with topic-relevant editorial identity."],
+                        },
                         "findings": [
                             {
                                 "priority": "P1",
@@ -46,10 +65,10 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                                 "evidence": [{"label": "llms.txt", "url": "https://example.com/llms.txt", "status": "404"}],
                             }
                         ],
-                        "visual_evidence": [
+                        "site_visual_evidence": [
                             {
                                 "label": "Homepage mobile",
-                                "path": "screenshots/mobile.png",
+                                "path": "site-screenshots/mobile.png",
                                 "viewport": "390x1400",
                                 "notes": ["No horizontal overflow detected"],
                             }
@@ -90,10 +109,13 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
             html = html_path.read_text(encoding="utf-8")
             self.assertIn("Make example.com easier for agents to cite.", html)
             self.assertIn("Missing agent-readable package", html)
-            self.assertIn("Visual evidence", html)
-            self.assertIn("screenshots/mobile.png", html)
+            self.assertIn("Design Watch", html)
+            self.assertIn("Analysis cohorts", html)
+            self.assertIn("Readable but visually under-positioned", html)
+            self.assertIn("Clear content, weak first impression", html)
+            self.assertIn("site-screenshots/mobile.png", html)
             self.assertIn("Readiness scores", html)
-            self.assertIn("Public measurements", html)
+            self.assertIn("Measurement access", html)
             self.assertIn("Chrome UX Report", html)
 
     def test_serve_report_check_mode_validates_report_directory(self) -> None:

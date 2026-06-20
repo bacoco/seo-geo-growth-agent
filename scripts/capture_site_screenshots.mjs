@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Capture desktop and mobile screenshots for a report or audited page.
+ * Capture desktop and mobile screenshots for an audited page.
  *
  * Preferred workflow: use Agent Browser when the agent runtime exposes it.
  * This script is the deterministic fallback for local environments with Chrome.
@@ -34,7 +34,7 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log(`Usage: node scripts/capture_report_screenshots.mjs --url URL --output-dir DIR [--evidence-out visual-evidence.json]`);
+  console.log(`Usage: node scripts/capture_site_screenshots.mjs --url URL --output-dir DIR [--evidence-out site-visual-evidence.json]`);
 }
 
 function detectChrome() {

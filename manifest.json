@@ -1,7 +1,7 @@
 {
   "name": "seo-geo-growth-agent",
-  "version": "1.2.0",
-  "description": "Agent-ready SEO + GEO skill for auditing, visual HTML reports, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
+  "version": "1.2.1",
+  "description": "Agent-ready SEO + GEO skill for auditing, Design Watch screenshot analysis, visual HTML reports, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
   "install_protocol": "INSTALL_FOR_AGENTS.md",
   "license": "MIT",
@@ -27,17 +27,22 @@
     "agentic-commerce",
     "html-report",
     "visual-audit",
+    "design-watch",
+    "analysis-cohorts",
     "screenshots"
   ],
   "runbooks": {
     "bootstrap": "runbooks/bootstrap.md",
+    "gstack_gbrain_improvement_map": "runbooks/gstack-gbrain-improvement-map.md",
+    "skill_optimization": "runbooks/skill-optimization.md",
     "visual_html_audit": "runbooks/visual-html-audit.md",
     "public_measurement_access": "runbooks/public-measurement-access.md"
   },
   "scripts": {
     "generate_html_audit_report": "scripts/generate_html_audit_report.py",
     "serve_report": "scripts/serve_report.py",
-    "capture_report_screenshots": "scripts/capture_report_screenshots.mjs"
+    "capture_site_screenshots": "scripts/capture_site_screenshots.mjs",
+    "skill_doctor": "scripts/skill_doctor.py"
   },
   "routing_evals": [
     "evals/routing-eval.jsonl"
@@ -54,10 +59,15 @@
     "templates/article-outline.md",
     "templates/bing-ai-performance-report.md",
     "templates/bot-access-policy-matrix.csv",
+    "templates/browser-audit-codification.md",
     "templates/claim-ledger.csv",
     "templates/comparison-page-outline.md",
     "templates/content-brief.md",
+    "templates/crawler-policy-freshness-check.md",
     "templates/daily-report.md",
+    "templates/design-watch-audit.md",
+    "templates/domain-decision-log.jsonl",
+    "templates/domain-notes.md",
     "templates/earned-media-entity-map.csv",
     "templates/evidence-container-scorecard.csv",
     "templates/for-ai-json.json",
@@ -71,13 +81,16 @@
     "templates/llms-full.txt",
     "templates/llms-generation-checklist.md",
     "templates/llms.txt",
+    "templates/local-skill-analytics.jsonl",
     "templates/measurement-access-matrix.csv",
     "templates/owner-checklist.md",
     "templates/query-fanout-map.csv",
     "templates/robots-ai-selective.txt",
     "templates/robots-ai.txt",
     "templates/server-log-ai-bot-audit.md",
+    "templates/source-confidence-register.csv",
     "templates/source-led-deepresearch.md",
+    "templates/visual-diff-checklist.md",
     "templates/weekly-report.md"
   ],
   "references": [

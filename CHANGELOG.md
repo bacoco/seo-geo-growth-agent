@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.1 — Design Watch and analysis cohorts
+
+### Added
+
+- Design Watch audit template for scoring first impression from audited-site screenshots.
+- Analysis cohorts in HTML reports to separate Search/Crawl, GEO/Citation, Browser Agent, Design Watch, Measurement, and Skillpack quality lenses.
+- GStack/GBrain improvement map covering browser-first audits, skill doctors, domain notes, decision logs, codification, visual diffs, source confidence, local analytics, crawler freshness, and Design Watch.
+- Installed skill doctor for runtime package verification.
+- Skill optimization runbook and extra templates for domain notes, decision logs, browser audit codification, crawler freshness, source confidence, local analytics, and visual diffs.
+
+### Changed
+
+- Visual evidence now means screenshots of the audited site, not screenshots of the generated report.
+- HTML report typography and layout are more compact and decision-oriented.
+- Visual audit runbook now requires screenshot analysis before report generation.
+
 ## 1.2.0 — Visual HTML audit reports
 
 ### Added
@@ -8,7 +24,7 @@
 - Readiness scorecards inspired by health-dashboard workflows.
 - Public-vs-owner-only measurement access runbook and reusable matrix.
 - Local report server with port fallback and browser-open option.
-- Chrome/DevTools screenshot fallback for desktop and mobile visual evidence when Agent Browser is unavailable.
+- Chrome/DevTools screenshot fallback for desktop and mobile audited-site evidence when Agent Browser is unavailable.
 - Visual HTML audit runbook covering Agent Browser-first screenshot workflow and evidence rules.
 - Validation and install smoke tests for runtime report scripts.
 
