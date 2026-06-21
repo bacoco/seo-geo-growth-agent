@@ -78,6 +78,7 @@ cp "$ROOT/scripts/compare_audit_reports.py" "$DEST/scripts/"
 cp "$ROOT/scripts/generate_geo_citation_panel.py" "$DEST/scripts/"
 cp "$ROOT/scripts/serve_report.py" "$DEST/scripts/"
 cp "$ROOT/scripts/capture_site_screenshots.mjs" "$DEST/scripts/"
+cp "$ROOT/scripts/skill_demo.py" "$DEST/scripts/"
 cp "$ROOT/scripts/skill_doctor.py" "$DEST/scripts/"
 
 echo "Installed seo-geo-growth-agent skill to: $DEST"

@@ -10,7 +10,7 @@ python3 scripts/run_full_audit.py https://example.com/ \
   --lang fr
 ```
 
-This orchestrates evidence capture, owner-data request generation, ARD readiness, AI-layer endpoint checks, conservative `audit.json` creation, downloadable AI-layer files, HTML report generation, report validation, and local serving.
+This orchestrates evidence capture, owner-data request generation, owner-data intake CSV creation, ARD readiness, AI-layer endpoint checks, conservative `audit.json` creation, downloadable AI-layer files, HTML report generation, report validation, and local serving.
 
 For CI or non-interactive runs:
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -107,6 +108,43 @@ def checklist(site: str, language: str) -> dict:
     }
 
 
+def intake_rows(site: str) -> list[dict[str, str]]:
+    return [
+        {
+            "site": site,
+            "source_key": item["source"],
+            "source_label": item["label"],
+            "owner": "",
+            "property_or_account": "",
+            "date_range_start": "",
+            "date_range_end": "",
+            "export_path": "",
+            "status": "requested",
+            "notes": item["why"],
+        }
+        for item in SOURCES
+    ]
+
+
+def write_intake_csv(path: Path, site: str) -> None:
+    fieldnames = [
+        "site",
+        "source_key",
+        "source_label",
+        "owner",
+        "property_or_account",
+        "date_range_start",
+        "date_range_end",
+        "export_path",
+        "status",
+        "notes",
+    ]
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(intake_rows(site))
+
+
 def main() -> None:
     args = parse_args()
     site = clean_site(args.site)
@@ -116,8 +154,10 @@ def main() -> None:
         json.dumps(checklist(site, args.language), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    write_intake_csv(args.output_dir / "owner-data-intake.csv", site)
     print(f"Wrote {args.output_dir / 'owner-data-request.md'}")
     print(f"Wrote {args.output_dir / 'owner-data-checklist.json'}")
+    print(f"Wrote {args.output_dir / 'owner-data-intake.csv'}")
 
 
 if __name__ == "__main__":

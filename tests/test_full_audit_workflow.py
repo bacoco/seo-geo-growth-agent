@@ -84,6 +84,7 @@ class FullAuditWorkflowTest(unittest.TestCase):
                 "LATEST-SEO-GEO-REPORT.md",
                 "owner-data/owner-data-request.md",
                 "owner-data/owner-data-checklist.json",
+                "owner-data/owner-data-intake.csv",
                 "ard-readiness.json",
                 "ai-layer-package.zip",
                 "report-validation.json",

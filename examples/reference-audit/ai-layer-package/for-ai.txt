@@ -1,26 +1,27 @@
-# For AI agents: reference.example
+# For AI agents: bacoco/seo-geo-growth-agent
 
-Canonical URL: https://reference.example/
+Canonical URL: https://github.com/bacoco/seo-geo-growth-agent
 
 ## Summary
 
-- reference.example is a fixture showing the generated SEO/GEO report structure.
-- Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims.
+- GitHub repository bacoco/seo-geo-growth-agent demonstrates a reusable SEO/GEO skill package.
+- Treat this as a real artifact demonstration for the public repository, not as evidence of traffic, ranking, conversions, or AI citations.
 
 ## Key facts
 
-- reference.example is a fixture showing the generated SEO/GEO report structure.
-- Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims.
-- /llms.txt is marked missing in this fixture
-- /for-ai is marked missing in this fixture
-- /for-ai.json is marked missing in this fixture
-- /for-ai.txt is marked missing in this fixture
+- GitHub repository bacoco/seo-geo-growth-agent demonstrates a reusable SEO/GEO skill package.
+- Treat this as a real artifact demonstration for the public repository, not as evidence of traffic, ranking, conversions, or AI citations.
+- The public repository exposes README.md, INSTALL_FOR_AGENTS.md, SKILL.md, runbooks, templates, scripts, tests, and examples.
+- A GitHub repository page is not the same as an owned domain root where /llms.txt, /for-ai, /for-ai.json, and /for-ai.txt can be published.
+- The committed golden audit intentionally keeps traffic, ranking, conversion, and AI-citation metrics unknown.
 
 ## Recommended use
 
-- Review the generated AI-layer package before adapting it to a real owned site.
-- AI-readable publication files are absent in this fixture.
-- Review the generated AI-layer package, adapt it to owner-approved facts, and publish only after owner validation.
+- Use this golden audit to verify the report pipeline, then run the full workflow on the real owned domain that will publish the AI-readable files.
+- The repository is installable, but the public GitHub page is not itself an owned website with root-level /llms.txt, /for-ai, or owner analytics.
+- Use the generated AI-layer package as an owner-review draft for a real documentation or website surface.
+- Publish only the files that match visible owner-approved content.
+- Keep analytics and citation metrics unknown until owner data exports or measured prompt panels are supplied.
 
 ## Do not extrapolate
 
@@ -31,4 +32,8 @@ Canonical URL: https://reference.example/
 
 ## Sources
 
-- Reference fixture: https://reference.example/
+- GitHub repository: https://github.com/bacoco/seo-geo-growth-agent
+- README: https://github.com/bacoco/seo-geo-growth-agent/blob/main/README.md
+- Installation protocol: https://github.com/bacoco/seo-geo-growth-agent/blob/main/INSTALL_FOR_AGENTS.md
+- Skill entrypoint: https://github.com/bacoco/seo-geo-growth-agent/blob/main/SKILL.md
+- Manifest: https://github.com/bacoco/seo-geo-growth-agent/blob/main/manifest.json

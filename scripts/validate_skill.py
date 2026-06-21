@@ -255,6 +255,7 @@ def check_install_script() -> None:
             "scripts/generate_geo_citation_panel.py",
             "scripts/serve_report.py",
             "scripts/capture_site_screenshots.mjs",
+            "scripts/skill_demo.py",
             "scripts/skill_doctor.py",
         ):
             if not (safe_dest / rel).exists():

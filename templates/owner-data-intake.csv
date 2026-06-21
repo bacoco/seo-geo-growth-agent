@@ -1,0 +1,6 @@
+site,source_key,source_label,owner,property_or_account,date_range_start,date_range_end,export_path,status,notes
+example.com,gsc,Google Search Console,,,,,,requested,Owner-provided export for queries pages countries devices CTR clicks impressions and average position.
+example.com,ga4,GA4,,,,,,requested,Owner-provided export for landing pages source medium conversions engagement and AI-assistant referrals.
+example.com,bing_webmaster_tools,Bing Webmaster Tools,,,,,,requested,Owner-provided search crawl IndexNow and AI Performance export when available.
+example.com,server_logs,server logs,,,,,,requested,Owner-provided bot and user-agent logs for search crawlers AI crawlers and user-triggered fetchers.
+example.com,cloudflare,Cloudflare Analytics,,,,,,requested,Owner-provided traffic cache WAF firewall bot and response-status evidence.

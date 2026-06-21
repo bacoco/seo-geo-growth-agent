@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0 — Professional audit workflow
+
+### Added
+
+- `scripts/skill_demo.py` validates the committed golden audit, optionally runs the installed package doctor, and writes `demo-result.json`.
+- `templates/owner-data-intake.csv` and generated `owner-data-intake.csv` files track owner-provided GSC, GA4, Bing, server-log, and Cloudflare exports.
+- The committed golden audit now targets the public `bacoco/seo-geo-growth-agent` repository instead of a fictional fixture domain.
+
+### Changed
+
+- README, install protocol, SKILL, bootstrap, CLI, and owner-data runbooks now position the package as a professional audit plus owner-reviewed improvement workflow.
+
 ## 1.2.9 — Review hardening
 
 ### Changed

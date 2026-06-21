@@ -1,10 +1,14 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "name": "reference.example is a fixture showing the generated SEO/GEO report structure.",
-  "url": "https://reference.example/",
-  "description": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+  "name": "GitHub repository bacoco/seo-geo-growth-agent demonstrates a reusable SEO/GEO skill package.",
+  "url": "https://github.com/bacoco/seo-geo-growth-agent",
+  "description": "GitHub repository bacoco/seo-geo-growth-agent demonstrates a reusable SEO/GEO skill package.",
   "isBasedOn": [
-    "https://reference.example/"
+    "https://github.com/bacoco/seo-geo-growth-agent",
+    "https://github.com/bacoco/seo-geo-growth-agent/blob/main/README.md",
+    "https://github.com/bacoco/seo-geo-growth-agent/blob/main/INSTALL_FOR_AGENTS.md",
+    "https://github.com/bacoco/seo-geo-growth-agent/blob/main/SKILL.md",
+    "https://github.com/bacoco/seo-geo-growth-agent/blob/main/manifest.json"
   ]
 }

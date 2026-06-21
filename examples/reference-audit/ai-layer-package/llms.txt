@@ -1,9 +1,9 @@
-# reference.example
+# bacoco/seo-geo-growth-agent
 
-> reference.example is a fixture showing the generated SEO/GEO report structure.
+> GitHub repository bacoco/seo-geo-growth-agent demonstrates a reusable SEO/GEO skill package.
 
 ## Primary pages
-- https://reference.example/ - Primary audited page.
+- https://github.com/bacoco/seo-geo-growth-agent - Primary audited page.
 
 ## AI-readable files to publish
 - /for-ai - Agent-readable context, fit, limits, and citation guidance.
@@ -17,4 +17,8 @@
 - Do not present llms.txt as a Google ranking factor or guaranteed AI visibility mechanism.
 
 ## Sources
-- Reference fixture: https://reference.example/
+- GitHub repository: https://github.com/bacoco/seo-geo-growth-agent
+- README: https://github.com/bacoco/seo-geo-growth-agent/blob/main/README.md
+- Installation protocol: https://github.com/bacoco/seo-geo-growth-agent/blob/main/INSTALL_FOR_AGENTS.md
+- Skill entrypoint: https://github.com/bacoco/seo-geo-growth-agent/blob/main/SKILL.md
+- Manifest: https://github.com/bacoco/seo-geo-growth-agent/blob/main/manifest.json

@@ -2,8 +2,8 @@
   "name": "ai-layer-package",
   "generated_by": "seo-geo-growth-agent",
   "generated_at": "2026-06-21T10:00:00+02:00",
-  "site": "reference.example",
-  "canonical_url": "https://reference.example/",
+  "site": "bacoco/seo-geo-growth-agent",
+  "canonical_url": "https://github.com/bacoco/seo-geo-growth-agent",
   "files": [
     {
       "label": "llms.txt",

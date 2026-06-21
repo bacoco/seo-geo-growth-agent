@@ -74,6 +74,8 @@ def write_plan(target_url: str, output_dir: Path, language: str, environment: st
             str(output_dir / "evidence-engine.json"),
             str(output_dir / "report-validation.json"),
             str(output_dir / "owner-data" / "owner-data-request.md"),
+            str(output_dir / "owner-data" / "owner-data-checklist.json"),
+            str(output_dir / "owner-data" / "owner-data-intake.csv"),
         ],
         "next_commands": command_strings(target_url, output_dir, language),
     }

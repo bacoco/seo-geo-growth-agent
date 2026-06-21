@@ -25,3 +25,4 @@
 {"input":"Make the logo bigger in the navbar and change the button color.","should_trigger":false,"expected_mode":"not_seo_geo"}
 {"input":"Write a generic motivational LinkedIn post about productivity.","should_trigger":false,"expected_mode":"not_seo_geo"}
 {"input":"Create a database migration for user accounts.","should_trigger":false,"expected_mode":"not_seo_geo"}
+{"input":"Run seo-geo-growth-agent demo mode and tell me if the golden audit and installed package doctor pass.","should_trigger":true,"expected_mode":"demo_doctor"}

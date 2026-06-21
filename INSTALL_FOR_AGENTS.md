@@ -18,7 +18,7 @@ If both Codex and Claude Code are present and the user did not specify a host, a
 
 ```bash
 INSTALL_TMP="$(mktemp -d)"
-git clone --depth 1 --branch v1.2.9 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
+git clone --depth 1 --branch v1.3.0 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
 cd "$INSTALL_TMP/seo-geo-growth-agent"
 ```
 
@@ -82,6 +82,7 @@ scripts/generate_geo_citation_panel.py
 scripts/seo_geo_audit.py
 scripts/serve_report.py
 scripts/capture_site_screenshots.mjs
+scripts/skill_demo.py
 scripts/skill_doctor.py
 ```
 
@@ -93,11 +94,12 @@ Read `runbooks/bootstrap.md` from the installed folder and offer the user the re
 
 1. SEO/GEO audit
 2. full audit command
-3. visual HTML audit
-4. `/for-ai` package
-5. content brief
-6. crawler and measurement policy
-7. ARD / ai-catalog validation when the site exposes agentic resources
+3. demo/doctor check
+4. visual HTML audit
+5. `/for-ai` package
+6. content brief
+7. crawler and measurement policy
+8. ARD / ai-catalog validation when the site exposes agentic resources
 
 Then tell the user: `seo-geo-growth-agent is installed. Restart the agent session if skills are not auto-refreshed.`
 
@@ -105,4 +107,10 @@ Optional post-install doctor:
 
 ```bash
 python3 /path/to/skills/seo-geo-growth-agent/scripts/skill_doctor.py /path/to/skills/seo-geo-growth-agent
+```
+
+Optional deterministic demo:
+
+```bash
+python3 /path/to/skills/seo-geo-growth-agent/scripts/skill_demo.py --output-dir /tmp/seo-geo-growth-agent-demo --no-serve
 ```

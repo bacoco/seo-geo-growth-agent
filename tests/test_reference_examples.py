@@ -32,9 +32,12 @@ class ReferenceExamplesTest(unittest.TestCase):
             self.assertTrue((example_dir / relative).exists(), relative)
 
         audit = json.loads((example_dir / "audit.json").read_text(encoding="utf-8"))
-        self.assertEqual(audit["site"], "reference.example")
+        self.assertEqual(audit["site"], "bacoco/seo-geo-growth-agent")
+        self.assertEqual(audit["audited_url"], "https://github.com/bacoco/seo-geo-growth-agent")
         self.assertEqual(audit["report_language"], "en")
         self.assertEqual(audit["ai_layer_package"]["status"], "generated")
+        self.assertIn("GitHub repository", audit["summary"]["headline"])
+        self.assertTrue(any(source["url"] == "https://github.com/bacoco/seo-geo-growth-agent" for source in audit["sources"]))
 
         with zipfile.ZipFile(example_dir / "ai-layer-package.zip") as archive:
             names = set(archive.namelist())

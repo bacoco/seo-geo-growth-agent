@@ -2,6 +2,7 @@
 """Tests for owner-data mode and the simple audit CLI."""
 from __future__ import annotations
 
+import csv
 import json
 import subprocess
 import sys
@@ -13,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CliOwnerAndEvidenceTest(unittest.TestCase):
-    def test_generate_owner_data_request_writes_markdown_and_json(self) -> None:
+    def test_generate_owner_data_request_writes_markdown_json_and_csv(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp) / "owner-data"
             result = subprocess.run(
@@ -34,6 +35,8 @@ class CliOwnerAndEvidenceTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             markdown = (output_dir / "owner-data-request.md").read_text(encoding="utf-8")
             checklist = json.loads((output_dir / "owner-data-checklist.json").read_text(encoding="utf-8"))
+            with (output_dir / "owner-data-intake.csv").open(encoding="utf-8") as handle:
+                intake_rows = list(csv.DictReader(handle))
             self.assertIn("example.com", markdown)
             self.assertIn("Google Search Console", markdown)
             self.assertIn("GA4", markdown)
@@ -43,6 +46,8 @@ class CliOwnerAndEvidenceTest(unittest.TestCase):
             self.assertTrue(any(item["source"] == "gsc" for item in checklist["requested_sources"]))
             self.assertTrue(any(item["source"] == "cloudflare" for item in checklist["requested_sources"]))
             self.assertEqual(checklist["paid_tools"]["default_policy"], "ask_before_use")
+            self.assertTrue(any(row["source_key"] == "gsc" for row in intake_rows))
+            self.assertTrue(any(row["source_key"] == "cloudflare" for row in intake_rows))
 
     def test_seo_geo_audit_plan_only_creates_workspace_plan(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -72,6 +77,7 @@ class CliOwnerAndEvidenceTest(unittest.TestCase):
             self.assertIn("generate_owner_data_request.py", " ".join(plan["next_commands"]))
             self.assertIn("check_ard_readiness.py", " ".join(plan["next_commands"]))
             self.assertIn("validate_audit_report.py", " ".join(plan["next_commands"]))
+            self.assertTrue(any("owner-data-intake.csv" in item for item in plan["expected_outputs"]))
 
     def test_generate_ard_catalog_writes_ai_catalog_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -31,6 +31,7 @@ REQUIRED_PATHS = [
     "scripts/generate_geo_citation_panel.py",
     "scripts/serve_report.py",
     "scripts/capture_site_screenshots.mjs",
+    "scripts/skill_demo.py",
     "scripts/skill_doctor.py",
 ]
 

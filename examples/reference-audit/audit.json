@@ -1,54 +1,71 @@
 {
-  "site": "reference.example",
-  "audited_url": "https://reference.example/",
+  "site": "bacoco/seo-geo-growth-agent",
+  "audited_url": "https://github.com/bacoco/seo-geo-growth-agent",
   "generated_at": "2026-06-21T10:00:00+02:00",
   "environment": "production",
   "report_language": "en",
   "summary": {
-    "headline": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+    "headline": "GitHub repository bacoco/seo-geo-growth-agent demonstrates a reusable SEO/GEO skill package.",
     "status": "partial",
-    "biggest_blocker": "AI-readable publication files are absent in this fixture.",
-    "fastest_win": "Review the generated AI-layer package before adapting it to a real owned site.",
+    "biggest_blocker": "The repository is installable, but the public GitHub page is not itself an owned website with root-level /llms.txt, /for-ai, or owner analytics.",
+    "fastest_win": "Use this golden audit to verify the report pipeline, then run the full workflow on the real owned domain that will publish the AI-readable files.",
     "data_confidence": "medium",
-    "decision": "Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims."
+    "decision": "Treat this as a real artifact demonstration for the public repository, not as evidence of traffic, ranking, conversions, or AI citations."
   },
   "findings": [
     {
       "priority": "P1",
-      "title": "Missing AI-readable publication layer",
+      "title": "Repository needs an owned publication surface for AI-readable files",
       "observed": [
-        "/llms.txt is marked missing in this fixture",
-        "/for-ai is marked missing in this fixture",
-        "/for-ai.json is marked missing in this fixture",
-        "/for-ai.txt is marked missing in this fixture"
+        "The public repository exposes README.md, INSTALL_FOR_AGENTS.md, SKILL.md, runbooks, templates, scripts, tests, and examples.",
+        "A GitHub repository page is not the same as an owned domain root where /llms.txt, /for-ai, /for-ai.json, and /for-ai.txt can be published.",
+        "The committed golden audit intentionally keeps traffic, ranking, conversion, and AI-citation metrics unknown."
       ],
       "inferred": [
-        "Assistants have less explicit context for citation guidance, source limits, and do-not-extrapolate boundaries."
+        "The skill package is reusable and installable, but AI-readable publication files still need owner review before being placed on an owned site or docs surface."
       ],
       "recommended": [
-        "Review the generated AI-layer package, adapt it to owner-approved facts, and publish only after owner validation."
+        "Use the generated AI-layer package as an owner-review draft for a real documentation or website surface.",
+        "Publish only the files that match visible owner-approved content.",
+        "Keep analytics and citation metrics unknown until owner data exports or measured prompt panels are supplied."
       ],
       "evidence": [
         {
-          "label": "Fixture scope",
-          "url": "https://reference.example/",
-          "status": "example_only"
+          "label": "Public GitHub repository",
+          "url": "https://github.com/bacoco/seo-geo-growth-agent",
+          "status": "observed"
         }
       ]
     }
   ],
   "sources": [
     {
-      "label": "Reference fixture",
-      "url": "https://reference.example/"
+      "label": "GitHub repository",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent"
+    },
+    {
+      "label": "README",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/blob/main/README.md"
+    },
+    {
+      "label": "Installation protocol",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/blob/main/INSTALL_FOR_AGENTS.md"
+    },
+    {
+      "label": "Skill entrypoint",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/blob/main/SKILL.md"
+    },
+    {
+      "label": "Manifest",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/blob/main/manifest.json"
     }
   ],
-  "screenshot_status": "unavailable: committed reference fixture does not include live browser screenshots",
+  "screenshot_status": "unavailable: committed golden audit does not include live browser screenshots",
   "responsive_study": {
     "method": "not_captured",
     "summary": {
       "status": "unavailable",
-      "verdict": "Browser evidence is intentionally omitted from this committed fixture."
+      "verdict": "Browser evidence is intentionally omitted from this deterministic committed golden audit."
     },
     "viewports": []
   },
@@ -56,11 +73,11 @@
   "evidence_engine": {},
   "ard_readiness": {
     "status": "missing",
-    "catalog_url": "https://reference.example/.well-known/ai-catalog.json",
+    "catalog_url": "https://github.com/bacoco/seo-geo-growth-agent/.well-known/ai-catalog.json",
     "signals": {
       "well_known": {
         "status": "missing",
-        "url": "https://reference.example/.well-known/ai-catalog.json"
+        "url": "https://github.com/bacoco/seo-geo-growth-agent/.well-known/ai-catalog.json"
       },
       "html_link": {
         "status": "missing",
@@ -77,10 +94,10 @@
     },
     "entries": [],
     "observed": [
-      "No ARD ai-catalog discovery signal is included in this fixture."
+      "No owner-hosted ARD ai-catalog discovery signal is included in this GitHub repository page."
     ],
     "recommended": [
-      "Use ARD only when a real skill, MCP server, A2A agent, or callable AI service should be discoverable."
+      "If the publisher wants this skill to be discoverable as an agentic resource, publish an owner-reviewed ai-catalog on an owned domain or documentation surface."
     ]
   },
   "ai_layer_current_state": {
@@ -92,40 +109,45 @@
   "ai_layer_endpoint_checks": [
     {
       "label": "/llms.txt",
-      "url": "https://reference.example/llms.txt",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/llms.txt",
       "status_code": 404,
       "present": false,
-      "error": "fixture"
+      "error": "not an owned domain-root publication path"
     },
     {
       "label": "/for-ai",
-      "url": "https://reference.example/for-ai",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/for-ai",
       "status_code": 404,
       "present": false,
-      "error": "fixture"
+      "error": "not an owned domain-root publication path"
     },
     {
       "label": "/for-ai.json",
-      "url": "https://reference.example/for-ai.json",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/for-ai.json",
       "status_code": 404,
       "present": false,
-      "error": "fixture"
+      "error": "not an owned domain-root publication path"
     },
     {
       "label": "/for-ai.txt",
-      "url": "https://reference.example/for-ai.txt",
+      "url": "https://github.com/bacoco/seo-geo-growth-agent/for-ai.txt",
       "status_code": 404,
       "present": false,
-      "error": "fixture"
+      "error": "not an owned domain-root publication path"
     }
   ],
   "public_measurements": [
     {
-      "source": "Reference fixture",
+      "source": "Public repository evidence",
       "access": "public",
-      "metric": "Artifact structure only",
+      "metric": "Repository structure and committed artifacts",
       "limit": "No visits, rankings, conversions, traffic, or AI citation metrics"
     }
+  ],
+  "representative_queries": [
+    "install seo-geo-growth-agent in Codex",
+    "run a full SEO GEO audit with generated AI-readable files",
+    "validate a generated SEO GEO HTML audit report"
   ],
   "ai_layer_package": {
     "status": "generated",
