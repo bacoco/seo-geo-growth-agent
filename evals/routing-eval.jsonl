@@ -15,6 +15,10 @@
 {"input":"Compare these two SEO/GEO audit.json files and tell me narratively what improved or regressed.","should_trigger":true,"expected_mode":"report_comparison"}
 {"input":"Generate a GEO citation prompt panel for ChatGPT, Perplexity and Claude, but mark it ready not executed.","should_trigger":true,"expected_mode":"geo_citation_panel"}
 {"input":"This is a staging site; keep GA4 and GSC as production gates instead of immediate fixes.","should_trigger":true,"expected_mode":"visual_html_audit"}
+{"input":"Run Evidence Engine with Console Watch, Network Watch and Cache/CDN Watch for this homepage audit.","should_trigger":true,"expected_mode":"visual_html_audit"}
+{"input":"Generate an owner-data request for GSC, GA4, Bing Webmaster Tools, server logs and Cloudflare Analytics.","should_trigger":true,"expected_mode":"owner_data_mode"}
+{"input":"Create an ARD /.well-known/ai-catalog.json draft with representativeQueries for this AI skill.","should_trigger":true,"expected_mode":"ard_ai_catalog"}
+{"input":"Use seo-geo-audit to create a repeatable audit workspace and plan-only command receipt.","should_trigger":true,"expected_mode":"cli_audit"}
 {"input":"Make the logo bigger in the navbar and change the button color.","should_trigger":false,"expected_mode":"not_seo_geo"}
 {"input":"Write a generic motivational LinkedIn post about productivity.","should_trigger":false,"expected_mode":"not_seo_geo"}
 {"input":"Create a database migration for user accounts.","should_trigger":false,"expected_mode":"not_seo_geo"}

@@ -112,8 +112,65 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                                 "limit": "No visit counts",
                             }
                         ],
+                        "evidence_engine": {
+                            "console_watch": {
+                                "summary": {
+                                    "total": 1,
+                                    "errors": 1,
+                                    "warnings": 0,
+                                    "by_classification": {"first_party": 1},
+                                },
+                                "sample": [
+                                    {
+                                        "level": "error",
+                                        "classification": "first_party",
+                                        "text": "Fixture console error",
+                                        "url": "https://example.com/app.js",
+                                    }
+                                ],
+                            },
+                            "network_watch": {
+                                "summary": {
+                                    "response_count": 12,
+                                    "failed_requests": 1,
+                                    "non_2xx_3xx": 1,
+                                    "status_counts": {"200": 11, "404": 1},
+                                },
+                                "failed_sample": [
+                                    {"type": "Image", "error_text": "net::ERR_ABORTED", "blocked_reason": ""}
+                                ],
+                            },
+                            "cache_cdn_watch": {
+                                "status": "headers_available",
+                                "verdict": "Cache/CDN headers captured.",
+                                "headers": {"cache-control": "max-age=3600", "cf-cache-status": "HIT"},
+                            },
+                            "design_watch_metrics": {
+                                "desktop": {
+                                    "cta_visible": True,
+                                    "trust_signal_visible": True,
+                                    "hero_height_ratio": 0.58,
+                                    "next_section_visible": True,
+                                }
+                            },
+                        },
+                        "ard_readiness": {
+                            "status": "draft_ready",
+                            "catalog_url": "https://example.com/.well-known/ai-catalog.json",
+                            "observed": ["No ai-catalog manifest is currently published."],
+                            "recommended": ["Publish /.well-known/ai-catalog.json if the site exposes agentic resources."],
+                            "entries": [
+                                {
+                                    "identifier": "urn:air:example.com:skill:seo-geo-growth-agent",
+                                    "type": "application/ai-skill+md",
+                                    "representativeQueries": ["audit my website for AI search", "generate a /for-ai package"],
+                                }
+                            ],
+                        },
                         "ai_layer_package": {
                             "status": "generated",
+                            "publication_status": "adapt_before_publish",
+                            "status_reason": "Owner review required before publishing.",
                             "zip_path": "ai-layer-package.zip",
                             "files": [
                                 {
@@ -168,7 +225,16 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
             self.assertIn("Readiness scores", html)
             self.assertIn("Measurement access", html)
             self.assertIn("Chrome UX Report", html)
+            self.assertIn("Evidence Engine", html)
+            self.assertIn("Console Watch", html)
+            self.assertIn("Cache/CDN Watch", html)
+            self.assertIn("Fixture console error", html)
+            self.assertIn("CTA visible", html)
+            self.assertIn("ARD readiness", html)
+            self.assertIn("ai-catalog", html)
             self.assertIn("AI layer package", html)
+            self.assertIn("adapt_before_publish", html)
+            self.assertIn("Owner review required before publishing.", html)
             self.assertIn("ai-layer-package.zip", html)
             self.assertIn("ai-layer-package/llms.txt", html)
             self.assertIn("Images loaded after scroll", html)

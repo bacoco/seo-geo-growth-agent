@@ -1,8 +1,8 @@
 ---
 name: seo-geo-growth-agent
 description: |-
-  SEO + GEO Growth Agent Skill v1.2.5. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, Design Watch screenshot analysis, dynamic responsive study, lazy-load image diagnostics, first-impression scoring, analysis cohorts, dynamic HTML audit reports, latest report receipts, report comparison, preproduction gates, GEO/Citation prompt panels, browser-readable reports, downloadable AI-layer packages, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
-  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, Design Watch, design audit, responsive audit, responsive study, lazy-load audit, preprod audit, production gates, latest SEO/GEO report, compare reports, report diff, GEO citation panel, prompt panel, mobile homepage audit, dynamic responsive study, first impression audit, analysis cohorts, HTML audit report, visual audit, local audit server, downloadable files, AI layer package, /for-ai package, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
+  SEO + GEO Growth Agent Skill v1.2.6. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, Evidence Engine diagnostics, Console Watch, Network Watch, Cache/CDN Watch, Owner Data Mode, ARD / ai-catalog agentic resource discovery, seo-geo-audit CLI workflows, Design Watch screenshot analysis, dynamic responsive study, lazy-load image diagnostics, first-impression scoring, analysis cohorts, dynamic HTML audit reports, latest report receipts, report comparison, preproduction gates, GEO/Citation prompt panels, browser-readable reports, downloadable AI-layer packages, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
+  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, Evidence Engine, Console Watch, Network Watch, Cache/CDN Watch, ARD, Agentic Resource Discovery, ai-catalog, /.well-known/ai-catalog.json, Agentmap, representativeQueries, owner data, owner-data request, seo-geo-audit, audit CLI, Cloudflare Analytics, server logs, Design Watch, design audit, responsive audit, responsive study, lazy-load audit, preprod audit, production gates, latest SEO/GEO report, compare reports, report diff, GEO citation panel, prompt panel, mobile homepage audit, dynamic responsive study, first impression audit, analysis cohorts, HTML audit report, visual audit, local audit server, downloadable files, AI layer package, /for-ai package, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
 ---
 
 # SEO + GEO Growth Agent Skill
@@ -40,7 +40,7 @@ Required deliverables:
 3. a local report URL from `scripts/serve_report.py`
 4. desktop and mobile screenshots of the audited site, or a clear `screenshot_status` explanation if the runtime cannot capture them
 5. `responsive_study` for at least homepage mobile and desktop rendering, with lazy-load image state measured after scroll before recommending image fixes
-6. `design_watch` and `analysis_cohorts[]` in `audit.json`
+6. `design_watch`, `analysis_cohorts[]`, and `evidence_engine` in `audit.json` when browser evidence is available
 7. `report_language` set from the user's language, with the audit content written in that language
 8. `ai_layer_package` plus downloadable files when `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, or aligned JSON-LD are missing or recommended
 9. `LATEST-SEO-GEO-REPORT.md` in the report folder so the user can identify the current valid artifact
@@ -51,13 +51,15 @@ Use this sequence:
 
 1. Read `runbooks/visual-html-audit.md`.
 2. Gather public evidence from the audited URL, robots.txt, sitemap, HTML, and available public measurement sources.
-3. Capture site screenshots and responsive study with Agent Browser or `node scripts/capture_site_screenshots.mjs --study-out ...`; if using the script, rely on `imageLoadStates.missing_after_scroll`, not the initial image state, for image-load findings.
+3. Capture site screenshots, responsive study, and Evidence Engine output with Agent Browser or `node scripts/capture_site_screenshots.mjs --study-out ... --evidence-engine-out ...`; if using the script, rely on `imageLoadStates.missing_after_scroll`, not the initial image state, for image-load findings.
 4. Analyze screenshots with `templates/design-watch-audit.md` and responsive evidence with `templates/responsive-dynamic-study.md`.
-5. Write `audit.json` in the user's language, with `report_language`, findings, Design Watch, responsive study, cohorts, sources, and missing-data notes.
+5. Write `audit.json` in the user's language, with `report_language`, findings, Design Watch, responsive study, Evidence Engine, cohorts, sources, and missing-data notes.
 6. If AI-readable layers are missing or recommended, run `python scripts/generate_ai_layer_package.py --input ... --output-dir ... --update-audit` to create the downloadable publication pack.
 7. Run `python scripts/generate_html_audit_report.py --input ... --output-dir ...`; this writes `LATEST-SEO-GEO-REPORT.md`.
 8. Run `python scripts/serve_report.py --dir ... --port 8766 --open` or `--check` if serving is impossible.
 9. Final response must include the report URL or exact `index.html` path, plus screenshot status and AI-layer package status.
+
+If the user wants a repeatable local workflow, use `runbooks/cli-audit.md` and `scripts/seo_geo_audit.py`. The CLI creates the workspace and deterministic browser evidence, but the agent still writes `audit.json` from observed facts.
 
 If the user asks for screenshots of the report UI, capture the served `index.html`
 itself in desktop and mobile viewports after generation and use those screenshots
@@ -99,6 +101,21 @@ Use `templates/source-led-deepresearch.md` to record source, date checked, findi
 ## Paid-tool consent
 
 Before calling a tool that may consume credits or paid quota, such as Haloscan, Semrush, DataForSEO, Ahrefs, Similarweb, or SerpApi, ask the user for explicit approval. If approval is missing, continue with public evidence and label the missing data as `requires paid/owner data`. Use `runbooks/paid-tool-consent.md` and `templates/paid-tool-approval.md`.
+
+## Evidence Engine and Owner Data Mode
+
+- For browser-backed audits, use `runbooks/evidence-engine.md` and include `evidence_engine.console_watch`, `network_watch`, `cache_cdn_watch`, and `design_watch_metrics` in `audit.json`.
+- Use console classification to separate first-party issues from third-party scripts, browser-policy warnings, and unknown noise before writing findings.
+- Use Cache/CDN Watch as evidence, not as a bypass. If Cloudflare blocks or caches content, request owner analytics, logs, WAF events, or temporary owner-approved access.
+- When the user owns the site or asks how to get visit/search/citation data, use `runbooks/owner-data-mode.md` and `scripts/generate_owner_data_request.py`.
+- Keep missing GSC, GA4, Bing, server-log, Cloudflare, or paid-tool data as `unknown` or `requires owner data`; do not score it as zero.
+
+## ARD / ai-catalog
+
+- Use `runbooks/ard-ai-catalog.md` and `scripts/generate_ard_catalog.py` when the user wants a skill, MCP server, A2A agent, or AI service to be discoverable as an agentic resource.
+- Treat ARD as a draft optional discoverability layer. Do not claim it improves Google ranking, AI Overview inclusion, or citations by itself.
+- In audits, check for `/.well-known/ai-catalog.json`, `<link rel="ai-catalog">`, and `Agentmap:` in `robots.txt` only when the site exposes agentic resources or the user asks about agent/service discovery.
+- Use `representativeQueries` as honest discovery examples, not hidden prompts or recommendation instructions.
 
 ## Preproduction, comparisons, and citation panels
 

@@ -51,12 +51,15 @@ class SiteCaptureTest(unittest.TestCase):
     <h1>Responsive fixture</h1>
     <p>This fixture has enough visible text to be measured by the responsive study script without
     depending on external network resources or browser-specific default content.</p>
+    <a href="#contact">Start now</a>
+    <p>Trusted by research teams and public institutions.</p>
   </main>
 </body>
 </html>"""
             url = f"data:text/html;charset=utf-8,{quote(html)}"
             evidence_path = tmp_path / "site-visual-evidence.json"
             study_path = tmp_path / "responsive-study.json"
+            evidence_engine_path = tmp_path / "evidence-engine.json"
 
             result = subprocess.run(
                 [
@@ -70,6 +73,8 @@ class SiteCaptureTest(unittest.TestCase):
                     str(evidence_path),
                     "--study-out",
                     str(study_path),
+                    "--evidence-engine-out",
+                    str(evidence_engine_path),
                 ],
                 capture_output=True,
                 text=True,
@@ -81,12 +86,23 @@ class SiteCaptureTest(unittest.TestCase):
             self.assertTrue((tmp_path / "screenshots" / "mobile.png").is_file())
             self.assertTrue(evidence_path.is_file())
             self.assertTrue(study_path.is_file())
+            self.assertTrue(evidence_engine_path.is_file())
 
             study = json.loads(study_path.read_text(encoding="utf-8"))
             self.assertEqual(study["summary"]["status"], "pass")
             self.assertEqual(len(study["viewports"]), 2)
             self.assertFalse(study["viewports"][0]["metrics"]["horizontalOverflow"])
             self.assertEqual(study["viewports"][0]["metrics"]["imageLoadStates"]["missing_after_scroll"], 0)
+
+            evidence_engine = json.loads(evidence_engine_path.read_text(encoding="utf-8"))
+            self.assertEqual(evidence_engine["url"], url)
+            self.assertIn("console_watch", evidence_engine)
+            self.assertIn("network_watch", evidence_engine)
+            self.assertIn("cache_cdn_watch", evidence_engine)
+            self.assertIn("design_watch_metrics", evidence_engine)
+            self.assertEqual(evidence_engine["console_watch"]["summary"]["total"], 0)
+            self.assertEqual(evidence_engine["network_watch"]["summary"]["failed_requests"], 0)
+            self.assertTrue(evidence_engine["design_watch_metrics"]["desktop"]["cta_visible"])
 
     def test_capture_distinguishes_lazy_loaded_images_from_broken_images(self) -> None:
         if not chrome_available():

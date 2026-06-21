@@ -14,23 +14,23 @@ Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.5/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.6/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.5/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.6/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.5/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.6/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.2.5 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.2.6 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -55,6 +55,14 @@ Use seo-geo-growth-agent to audit this site for SEO/GEO and rank the P0 fixes.
 
 ```text
 Use seo-geo-growth-agent on this site and generate a dynamic HTML audit report served locally. Capture desktop/mobile screenshots of the audited site, run a responsive mobile/desktop study, run Design Watch, and add analysis cohorts.
+```
+
+```text
+Use seo-geo-growth-agent with Evidence Engine: capture Console Watch, Network Watch, Cache/CDN Watch, owner-data request files, and a served HTML report.
+```
+
+```text
+Generate an ARD /.well-known/ai-catalog.json draft for this skill or AI service, with representativeQueries and safe draft-status notes.
 ```
 
 ```text
@@ -85,6 +93,10 @@ It helps an agent produce:
 - crawler and robots.txt policy matrices;
 - claim ledgers and citation-safe source registers;
 - tabbed dynamic HTML audit reports with local serving, executive overview, animated readiness signal, lazy-load aware responsive mobile/desktop study, site screenshot analysis, Design Watch scoring, and analysis cohorts;
+- Evidence Engine outputs for Console Watch, Network Watch, Cache/CDN Watch, and measurable first-screen Design Watch facts;
+- ARD / `ai-catalog.json` drafts for agentic resource discovery, clearly marked as draft/optional;
+- Owner Data Mode requests for GSC, GA4, Bing Webmaster Tools, server logs, Cloudflare Analytics, and paid-tool consent boundaries;
+- a simple `scripts/seo_geo_audit.py` CLI that creates an audit workspace, browser evidence, owner-data request files, and next commands;
 - `LATEST-SEO-GEO-REPORT.md` receipts, preproduction/production gates, and narrative comparison between two reports;
 - GEO/Citation prompt panels for ChatGPT, Perplexity, and Claude, clearly marked `ready_not_executed` until run;
 - public-vs-owner-only measurement matrices for traffic, Search Console, GA4, logs, and AI visibility;
@@ -148,8 +160,11 @@ runbooks/
 evals/
 scripts/generate_html_audit_report.py
 scripts/generate_ai_layer_package.py
+scripts/generate_owner_data_request.py
+scripts/generate_ard_catalog.py
 scripts/compare_audit_reports.py
 scripts/generate_geo_citation_panel.py
+scripts/seo_geo_audit.py
 scripts/serve_report.py
 scripts/capture_site_screenshots.mjs
 scripts/skill_doctor.py

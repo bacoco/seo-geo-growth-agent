@@ -1,0 +1,27 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "{{host_display_name}}",
+    "identifier": "https://{{publisher_domain}}",
+    "documentationUrl": "{{documentation_url}}"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:{{publisher_domain}}:skill:{{resource_name}}",
+      "displayName": "{{resource_display_name}}",
+      "type": "application/ai-skill+md",
+      "url": "{{resource_url}}",
+      "description": "{{resource_description}}",
+      "tags": ["seo", "geo", "ai-search", "skill"],
+      "capabilities": ["SEOAudit", "GEOAudit", "ForAIPackage", "EvidenceEngine"],
+      "representativeQueries": [
+        "audit my website for SEO and AI search readiness",
+        "generate an AI-readable /for-ai package for my site"
+      ],
+      "metadata": {
+        "spec_status": "ARD v0.9 draft",
+        "publication_path": "/.well-known/ai-catalog.json"
+      }
+    }
+  ]
+}

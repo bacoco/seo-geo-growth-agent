@@ -82,6 +82,8 @@ class AiLayerPackageTest(unittest.TestCase):
 
             updated_audit = json.loads(audit_path.read_text(encoding="utf-8"))
             self.assertEqual(updated_audit["ai_layer_package"]["zip_path"], "ai-layer-package.zip")
+            self.assertEqual(updated_audit["ai_layer_package"]["publication_status"], "adapt_before_publish")
+            self.assertIn("status_reason", updated_audit["ai_layer_package"])
             self.assertEqual(len(updated_audit["ai_layer_package"]["files"]), len(expected_files))
 
             with zipfile.ZipFile(output_dir / "ai-layer-package.zip") as archive:

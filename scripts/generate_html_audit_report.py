@@ -556,6 +556,30 @@ HTML_TEMPLATE = """<!doctype html>
         visualProof: 'Visual proof',
         publicSources: 'Public sources',
         topCohorts: 'Top cohorts',
+        evidenceEngine: 'Evidence Engine',
+        consoleWatch: 'Console Watch',
+        networkWatch: 'Network Watch',
+        cacheCdnWatch: 'Cache/CDN Watch',
+        designWatchMetrics: 'Design Watch metrics',
+        totalMessages: 'Total messages',
+        errors: 'Errors',
+        warnings: 'Warnings',
+        responses: 'Responses',
+        failedRequests: 'Failed requests',
+        non2xx3xx: 'Non-2xx/3xx',
+        cacheStatus: 'Cache status',
+        ctaVisible: 'CTA visible',
+        trustSignalVisible: 'Trust signal visible',
+        heroHeightRatio: 'Hero height ratio',
+        nextSectionVisible: 'Next section visible',
+        cacheHeaders: 'Cache headers',
+        message: 'Message',
+        classification: 'Classification',
+        ardReadiness: 'ARD readiness',
+        catalogUrl: 'Catalog URL',
+        identifier: 'Identifier',
+        type: 'Type',
+        representativeQueries: 'Representative queries',
         fallbackSubtitle: 'Evidence-led audit for search engines, AI answer engines, and browser agents.',
         status: 'Status',
         confidence: 'Confidence',
@@ -666,6 +690,30 @@ HTML_TEMPLATE = """<!doctype html>
         visualProof: 'Preuves visuelles',
         publicSources: 'Sources publiques',
         topCohorts: 'Cohortes clés',
+        evidenceEngine: 'Evidence Engine',
+        consoleWatch: 'Console Watch',
+        networkWatch: 'Network Watch',
+        cacheCdnWatch: 'Cache/CDN Watch',
+        designWatchMetrics: 'Métriques Design Watch',
+        totalMessages: 'Messages au total',
+        errors: 'Erreurs',
+        warnings: 'Avertissements',
+        responses: 'Réponses',
+        failedRequests: 'Requêtes échouées',
+        non2xx3xx: 'Hors 2xx/3xx',
+        cacheStatus: 'Statut cache',
+        ctaVisible: 'CTA visible',
+        trustSignalVisible: 'Signal de confiance visible',
+        heroHeightRatio: 'Ratio hauteur héros',
+        nextSectionVisible: 'Section suivante visible',
+        cacheHeaders: 'Headers cache',
+        message: 'Message',
+        classification: 'Classification',
+        ardReadiness: 'ARD readiness',
+        catalogUrl: 'URL du catalogue',
+        identifier: 'Identifiant',
+        type: 'Type',
+        representativeQueries: 'Requêtes représentatives',
         fallbackSubtitle: 'Audit fondé sur des preuves pour les moteurs de recherche, les moteurs de réponse IA et les agents navigateur.',
         status: 'Statut',
         confidence: 'Confiance',
@@ -1310,6 +1358,110 @@ HTML_TEMPLATE = """<!doctype html>
       ]);
     }
 
+    function renderEvidenceEngine() {
+      const engine = audit.evidence_engine || audit.evidenceEngine || null;
+      if (!engine) return null;
+      const consoleSummary = engine.console_watch?.summary || {};
+      const networkSummary = engine.network_watch?.summary || {};
+      const cache = engine.cache_cdn_watch || {};
+      const designMetrics = engine.design_watch_metrics || {};
+      const consoleSample = Array.isArray(engine.console_watch?.sample) ? engine.console_watch.sample : [];
+      const cacheHeaders = cache.headers || {};
+      return section(t('evidenceEngine'), [
+        el('div', { class: 'grid four' }, [
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('consoleWatch') }),
+            el('p', { text: `${t('totalMessages')}: ${text(consoleSummary.total, '0')}` }),
+            el('p', { class: 'small', text: `${t('errors')}: ${text(consoleSummary.errors, '0')} · ${t('warnings')}: ${text(consoleSummary.warnings, '0')}` })
+          ]),
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('networkWatch') }),
+            el('p', { text: `${t('responses')}: ${text(networkSummary.response_count, '0')}` }),
+            el('p', { class: 'small', text: `${t('failedRequests')}: ${text(networkSummary.failed_requests, '0')} · ${t('non2xx3xx')}: ${text(networkSummary.non_2xx_3xx, '0')}` })
+          ]),
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('cacheCdnWatch') }),
+            cache.status ? badge(cache.status) : null,
+            el('p', { class: 'small', text: text(cache.verdict, '') })
+          ].filter(Boolean)),
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('designWatchMetrics') }),
+            el('p', { text: Object.keys(designMetrics).join(', ') || t('unknown') }),
+            el('p', { class: 'small', text: text(engine.method, '') })
+          ])
+        ]),
+        consoleSample.length ? el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('consoleWatch') }),
+            el('th', { text: t('classification') }),
+            el('th', { text: t('message') })
+          ])]),
+          el('tbody', {}, consoleSample.map(item => el('tr', {}, [
+            el('td', {}, [badge(text(item.level, 'log'))]),
+            el('td', { text: text(item.classification, t('unknown')) }),
+            el('td', { text: text(item.text || item.url, '') })
+          ])))
+        ]) : null,
+        Object.keys(cacheHeaders).length ? el('div', {}, [
+          el('h3', { text: t('cacheHeaders') }),
+          el('table', {}, [
+            el('tbody', {}, Object.entries(cacheHeaders).map(([key, value]) => el('tr', {}, [
+              el('td', { text: key }),
+              el('td', { text: text(value, '') })
+            ])))
+          ])
+        ]) : null,
+        Object.keys(designMetrics).length ? el('div', {}, [
+          el('h3', { text: t('designWatchMetrics') }),
+          el('table', {}, [
+            el('thead', {}, [el('tr', {}, [
+              el('th', { text: t('viewport') }),
+              el('th', { text: t('ctaVisible') }),
+              el('th', { text: t('trustSignalVisible') }),
+              el('th', { text: t('heroHeightRatio') }),
+              el('th', { text: t('nextSectionVisible') })
+            ])]),
+            el('tbody', {}, Object.entries(designMetrics).map(([viewport, metrics]) => el('tr', {}, [
+              el('td', { text: viewport }),
+              el('td', { text: metrics.cta_visible ? t('yes') : t('no') }),
+              el('td', { text: metrics.trust_signal_visible ? t('yes') : t('no') }),
+              el('td', { text: text(metrics.hero_height_ratio, t('unknown')) }),
+              el('td', { text: metrics.next_section_visible ? t('yes') : t('no') })
+            ])))
+          ])
+        ]) : null
+      ].filter(Boolean));
+    }
+
+    function renderArdReadiness() {
+      const ard = audit.ard_readiness || audit.ardReadiness || null;
+      if (!ard) return null;
+      const entries = Array.isArray(ard.entries) ? ard.entries : [];
+      return section(t('ardReadiness'), [
+        el('div', { class: 'callout' }, [
+          ard.status ? badge(ard.status) : null,
+          ard.catalog_url ? el('p', {}, [
+            `${t('catalogUrl')}: `,
+            el('a', { href: ard.catalog_url, text: ard.catalog_url })
+          ]) : null,
+          list(ard.observed),
+          list(ard.recommended)
+        ].filter(Boolean)),
+        entries.length ? el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('identifier') }),
+            el('th', { text: t('type') }),
+            el('th', { text: t('representativeQueries') })
+          ])]),
+          el('tbody', {}, entries.map(item => el('tr', {}, [
+            el('td', { text: text(item.identifier, '') }),
+            el('td', { text: text(item.type, '') }),
+            el('td', {}, [list(item.representativeQueries)])
+          ])))
+        ]) : null
+      ].filter(Boolean));
+    }
+
     function renderProductionGates() {
       const gates = Array.isArray(audit.production_gates || audit.preprod_gates)
         ? (audit.production_gates || audit.preprod_gates)
@@ -1369,7 +1521,9 @@ HTML_TEMPLATE = """<!doctype html>
           el('div', {}, [
             el('h3', { text: t('aiLayerPackage') }),
             el('p', { text: t('aiLayerPackageCopy') }),
-            packageData.status ? badge(packageData.status) : null
+            packageData.status ? badge(packageData.status) : null,
+            packageData.publication_status ? badge(packageData.publication_status) : null,
+            packageData.status_reason ? el('p', { class: 'small', text: text(packageData.status_reason, '') }) : null
           ].filter(Boolean)),
           packageData.zip_path ? el('a', { class: 'download-button', href: packageData.zip_path, text: t('downloadZip') }) : null
         ].filter(Boolean)),
@@ -1401,6 +1555,8 @@ HTML_TEMPLATE = """<!doctype html>
       return [
         renderTechnicalSnapshot(),
         renderProductionGates(),
+        renderEvidenceEngine(),
+        renderArdReadiness(),
         renderPublicMeasurements()
       ].filter(Boolean);
     }

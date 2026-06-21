@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.6 — Evidence Engine, Owner Data Mode, CLI, and ARD drafts
+
+### Added
+
+- `scripts/capture_site_screenshots.mjs` can now emit `evidence-engine.json` with Console Watch, Network Watch, Cache/CDN Watch, and measurable first-screen Design Watch facts.
+- HTML reports render Evidence Engine and ARD readiness blocks in the Technical tab.
+- `scripts/generate_owner_data_request.py` creates owner-data requests for GSC, GA4, Bing Webmaster Tools, server logs, Cloudflare Analytics, and paid-tool consent.
+- `scripts/seo_geo_audit.py` creates repeatable audit workspaces and plan-only command receipts.
+- `scripts/generate_ard_catalog.py`, `templates/ai-catalog.json`, and `runbooks/ard-ai-catalog.md` add optional ARD / `/.well-known/ai-catalog.json` support for agentic resource discovery.
+- AI-layer packages now expose `publication_status` and `status_reason` so drafts are not mistaken for owner-approved publication files.
+
 ## 1.2.5 — Receipts, preproduction gates, comparisons, and citation panels
 
 ### Added

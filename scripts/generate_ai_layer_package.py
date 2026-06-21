@@ -332,8 +332,33 @@ def file_manifest() -> list[dict[str, str]]:
     ]
 
 
+def publication_status(audit: dict[str, Any]) -> tuple[str, str]:
+    current = audit.get("ai_layer_current_state") if isinstance(audit.get("ai_layer_current_state"), dict) else {}
+    if current.get("conflict") or current.get("status") == "conflict":
+        return (
+            "conflict_with_existing_source",
+            "The audit reports an existing AI layer conflict; compare files before publishing generated drafts.",
+        )
+    if current.get("llms_txt") and current.get("for_ai") and current.get("for_ai_json") and current.get("for_ai_txt"):
+        return (
+            "already_present",
+            "The audited site appears to already expose the expected AI-readable layer.",
+        )
+    owner_review = audit.get("owner_review") if isinstance(audit.get("owner_review"), dict) else {}
+    if owner_review.get("approved_ai_layer") is True:
+        return (
+            "publish_as_is",
+            "Owner review marked the generated AI layer as approved for publication.",
+        )
+    return (
+        "adapt_before_publish",
+        "Generated files are drafts built from audit evidence and require owner review before publication.",
+    )
+
+
 def write_package(audit: dict[str, Any], output_dir: Path) -> dict[str, Any]:
     payload = package_payload(audit)
+    publish_status, status_reason = publication_status(audit)
     package_dir = output_dir / PACKAGE_DIR
     package_dir.mkdir(parents=True, exist_ok=True)
     (package_dir / "for-ai").mkdir(exist_ok=True)
@@ -366,6 +391,8 @@ def write_package(audit: dict[str, Any], output_dir: Path) -> dict[str, Any]:
 
     return {
         "status": "generated",
+        "publication_status": publish_status,
+        "status_reason": status_reason,
         "path": PACKAGE_DIR,
         "zip_path": PACKAGE_ZIP,
         "files": file_manifest(),

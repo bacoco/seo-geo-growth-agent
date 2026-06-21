@@ -13,6 +13,8 @@ reports/<site-slug>/<YYYY-MM-DD>/
 ├── LATEST-SEO-GEO-REPORT.md
 ├── ai-layer-package.zip
 ├── ai-layer-package/
+├── evidence-engine.json
+├── owner-data/
 └── screenshots/
     ├── desktop.png
     └── mobile.png
@@ -58,6 +60,8 @@ Optional:
 - `design_watch`
 - `site_visual_evidence[]`
 - `responsive_study`
+- `evidence_engine`
+- `ard_readiness`
 - `screenshot_status`
 - `public_measurements[]`
 - `action_plan[]`
@@ -67,7 +71,7 @@ Optional:
 ## Workflow
 
 1. Run the normal SEO/GEO audit first.
-2. Capture desktop and mobile screenshots of the audited URL and run a dynamic responsive study. If this fails, record why in `screenshot_status`.
+2. Capture desktop and mobile screenshots of the audited URL and run a dynamic responsive study plus Evidence Engine. If this fails, record why in `screenshot_status`.
 3. Analyze the screenshots and write a `design_watch` verdict. Analyze mobile/desktop rendering and write `responsive_study`. If screenshots are unavailable, write lower-confidence blocks based only on rendered/HTML evidence and state the limit.
 4. Convert the audit into `audit.json` in the user's language. Set `report_language` to the language of the user's request.
 5. If `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, or aligned JSON-LD are missing or recommended, generate the downloadable AI-layer publication pack:
@@ -79,7 +83,18 @@ python scripts/generate_ai_layer_package.py \
   --update-audit
 ```
 
-6. Generate the dynamic HTML report and current-report receipt:
+6. If the site exposes a skill, MCP server, A2A agent, or callable AI service, add `ard_readiness` and optionally generate an ARD draft:
+
+```bash
+python scripts/generate_ard_catalog.py \
+  --publisher-domain example.com \
+  --display-name "Example AI Resource" \
+  --resource-name example-resource \
+  --resource-url https://example.com/resource \
+  --output reports/<site-slug>/<YYYY-MM-DD>/ai-catalog.json
+```
+
+7. Generate the dynamic HTML report and current-report receipt:
 
 ```bash
 python scripts/generate_html_audit_report.py \
@@ -87,7 +102,7 @@ python scripts/generate_html_audit_report.py \
   --output-dir reports/<site-slug>/<YYYY-MM-DD>
 ```
 
-7. Start the local server:
+8. Start the local server:
 
 ```bash
 python scripts/serve_report.py \
@@ -98,7 +113,7 @@ python scripts/serve_report.py \
 
 If the preferred port is busy, the server chooses a nearby free port and prints the URL.
 
-8. When report UI quality is in scope, screenshot the served report itself in
+9. When report UI quality is in scope, screenshot the served report itself in
 desktop and mobile viewports, review the resulting images, and iterate on the
 presentation layer until text hierarchy, spacing, wrapping, tabs, and visual
 evidence are clean.
@@ -115,11 +130,13 @@ Before finalizing, verify that all applicable deliverables exist:
 | `LATEST-SEO-GEO-REPORT.md` | yes |
 | desktop and mobile site screenshots | yes, unless unavailable |
 | `responsive_study` for mobile and desktop | yes |
+| `evidence_engine` | yes, when browser events are available |
 | `screenshot_status` reason when screenshots are missing | yes, if screenshots failed |
 | `design_watch` | yes |
 | `analysis_cohorts[]` | yes for global reports |
 | `report_language` matching the user's language | yes |
 | downloadable AI-layer package | yes, when AI-readable layers are missing or recommended |
+| `ard_readiness` | yes, when agentic resources are in scope |
 | report desktop/mobile screenshots | yes, when UI quality is requested |
 
 ## Design Watch From Site Screenshots
