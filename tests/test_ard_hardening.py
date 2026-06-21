@@ -150,6 +150,7 @@ class ArdHardeningTest(unittest.TestCase):
                         f"{base_url}/",
                         "--output",
                         str(output_path),
+                        "--allow-local",
                     ],
                     capture_output=True,
                     text=True,

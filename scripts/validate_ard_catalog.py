@@ -9,8 +9,10 @@ import sys
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
+from runtime_config import USER_AGENT, validate_network_url
 
 IDENTIFIER_PATTERN = re.compile(r"^urn:air:[A-Za-z0-9.-]+(?::[A-Za-z0-9][A-Za-z0-9._-]*){2,}$")
 
@@ -19,19 +21,24 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", help="Local ai-catalog.json path or http(s) URL.")
     parser.add_argument("--json", action="store_true", help="Print machine-readable validation results.")
+    parser.add_argument("--allow-local", action="store_true", help="Allow localhost, loopback, private, and reserved network URLs.")
     return parser.parse_args()
 
 
-def load_json(source: str) -> Any:
-    if source.startswith(("http://", "https://")):
-        request = Request(source, headers={"User-Agent": "seo-geo-growth-agent/1.2"})
+def load_json(source: str, *, allow_local: bool = False) -> Any:
+    scheme = urlparse(source).scheme
+    if scheme:
+        network_source = validate_network_url(source, allow_local=allow_local)
+        request = Request(network_source, headers={"User-Agent": USER_AGENT})
         try:
             with urlopen(request, timeout=10) as response:
                 return json.loads(response.read().decode("utf-8"))
         except HTTPError as exc:
-            raise ValueError(f"HTTP {exc.code} while fetching {source}") from exc
+            raise ValueError(f"HTTP {exc.code} while fetching {network_source}") from exc
         except URLError as exc:
-            raise ValueError(f"network error while fetching {source}: {exc.reason}") from exc
+            raise ValueError(f"network error while fetching {network_source}: {exc.reason}") from exc
+        except (OSError, TimeoutError) as exc:
+            raise ValueError(f"network error while fetching {network_source}: {exc}") from exc
     path = Path(source)
     try:
         return json.loads(path.read_text(encoding="utf-8"))
@@ -106,7 +113,7 @@ def validate_catalog(catalog: Any) -> list[str]:
 def main() -> None:
     args = parse_args()
     try:
-        catalog = load_json(args.source)
+        catalog = load_json(args.source, allow_local=args.allow_local)
     except ValueError as exc:
         if args.json:
             print(json.dumps({"status": "fail", "errors": [str(exc)]}, indent=2))

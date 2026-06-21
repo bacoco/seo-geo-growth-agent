@@ -258,6 +258,7 @@ def check_install_script() -> None:
             "scripts/check_ard_readiness.py",
             "scripts/compare_audit_reports.py",
             "scripts/generate_geo_citation_panel.py",
+            "scripts/runtime_config.py",
             "scripts/serve_report.py",
             "scripts/capture_site_screenshots.mjs",
             "scripts/skill_demo.py",
@@ -299,13 +300,10 @@ def check_runtime_script_syntax(manifest: dict) -> None:
     for rel in scripts.values():
         path = ROOT / rel
         if path.suffix == ".py":
-            result = subprocess.run(
-                [sys.executable, "-m", "py_compile", str(path)],
-                capture_output=True,
-                text=True,
-            )
-            if result.returncode != 0:
-                fail(f"{rel} has invalid Python syntax:\n{result.stderr.strip()}")
+            try:
+                compile(path.read_text(encoding="utf-8"), str(path), "exec")
+            except SyntaxError as exc:
+                fail(f"{rel} has invalid Python syntax:\n{exc}")
         if path.suffix == ".mjs":
             result = subprocess.run(
                 ["node", "--check", str(path)],

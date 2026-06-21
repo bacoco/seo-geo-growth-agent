@@ -2,6 +2,25 @@
 
 Read this entire file before running commands. Install only the runtime skill package, then verify it.
 
+## Prerequisites
+
+Required:
+
+- Git
+- Bash
+- Python 3
+- Node.js, because `skill_doctor.py` validates the `.mjs` capture script with `node --check`
+
+Optional:
+
+- Chrome or Chromium for local screenshot capture through `scripts/capture_site_screenshots.mjs`
+- Agent Browser in capable agent runtimes for browser evidence without relying on local Chrome
+
+Network safety:
+
+- Audit scripts accept only `http://` and `https://` targets.
+- Localhost, loopback, private IP, and reserved targets require explicit `--allow-local`; use that only for sites the user owns or controls.
+
 ## Step 1: Choose The Target Host
 
 Use one of these targets:
@@ -18,7 +37,7 @@ If both Codex and Claude Code are present and the user did not specify a host, a
 
 ```bash
 INSTALL_TMP="$(mktemp -d)"
-git clone --depth 1 --branch v1.3.1 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
+git clone --depth 1 --branch v1.3.2 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
 cd "$INSTALL_TMP/seo-geo-growth-agent"
 ```
 
@@ -80,6 +99,7 @@ scripts/validate_ard_catalog.py
 scripts/check_ard_readiness.py
 scripts/compare_audit_reports.py
 scripts/generate_geo_citation_panel.py
+scripts/runtime_config.py
 scripts/seo_geo_audit.py
 scripts/serve_report.py
 scripts/capture_site_screenshots.mjs

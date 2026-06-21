@@ -138,6 +138,7 @@ class ReviewHardeningTest(unittest.TestCase):
                     "http://127.0.0.1:9/",
                     "--output",
                     str(output_path),
+                    "--allow-local",
                 ],
                 capture_output=True,
                 text=True,

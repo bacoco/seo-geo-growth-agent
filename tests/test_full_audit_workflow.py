@@ -67,6 +67,7 @@ class FullAuditWorkflowTest(unittest.TestCase):
                         "en",
                         "--skip-browser",
                         "--no-serve",
+                        "--allow-local",
                     ],
                     capture_output=True,
                     text=True,

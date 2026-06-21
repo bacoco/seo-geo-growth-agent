@@ -12,6 +12,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
+from runtime_config import USER_AGENT, validate_network_url
 from validate_ard_catalog import validate_catalog
 
 
@@ -24,24 +25,19 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--url", required=True, help="Homepage or page URL to inspect.")
     parser.add_argument("--output", required=True, type=Path, help="Output JSON path for ard_readiness.")
+    parser.add_argument("--allow-local", action="store_true", help="Allow localhost, loopback, private, and reserved network targets.")
     return parser.parse_args()
 
 
-def normalize_url(url: str) -> str:
-    if url.startswith(("http://", "https://")):
-        return url
-    return f"https://{url}"
-
-
 def origin_for(url: str) -> str:
-    parsed = urlparse(normalize_url(url))
+    parsed = urlparse(url)
     if not parsed.netloc:
         raise ValueError(f"invalid URL: {url}")
     return f"{parsed.scheme}://{parsed.netloc}"
 
 
 def fetch(url: str) -> dict[str, Any]:
-    request = Request(url, headers={"User-Agent": "seo-geo-growth-agent/1.2"})
+    request = Request(url, headers={"User-Agent": USER_AGENT})
     try:
         with urlopen(request, timeout=10) as response:
             body = response.read()
@@ -56,6 +52,8 @@ def fetch(url: str) -> dict[str, Any]:
         return {"status_code": exc.code, "body": body, "content_type": "", "error": f"HTTP {exc.code}"}
     except URLError as exc:
         return {"status_code": None, "body": "", "content_type": "", "error": str(exc.reason)}
+    except (OSError, TimeoutError) as exc:
+        return {"status_code": None, "body": "", "content_type": "", "error": str(exc)}
 
 
 def attrs(tag: str) -> dict[str, str]:
@@ -90,8 +88,8 @@ def signal_status(url: str, response: dict[str, Any] | None = None) -> dict[str,
     return {"status": "error", "url": url, "error": str(response.get("error") or response.get("status_code"))}
 
 
-def build_readiness(url: str) -> dict[str, Any]:
-    target_url = normalize_url(url)
+def build_readiness(url: str, *, allow_local: bool = False) -> dict[str, Any]:
+    target_url = validate_network_url(url, allow_local=allow_local)
     origin = origin_for(target_url)
     well_known_url = f"{origin}/.well-known/ai-catalog.json"
     robots_url = f"{origin}/robots.txt"
@@ -134,11 +132,11 @@ def build_readiness(url: str) -> dict[str, Any]:
         catalog_url = well_known_url
         catalog_response = well_known
     elif link_url:
-        catalog_url = link_url
-        catalog_response = fetch(link_url)
+        catalog_url = validate_network_url(link_url, allow_local=allow_local)
+        catalog_response = fetch(catalog_url)
     elif agentmap_url:
-        catalog_url = agentmap_url
-        catalog_response = fetch(agentmap_url)
+        catalog_url = validate_network_url(agentmap_url, allow_local=allow_local)
+        catalog_response = fetch(catalog_url)
 
     validation = {"status": "not_checked", "errors": []}
     entries: list[Any] = []
@@ -188,7 +186,7 @@ def build_readiness(url: str) -> dict[str, Any]:
 def main() -> None:
     args = parse_args()
     try:
-        readiness = build_readiness(args.url)
+        readiness = build_readiness(args.url, allow_local=args.allow_local)
     except ValueError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         raise SystemExit(2)

@@ -18,6 +18,7 @@ function parseArgs(argv) {
     evidenceEngineOut: "",
     studyOut: "",
     url: "",
+    allowLocal: false,
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
@@ -26,6 +27,7 @@ function parseArgs(argv) {
     else if (arg === "--evidence-out") args.evidenceOut = argv[++i];
     else if (arg === "--evidence-engine-out") args.evidenceEngineOut = argv[++i];
     else if (arg === "--study-out") args.studyOut = argv[++i];
+    else if (arg === "--allow-local") args.allowLocal = true;
     else if (arg === "--help" || arg === "-h") {
       usage();
       process.exit(0);
@@ -38,7 +40,61 @@ function parseArgs(argv) {
 }
 
 function usage() {
-  console.log(`Usage: node scripts/capture_site_screenshots.mjs --url URL --output-dir DIR [--evidence-out site-visual-evidence.json] [--study-out responsive-study.json] [--evidence-engine-out evidence-engine.json]`);
+  console.log(`Usage: node scripts/capture_site_screenshots.mjs --url URL --output-dir DIR [--evidence-out site-visual-evidence.json] [--study-out responsive-study.json] [--evidence-engine-out evidence-engine.json] [--allow-local]`);
+}
+
+function normalizeTargetUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) throw new Error("URL is required");
+  if (/^[A-Za-z][A-Za-z0-9+.-]*:/.test(raw)) return raw;
+  return `https://${raw}`;
+}
+
+function isPrivateIpv4(host) {
+  const parts = host.split(".").map((part) => Number(part));
+  if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return false;
+  const [a, b, c] = parts;
+  return (
+    a === 0 ||
+    a === 10 ||
+    a === 127 ||
+    (a === 100 && b >= 64 && b <= 127) ||
+    (a === 169 && b === 254) ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 0 && (c === 0 || c === 2)) ||
+    (a === 192 && b === 168) ||
+    (a === 198 && (b === 18 || b === 19 || (b === 51 && c === 100))) ||
+    (a === 203 && b === 0 && c === 113) ||
+    a >= 224
+  );
+}
+
+function isLocalHostname(hostnameValue) {
+  const host = String(hostnameValue || "").trim().replace(/^\[/, "").replace(/\]$/, "").replace(/\.$/, "").toLowerCase();
+  if (!host) return false;
+  if (host === "localhost" || host.endsWith(".localhost")) return true;
+  if (isPrivateIpv4(host)) return true;
+  if (host === "::1" || host === "0:0:0:0:0:0:0:1") return true;
+  if (host.startsWith("fc") || host.startsWith("fd") || host.startsWith("fe80")) return true;
+  return false;
+}
+
+function validateTargetUrl(value, allowLocal) {
+  const normalized = normalizeTargetUrl(value);
+  let parsed;
+  try {
+    parsed = new URL(normalized);
+  } catch {
+    throw new Error(`invalid URL: ${value}`);
+  }
+  if (!["http:", "https:"].includes(parsed.protocol)) {
+    throw new Error("Only http:// and https:// URLs are supported for network access.");
+  }
+  if (!parsed.hostname) throw new Error(`invalid URL: ${value}`);
+  if (isLocalHostname(parsed.hostname) && !allowLocal) {
+    throw new Error("Local, private, reserved, and loopback targets require explicit --allow-local.");
+  }
+  return parsed.toString();
 }
 
 function detectChrome() {
@@ -548,6 +604,7 @@ function buildEvidenceEngine(url, events, responsiveViewports) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
+  args.url = validateTargetUrl(args.url, args.allowLocal);
   mkdirSync(args.outputDir, { recursive: true });
   const chrome = detectChrome();
   const port = await freePort();

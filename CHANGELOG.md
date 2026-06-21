@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.2 — Runtime cleanup and URL guardrails
+
+### Added
+
+- Shared `scripts/runtime_config.py` centralizes the runtime version, User-Agent, URL validation, and `__pycache__` cleanup helpers.
+- Network-facing CLIs now reject non-HTTP(S) schemes and require `--allow-local` for localhost, loopback, private, reserved, or preproduction targets.
+- README and agent installation protocol now list Git, Bash, Python, Node, and optional Chrome/Chromium prerequisites explicitly.
+
+### Changed
+
+- User-Agent headers now report the manifest version instead of the stale `seo-geo-growth-agent/1.2` value.
+- Runtime installation copies only `examples/reference-audit/`, keeping `examples/README.md` as source documentation.
+- Doctor/demo validation compiles Python in memory and cleans runtime `__pycache__` directories.
+
 ## 1.3.1 — Installed demo self-check
 
 ### Fixed

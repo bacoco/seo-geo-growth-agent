@@ -13,7 +13,8 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
-from seo_geo_audit import default_output_dir, normalize_url, site_slug, write_plan
+from runtime_config import USER_AGENT, validate_network_url
+from seo_geo_audit import default_output_dir, site_slug, write_plan
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-serve", action="store_true", help="Do not start the local report server after generation.")
     parser.add_argument("--port", type=int, default=8766, help="Preferred local report server port.")
     parser.add_argument("--open", action="store_true", help="Open the served report in the system browser.")
+    parser.add_argument("--allow-local", action="store_true", help="Allow localhost, loopback, private, and reserved network targets.")
     return parser.parse_args()
 
 
@@ -55,7 +57,7 @@ def load_json(path: Path, fallback: Any) -> Any:
 
 
 def fetch_status(url: str) -> dict[str, Any]:
-    request = Request(url, headers={"User-Agent": "seo-geo-growth-agent/1.2"})
+    request = Request(url, headers={"User-Agent": USER_AGENT})
     try:
         with urlopen(request, timeout=10) as response:
             return {"url": url, "status_code": response.status, "present": 200 <= response.status < 400, "error": ""}
@@ -63,6 +65,8 @@ def fetch_status(url: str) -> dict[str, Any]:
         return {"url": url, "status_code": exc.code, "present": False, "error": f"HTTP {exc.code}"}
     except URLError as exc:
         return {"url": url, "status_code": None, "present": False, "error": str(exc.reason)}
+    except (OSError, TimeoutError) as exc:
+        return {"url": url, "status_code": None, "present": False, "error": str(exc)}
 
 
 def ai_layer_state(target_url: str) -> tuple[dict[str, bool], list[dict[str, Any]]]:
@@ -182,10 +186,14 @@ def write_audit(path: Path, audit: dict[str, Any]) -> None:
 
 def main() -> None:
     args = parse_args()
-    target_url = normalize_url(args.url)
+    try:
+        target_url = validate_network_url(args.url, allow_local=args.allow_local)
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        raise SystemExit(2)
     output_dir = args.output_dir or default_output_dir(target_url)
     output_dir.mkdir(parents=True, exist_ok=True)
-    write_plan(target_url, output_dir, args.lang, args.environment, "full_audit")
+    write_plan(target_url, output_dir, args.lang, args.environment, "full_audit", args.allow_local)
 
     if not args.skip_browser:
         run(
@@ -203,6 +211,7 @@ def main() -> None:
                 "--evidence-engine-out",
                 str(output_dir / "evidence-engine.json"),
             ]
+            + (["--allow-local"] if args.allow_local else [])
         )
 
     run(
@@ -225,7 +234,8 @@ def main() -> None:
             target_url,
             "--output",
             str(output_dir / "ard-readiness.json"),
-        ],
+        ]
+        + (["--allow-local"] if args.allow_local else []),
         check=False,
     )
 

@@ -11,7 +11,6 @@ import unittest
 from base64 import b64decode
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 PNG_1X1 = b64decode(
@@ -39,10 +38,13 @@ class SiteCaptureTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
+            site_dir = tmp_path / "site"
+            site_dir.mkdir()
             html = """<!doctype html>
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
   <title>Responsive fixture</title>
   <style>body{font-family:sans-serif;margin:0;padding:24px;max-width:720px}</style>
 </head>
@@ -56,30 +58,45 @@ class SiteCaptureTest(unittest.TestCase):
   </main>
 </body>
 </html>"""
-            url = f"data:text/html;charset=utf-8,{quote(html)}"
+            (site_dir / "index.html").write_text(html, encoding="utf-8")
+
+            class Handler(SimpleHTTPRequestHandler):
+                def log_message(self, format: str, *args: object) -> None:
+                    return
+
+            server = ThreadingHTTPServer(("127.0.0.1", 0), lambda *args, **kwargs: Handler(*args, directory=site_dir, **kwargs))
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            url = f"http://127.0.0.1:{server.server_port}/index.html"
             evidence_path = tmp_path / "site-visual-evidence.json"
             study_path = tmp_path / "responsive-study.json"
             evidence_engine_path = tmp_path / "evidence-engine.json"
 
-            result = subprocess.run(
-                [
-                    "node",
-                    str(ROOT / "scripts" / "capture_site_screenshots.mjs"),
-                    "--url",
-                    url,
-                    "--output-dir",
-                    str(tmp_path / "screenshots"),
-                    "--evidence-out",
-                    str(evidence_path),
-                    "--study-out",
-                    str(study_path),
-                    "--evidence-engine-out",
-                    str(evidence_engine_path),
-                ],
-                capture_output=True,
-                text=True,
-                timeout=20,
-            )
+            try:
+                result = subprocess.run(
+                    [
+                        "node",
+                        str(ROOT / "scripts" / "capture_site_screenshots.mjs"),
+                        "--url",
+                        url,
+                        "--output-dir",
+                        str(tmp_path / "screenshots"),
+                        "--evidence-out",
+                        str(evidence_path),
+                        "--study-out",
+                        str(study_path),
+                        "--evidence-engine-out",
+                        str(evidence_engine_path),
+                        "--allow-local",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=20,
+                )
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=3)
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertTrue((tmp_path / "screenshots" / "desktop.png").is_file())
@@ -157,6 +174,7 @@ class SiteCaptureTest(unittest.TestCase):
                         str(tmp_path / "screenshots"),
                         "--study-out",
                         str(study_path),
+                        "--allow-local",
                     ],
                     capture_output=True,
                     text=True,

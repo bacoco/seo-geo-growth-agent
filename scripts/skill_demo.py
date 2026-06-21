@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+sys.dont_write_bytecode = True
+
+from runtime_config import clean_pycache
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +31,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def run(command: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, env=env)
     if check and result.returncode != 0:
         raise SystemExit(result.stderr.strip() or result.stdout.strip() or f"Command failed: {' '.join(command)}")
     return result
@@ -95,26 +101,31 @@ def serve_report(port: int, open_report: bool) -> None:
 def main() -> None:
     args = parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    golden = validate_golden_audit(args.output_dir)
-    doctor = run_install_doctor(args.install_dir)
-    status = "pass" if golden["validation_status"] == "pass" and doctor["status"] in {"pass", "not_run"} else "fail"
-    result = {
-        "status": status,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "golden_audit": golden,
-        "install_doctor": doctor,
-        "next_commands": [
-            "python3 scripts/run_full_audit.py [OWNED_SITE_URL] --output-dir reports/[site-slug]/latest --lang en",
-            "python3 scripts/generate_owner_data_request.py --site [OWNED_SITE_URL] --output-dir reports/[site-slug]/latest/owner-data --language en",
-            "python3 scripts/serve_report.py --dir examples/reference-audit --port 8766 --open",
-        ],
-    }
-    output_path = args.output_dir / "demo-result.json"
-    output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {output_path}")
-    if not args.no_serve:
-        serve_report(args.port, args.open)
-    raise SystemExit(0 if status == "pass" else 1)
+    try:
+        golden = validate_golden_audit(args.output_dir)
+        doctor = run_install_doctor(args.install_dir)
+        status = "pass" if golden["validation_status"] == "pass" and doctor["status"] in {"pass", "not_run"} else "fail"
+        result = {
+            "status": status,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "golden_audit": golden,
+            "install_doctor": doctor,
+            "next_commands": [
+                "python3 scripts/run_full_audit.py [OWNED_SITE_URL] --output-dir reports/[site-slug]/latest --lang en",
+                "python3 scripts/generate_owner_data_request.py --site [OWNED_SITE_URL] --output-dir reports/[site-slug]/latest/owner-data --language en",
+                "python3 scripts/serve_report.py --dir examples/reference-audit --port 8766 --open",
+            ],
+        }
+        output_path = args.output_dir / "demo-result.json"
+        output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"Wrote {output_path}")
+        if not args.no_serve:
+            serve_report(args.port, args.open)
+        raise SystemExit(0 if status == "pass" else 1)
+    finally:
+        clean_pycache(ROOT)
+        if args.install_dir:
+            clean_pycache(args.install_dir)
 
 
 if __name__ == "__main__":

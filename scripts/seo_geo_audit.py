@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
+from runtime_config import normalize_url, validate_network_url
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -23,13 +24,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--environment", choices=["preprod", "production"], default="production")
     parser.add_argument("--plan-only", action="store_true", help="Only create the audit plan; do not launch browser capture.")
     parser.add_argument("--skip-browser", action="store_true", help="Create the workspace without browser capture.")
+    parser.add_argument("--allow-local", action="store_true", help="Allow localhost, loopback, private, and reserved network targets.")
     return parser.parse_args()
-
-
-def normalize_url(url: str) -> str:
-    if url.startswith(("http://", "https://")):
-        return url
-    return f"https://{url}"
 
 
 def site_slug(url: str) -> str:
@@ -43,12 +39,13 @@ def default_output_dir(url: str) -> Path:
     return ROOT / "reports" / site_slug(url) / datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
-def command_strings(target_url: str, output_dir: Path, language: str) -> list[str]:
+def command_strings(target_url: str, output_dir: Path, language: str, allow_local: bool = False) -> list[str]:
     screenshots = output_dir / "site-screenshots"
+    local_flag = " --allow-local" if allow_local else ""
     return [
-        f"node scripts/capture_site_screenshots.mjs --url {target_url} --output-dir {screenshots} --evidence-out {output_dir / 'site-visual-evidence.json'} --study-out {output_dir / 'responsive-study.json'} --evidence-engine-out {output_dir / 'evidence-engine.json'}",
+        f"node scripts/capture_site_screenshots.mjs --url {target_url} --output-dir {screenshots} --evidence-out {output_dir / 'site-visual-evidence.json'} --study-out {output_dir / 'responsive-study.json'} --evidence-engine-out {output_dir / 'evidence-engine.json'}{local_flag}",
         f"python3 scripts/generate_owner_data_request.py --site {target_url} --output-dir {output_dir / 'owner-data'} --language {language if language in ('en', 'fr') else 'en'}",
-        f"python3 scripts/check_ard_readiness.py --url {target_url} --output {output_dir / 'ard-readiness.json'}",
+        f"python3 scripts/check_ard_readiness.py --url {target_url} --output {output_dir / 'ard-readiness.json'}{local_flag}",
         f"python3 scripts/generate_ai_layer_package.py --input {output_dir / 'audit.json'} --output-dir {output_dir} --update-audit",
         f"python3 scripts/generate_html_audit_report.py --input {output_dir / 'audit.json'} --output-dir {output_dir}",
         f"python3 scripts/validate_audit_report.py --report-dir {output_dir} --output {output_dir / 'report-validation.json'}",
@@ -56,7 +53,7 @@ def command_strings(target_url: str, output_dir: Path, language: str) -> list[st
     ]
 
 
-def write_plan(target_url: str, output_dir: Path, language: str, environment: str, mode: str) -> dict:
+def write_plan(target_url: str, output_dir: Path, language: str, environment: str, mode: str, allow_local: bool = False) -> dict:
     plan = {
         "target_url": target_url,
         "site_slug": site_slug(target_url),
@@ -77,7 +74,7 @@ def write_plan(target_url: str, output_dir: Path, language: str, environment: st
             str(output_dir / "owner-data" / "owner-data-checklist.json"),
             str(output_dir / "owner-data" / "owner-data-intake.csv"),
         ],
-        "next_commands": command_strings(target_url, output_dir, language),
+        "next_commands": command_strings(target_url, output_dir, language, allow_local),
     }
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "audit-plan.json").write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -92,10 +89,14 @@ def run(command: list[str]) -> None:
 
 def main() -> None:
     args = parse_args()
-    target_url = normalize_url(args.url)
+    try:
+        target_url = validate_network_url(args.url, allow_local=args.allow_local)
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        raise SystemExit(2)
     output_dir = args.output_dir or default_output_dir(target_url)
     mode = "plan_only" if args.plan_only else ("workspace_only" if args.skip_browser else "capture_started")
-    plan = write_plan(target_url, output_dir, args.lang, args.environment, mode)
+    plan = write_plan(target_url, output_dir, args.lang, args.environment, mode, args.allow_local)
     print(f"Wrote {output_dir / 'audit-plan.json'}")
     if args.plan_only or args.skip_browser:
         print("Next commands:")
@@ -117,6 +118,7 @@ def main() -> None:
             "--evidence-engine-out",
             str(output_dir / "evidence-engine.json"),
         ]
+        + (["--allow-local"] if args.allow_local else [])
     )
     run(
         [

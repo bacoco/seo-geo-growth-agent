@@ -8,6 +8,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True
+
+from runtime_config import clean_pycache
+
 
 REQUIRED_PATHS = [
     "SKILL.md",
@@ -34,6 +38,7 @@ REQUIRED_PATHS = [
     "scripts/check_ard_readiness.py",
     "scripts/compare_audit_reports.py",
     "scripts/generate_geo_citation_panel.py",
+    "scripts/runtime_config.py",
     "scripts/serve_report.py",
     "scripts/capture_site_screenshots.mjs",
     "scripts/skill_demo.py",
@@ -100,9 +105,10 @@ def check_script_syntax(root: Path, manifest: dict) -> None:
     for rel in manifest.get("scripts", {}).values():
         path = root / rel
         if path.suffix == ".py":
-            result = subprocess.run([sys.executable, "-m", "py_compile", str(path)], capture_output=True, text=True)
-            if result.returncode != 0:
-                fail(f"{rel} has invalid Python syntax:\n{result.stderr.strip()}")
+            try:
+                compile(path.read_text(encoding="utf-8"), str(path), "exec")
+            except SyntaxError as exc:
+                fail(f"{rel} has invalid Python syntax:\n{exc}")
         if path.suffix == ".mjs":
             try:
                 result = subprocess.run(["node", "--check", str(path)], capture_output=True, text=True)
@@ -115,9 +121,12 @@ def check_script_syntax(root: Path, manifest: dict) -> None:
 def main() -> None:
     args = parse_args()
     root = args.install_dir.resolve()
-    check_paths(root)
-    manifest = check_manifest(root)
-    check_script_syntax(root, manifest)
+    try:
+        check_paths(root)
+        manifest = check_manifest(root)
+        check_script_syntax(root, manifest)
+    finally:
+        clean_pycache(root)
     print(f"OK: installed skill doctor passed for {root}")
 
 

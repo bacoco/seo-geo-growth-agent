@@ -12,29 +12,38 @@ It does not stop at diagnosis: when AI-readable layers are missing, it generates
 
 In short: it audits the site, explains the gaps, generates owner-review improvement files as drafts, renders a browser report, validates that the report is complete enough to share, and gives the site owner a clean intake path for real search, traffic, crawl, cache, and conversion data.
 
+## Prerequisites
+
+- Git and Bash for the pinned installer.
+- Python 3 for validators, report generation, demos, and audit orchestration.
+- Node.js for the screenshot fallback syntax check and Chrome DevTools capture script.
+- Chrome or Chromium only when you want local screenshot capture; Agent Browser can be used by capable agents instead.
+
+By default, network scripts accept only `http://` and `https://` public targets. Use `--allow-local` only for explicit localhost, private IP, reserved-domain, or preproduction audits you control.
+
 ## Install
 
 Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.1/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.2/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.1/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.2/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.1/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.2/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.3.1 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.3.2 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
