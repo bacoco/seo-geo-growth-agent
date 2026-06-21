@@ -95,7 +95,16 @@ async function connectWebSocket(url) {
   const callbacks = new Map();
   const events = [];
   socket.onmessage = (event) => {
-    const message = JSON.parse(event.data);
+    let message;
+    try {
+      message = JSON.parse(event.data);
+    } catch (error) {
+      events.push({
+        method: "SEOGeoClient.parseError",
+        params: { error: error.message, sample: String(event.data || "").slice(0, 240) },
+      });
+      return;
+    }
     if (!message.id && message.method) {
       events.push(message);
       return;
@@ -106,11 +115,30 @@ async function connectWebSocket(url) {
     if (message.error) reject(new Error(JSON.stringify(message.error)));
     else resolve(message.result || {});
   };
+  socket.onclose = () => {
+    for (const [id, { reject }] of callbacks.entries()) {
+      callbacks.delete(id);
+      reject(new Error(`DevTools websocket closed before response ${id}`));
+    }
+  };
   function send(method, params = {}) {
     return new Promise((resolve, reject) => {
       const id = nextId;
       nextId += 1;
-      callbacks.set(id, { resolve, reject });
+      const timer = setTimeout(() => {
+        callbacks.delete(id);
+        reject(new Error(`DevTools command timed out: ${method}`));
+      }, 15000);
+      callbacks.set(id, {
+        resolve: (value) => {
+          clearTimeout(timer);
+          resolve(value);
+        },
+        reject: (error) => {
+          clearTimeout(timer);
+          reject(error);
+        },
+      });
       socket.send(JSON.stringify({ id, method, params }));
     });
   }
@@ -215,7 +243,19 @@ async function readLayout(send) {
     })())`,
     returnByValue: true,
   });
-  return JSON.parse(layout.result.value);
+  return parseRuntimeJson(layout, "layout metrics");
+}
+
+function parseRuntimeJson(result, label) {
+  const raw = result?.result?.value;
+  if (typeof raw !== "string") {
+    throw new Error(`Unable to read ${label}: Runtime.evaluate did not return JSON text`);
+  }
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    throw new Error(`Unable to parse ${label}: ${error.message}`);
+  }
 }
 
 async function scrollThroughPage(send) {
@@ -232,7 +272,7 @@ async function scrollThroughPage(send) {
     })())`,
     returnByValue: true,
   });
-  const metrics = JSON.parse(metricsResult.result.value);
+  const metrics = parseRuntimeJson(metricsResult, "scroll metrics");
   const stepSize = Math.max(320, Math.floor(metrics.innerHeight * 0.75));
   let steps = 0;
   for (let y = 0; y < metrics.maxScroll; y += stepSize) {
@@ -305,29 +345,33 @@ function summarizeImageLoading(initialImages = [], finalImages = []) {
 }
 
 async function captureViewport(send, url, viewport, outputPath) {
-  await send("Page.enable");
-  await send("Runtime.enable");
-  await send("Emulation.setDeviceMetricsOverride", {
-    width: viewport.width,
-    height: viewport.height,
-    deviceScaleFactor: 1,
-    mobile: viewport.mobile,
-  });
-  await send("Page.navigate", { url });
-  await sleep(1400);
-  const initialLayout = await readLayout(send);
-  const scrollProbe = await scrollThroughPage(send);
-  const finalLayout = await readLayout(send);
-  finalLayout.initialMissingImages = initialLayout.missingImages;
-  finalLayout.imageLoadStates = summarizeImageLoading(initialLayout.images, finalLayout.images);
-  finalLayout.scrollProbe = scrollProbe;
-  const screenshot = await send("Page.captureScreenshot", {
-    format: "png",
-    fromSurface: true,
-    captureBeyondViewport: false,
-  });
-  writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));
-  return finalLayout;
+  try {
+    await send("Page.enable");
+    await send("Runtime.enable");
+    await send("Emulation.setDeviceMetricsOverride", {
+      width: viewport.width,
+      height: viewport.height,
+      deviceScaleFactor: 1,
+      mobile: viewport.mobile,
+    });
+    await send("Page.navigate", { url });
+    await sleep(1400);
+    const initialLayout = await readLayout(send);
+    const scrollProbe = await scrollThroughPage(send);
+    const finalLayout = await readLayout(send);
+    finalLayout.initialMissingImages = initialLayout.missingImages;
+    finalLayout.imageLoadStates = summarizeImageLoading(initialLayout.images, finalLayout.images);
+    finalLayout.scrollProbe = scrollProbe;
+    const screenshot = await send("Page.captureScreenshot", {
+      format: "png",
+      fromSurface: true,
+      captureBeyondViewport: false,
+    });
+    writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));
+    return finalLayout;
+  } catch (error) {
+    throw new Error(`${viewport.label || "Viewport"} capture failed: ${error.message}`);
+  }
 }
 
 function analyzeViewport(layout) {

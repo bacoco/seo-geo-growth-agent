@@ -98,7 +98,10 @@ def check_script_syntax(root: Path, manifest: dict) -> None:
             if result.returncode != 0:
                 fail(f"{rel} has invalid Python syntax:\n{result.stderr.strip()}")
         if path.suffix == ".mjs":
-            result = subprocess.run(["node", "--check", str(path)], capture_output=True, text=True)
+            try:
+                result = subprocess.run(["node", "--check", str(path)], capture_output=True, text=True)
+            except FileNotFoundError:
+                fail("required command not found: node")
             if result.returncode != 0:
                 fail(f"{rel} has invalid JavaScript syntax:\n{result.stderr.strip()}")
 

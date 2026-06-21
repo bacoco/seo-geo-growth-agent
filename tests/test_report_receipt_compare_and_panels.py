@@ -66,7 +66,7 @@ class ReportReceiptCompareAndPanelsTest(unittest.TestCase):
             receipt_text = receipt.read_text(encoding="utf-8")
             self.assertIn("example.com", receipt_text)
             self.assertIn("index.html", receipt_text)
-            self.assertIn("v1.2.8", receipt_text)
+            self.assertIn("v1.2.9", receipt_text)
             self.assertIn("preprod", receipt_text)
 
             html = (output_dir / "index.html").read_text(encoding="utf-8")

@@ -100,6 +100,25 @@ def build_readiness(url: str) -> dict[str, Any]:
     well_known = fetch(well_known_url)
     robots = fetch(robots_url)
 
+    if homepage.get("status_code") is None:
+        return {
+            "status": "error",
+            "checked_url": target_url,
+            "catalog_url": well_known_url,
+            "signals": {
+                "homepage": signal_status(target_url, homepage),
+                "well_known": signal_status(well_known_url, well_known),
+                "html_link": {"status": "not_checked", "url": ""},
+                "robots_agentmap": {"status": "not_checked", "url": ""},
+            },
+            "validation": {"status": "not_checked", "errors": []},
+            "entries": [],
+            "observed": [f"Homepage fetch failed: {homepage.get('error') or 'network error'}."],
+            "recommended": [
+                "Retry after confirming the homepage is reachable; do not classify ARD discovery as missing from a failed homepage fetch."
+            ],
+        }
+
     link_url = html_ai_catalog_link(homepage["body"], target_url) if homepage.get("body") else ""
     agentmap_url = robots_agentmap(robots["body"], origin) if robots.get("body") else ""
 

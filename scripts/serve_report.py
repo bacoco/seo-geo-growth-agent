@@ -5,8 +5,10 @@ from __future__ import annotations
 import argparse
 import functools
 import http.server
+import ipaddress
 import json
 import socket
+import sys
 import webbrowser
 from pathlib import Path
 
@@ -34,13 +36,37 @@ def validate_report_dir(path: Path) -> Path:
 def port_available(host: str, port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.settimeout(0.2)
-        return sock.connect_ex((host, port)) != 0
+        try:
+            return sock.connect_ex((host, port)) != 0
+        except OSError as exc:
+            raise SystemExit(f"Could not bind report server on {host}:{port}: {exc}") from None
+
+
+def is_loopback_host(host: str) -> bool:
+    if host.lower() == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
+def warn_if_non_loopback(host: str) -> None:
+    if not is_loopback_host(host):
+        print(
+            f"WARNING: serving on non-loopback host {host}; the report tree may be reachable from other machines.",
+            file=sys.stderr,
+            flush=True,
+        )
 
 
 def choose_port(host: str, preferred: int) -> int:
     if preferred == 0:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.bind((host, 0))
+            try:
+                sock.bind((host, 0))
+            except OSError as exc:
+                raise SystemExit(f"Could not bind report server on {host}:0: {exc}") from None
             return int(sock.getsockname()[1])
     if port_available(host, preferred):
         return preferred
@@ -89,11 +115,15 @@ def main() -> None:
 
     port = choose_port(args.host, args.port)
     handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(report_dir))
-    server = http.server.ThreadingHTTPServer((args.host, port), handler)
+    try:
+        server = http.server.ThreadingHTTPServer((args.host, port), handler)
+    except OSError as exc:
+        raise SystemExit(f"Could not bind report server on {args.host}:{port}: {exc}") from None
     url = f"http://{args.host}:{port}/"
     update_receipt(report_dir, url)
-    print(f"Serving report: {url}")
-    print("Press Ctrl-C to stop.")
+    warn_if_non_loopback(args.host)
+    print(f"Serving report: {url}", flush=True)
+    print("Press Ctrl-C to stop.", flush=True)
     if args.open:
         webbrowser.open(url)
     try:

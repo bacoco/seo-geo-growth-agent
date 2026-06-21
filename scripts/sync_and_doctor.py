@@ -31,7 +31,10 @@ def targets(selection: str) -> list[tuple[str, Path]]:
 
 
 def run(command: list[str]) -> None:
-    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    try:
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+    except FileNotFoundError as exc:
+        raise SystemExit(f"required command not found: {command[0]}") from exc
     if result.returncode != 0:
         raise SystemExit(result.stderr.strip() or result.stdout.strip())
     if result.stdout.strip():

@@ -52,6 +52,25 @@ def score_map(audit: dict[str, Any]) -> dict[str, float]:
     return scores
 
 
+def finding_identity(item: dict[str, Any], index: int) -> str:
+    title = str(item.get("title") or "").strip()
+    if title:
+        return title
+    priority = str(item.get("priority") or item.get("severity") or "").strip()
+    evidence = str(item.get("evidence") or item.get("issue") or item.get("recommendation") or "").strip()
+    if priority and evidence:
+        return f"{priority}: {evidence}"
+    if priority:
+        return priority
+    if evidence:
+        return evidence
+    return f"untitled finding #{index + 1}"
+
+
+def finding_keys(findings: list[dict[str, Any]]) -> set[str]:
+    return {finding_identity(item, index) for index, item in enumerate(findings)}
+
+
 def compare(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
     before_scores = score_map(before)
     after_scores = score_map(after)
@@ -79,11 +98,15 @@ def compare(before: dict[str, Any], after: dict[str, Any]) -> dict[str, Any]:
         "after_status": (after.get("summary") or {}).get("status"),
         "score_deltas": score_deltas,
         "finding_delta": len(after_findings) - len(before_findings),
-        "resolved_findings": sorted(
-            {str(item.get("title")) for item in before_findings}
-            - {str(item.get("title")) for item in after_findings}
-        ),
+        "resolved_findings": sorted(finding_keys(before_findings) - finding_keys(after_findings)),
     }
+
+
+def format_score(value: float) -> str:
+    formatted = f"{value:.2f}".rstrip("0").rstrip(".")
+    if "." not in formatted:
+        formatted = f"{formatted}.0"
+    return formatted
 
 
 def markdown_report(data: dict[str, Any]) -> str:
@@ -96,7 +119,10 @@ def markdown_report(data: dict[str, Any]) -> str:
     if data["score_deltas"]:
         for item in data["score_deltas"]:
             sign = "+" if item["delta"] >= 0 else ""
-            lines.append(f"- {item['label']}: {sign}{item['delta']:.1f} ({item['before']:.1f} -> {item['after']:.1f})")
+            lines.append(
+                f"- {item['label']}: {sign}{format_score(item['delta'])} "
+                f"({format_score(item['before'])} -> {format_score(item['after'])})"
+            )
     else:
         lines.append("- No comparable scorecards supplied.")
     lines.extend(

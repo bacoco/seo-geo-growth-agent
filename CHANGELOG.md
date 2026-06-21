@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.9 — Review hardening
+
+### Changed
+
+- `validate_audit_report.py` now confines visual evidence and package paths to the report directory.
+- `serve_report.py` now warns on non-loopback hosts and exits cleanly on bind errors.
+- Screenshot capture, ARD readiness checks, report comparison, install paths, and doctor scripts now handle malformed input or missing tools with clearer failures.
+
 ## 1.2.8 — Full audit command and report validation
 
 ### Added

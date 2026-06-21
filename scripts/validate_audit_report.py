@@ -32,6 +32,25 @@ def load_json(path: Path) -> tuple[dict[str, Any] | None, str]:
     return data, ""
 
 
+def is_within(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+    except ValueError:
+        return False
+    return True
+
+
+def report_member_path(report_dir: Path, value: Any) -> Path | None:
+    if not value:
+        return None
+    raw = Path(str(value))
+    candidate = raw if raw.is_absolute() else report_dir / raw
+    resolved = candidate.resolve()
+    if not is_within(resolved, report_dir):
+        return None
+    return resolved
+
+
 def has_visual_evidence(audit: dict[str, Any], report_dir: Path) -> bool:
     for key in ("site_visual_evidence", "visual_evidence"):
         visuals = audit.get(key)
@@ -42,9 +61,11 @@ def has_visual_evidence(audit: dict[str, Any], report_dir: Path) -> bool:
                 continue
             report_path = item.get("path")
             source_path = item.get("source_path")
-            if report_path and (report_dir / str(report_path)).is_file():
+            report_member = report_member_path(report_dir, report_path)
+            source_member = report_member_path(report_dir, source_path)
+            if report_member and report_member.is_file():
                 return True
-            if source_path and Path(str(source_path)).is_file():
+            if source_member and source_member.is_file():
                 return True
     return False
 
@@ -70,12 +91,19 @@ def validate_package(audit: dict[str, Any], report_dir: Path, errors: list[str])
             continue
         relative = str(item["path"])
         listed_paths.append(relative)
-        if not (report_dir / relative).is_file():
+        member = report_member_path(report_dir, relative)
+        if member is None:
+            errors.append(f"ai_layer_package file path escapes report directory: {relative}")
+            continue
+        if not member.is_file():
             errors.append(f"ai_layer_package file is missing: {relative}")
 
     zip_path = package.get("zip_path")
     if zip_path:
-        zip_file = report_dir / str(zip_path)
+        zip_file = report_member_path(report_dir, zip_path)
+        if zip_file is None:
+            errors.append(f"ai_layer_package zip path escapes report directory: {zip_path}")
+            return
         if not zip_file.is_file():
             errors.append(f"ai_layer_package zip is missing: {zip_path}")
             return

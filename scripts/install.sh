@@ -6,7 +6,7 @@ TARGET="${1:-codex}"
 SKILL_DIR_NAME="seo-geo-growth-agent"
 
 usage() {
-  echo "Usage: ./scripts/install.sh [codex|claude|/custom/path/seo-geo-growth-agent]" >&2
+  echo "Usage: ./scripts/install.sh [codex|claude|/custom/path/seo-geo-growth-agent|relative/path/seo-geo-growth-agent]" >&2
 }
 
 case "$TARGET" in
@@ -16,12 +16,8 @@ case "$TARGET" in
   claude)
     DEST="$HOME/.claude/skills/$SKILL_DIR_NAME"
     ;;
-  /*|.*)
-    DEST="$TARGET"
-    ;;
   *)
-    usage
-    exit 2
+    DEST="$TARGET"
     ;;
 esac
 

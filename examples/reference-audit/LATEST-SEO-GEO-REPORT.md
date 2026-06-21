@@ -4,7 +4,7 @@
 - Audited URL: https://reference.example/
 - Generated at: 2026-06-21T10:00:00+02:00
 - Environment: production
-- Skill version: v1.2.8
+- Skill version: v1.2.9
 - HTML path: examples/reference-audit/index.html
 - Audit JSON: examples/reference-audit/audit.json
 - Local URL: not served yet
