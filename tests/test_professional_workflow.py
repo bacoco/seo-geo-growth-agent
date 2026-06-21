@@ -99,6 +99,7 @@ class ProfessionalWorkflowTest(unittest.TestCase):
             self.assertEqual(data["status"], "pass")
             self.assertEqual(data["install_doctor"]["status"], "pass")
             self.assertTrue((install_dir / "examples" / "reference-audit" / "index.html").is_file())
+            self.assertTrue((install_dir / "examples" / "preprod-gated-audit" / "index.html").is_file())
             self.assertFalse((install_dir / "examples" / "README.md").exists())
 
     def test_doctor_and_demo_do_not_leave_pycache_in_installed_runtime(self) -> None:
@@ -139,7 +140,7 @@ class ProfessionalWorkflowTest(unittest.TestCase):
 
     def test_runtime_manifest_installs_demo_script_and_owner_data_template(self) -> None:
         manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["version"], "1.3.3")
+        self.assertEqual(manifest["version"], "1.3.4")
         self.assertEqual(manifest["scripts"]["skill_demo"], "scripts/skill_demo.py")
         self.assertEqual(manifest["scripts"]["runtime_config"], "scripts/runtime_config.py")
         self.assertIn("templates/owner-data-intake.csv", manifest["templates"])

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.4 — Executive verdict and preprod fixture
+
+### Added
+
+- Audit reports now render an Executive Verdict block with launch readiness, top blocker, owner decision needed, confidence, and canonical URL guidance.
+- Reports now render Human Review Required cards when production gates, owner data, URL scope, existing AI layers, or visual interpretation need a human decision.
+- Design Watch first-impression sections now show visual judgment, first-impression risk, and explicit limits instead of overconfident screenshot scoring.
+- `examples/preprod-gated-audit/` provides a committed preproduction golden fixture for launch-gated audits with fragment URL risk and owner-decision gates.
+
+### Changed
+
+- Runtime installation, `skill_doctor.py`, and repository validation now require both golden examples: `reference-audit` and `preprod-gated-audit`.
+- README, install protocol, and skill instructions now document the pre-audit human-in-the-loop positioning more explicitly.
+
 ## 1.3.3 — Pre-audit judgment hardening
 
 ### Added

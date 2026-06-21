@@ -1,15 +1,4 @@
-#!/usr/bin/env python3
-"""Generate a self-contained dynamic HTML report from SEO/GEO audit JSON."""
-from __future__ import annotations
-
-import argparse
-import json
-import shutil
-from datetime import datetime, timezone
-from pathlib import Path
-
-
-HTML_TEMPLATE = """<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -581,7 +570,214 @@ HTML_TEMPLATE = """<!doctype html>
     <div class="wrap tabs" id="tabs"></div>
   </nav>
   <main class="wrap" id="app"></main>
-  <script id="audit-data" type="application/json">__AUDIT_JSON__</script>
+  <script id="audit-data" type="application/json">{
+  "site": "Swing Digital preproduction",
+  "audited_url": "https://swing.appmiweb.com/#page-1",
+  "generated_at": "2026-06-21T12:00:00+02:00",
+  "environment": "preprod",
+  "report_language": "fr",
+  "url_scope": {
+    "audited_url": "https://swing.appmiweb.com/#page-1",
+    "canonical_without_fragment": "https://swing.appmiweb.com/",
+    "fragment": "page-1",
+    "has_fragment": true,
+    "share_url_recommendation": "Use the fragment-free canonical URL for SEO, sharing, and production references."
+  },
+  "summary": {
+    "headline": "Préproduction techniquement saine, production finale encore gated.",
+    "status": "production_gated",
+    "biggest_blocker": "Décisions de lancement non verrouillées",
+    "fastest_win": "Valider domaine final, mentions légales, réservations, mesure et politique IA",
+    "data_confidence": "medium",
+    "decision": "Ne pas lancer la production finale tant que les gates propriétaire ne sont pas verrouillés."
+  },
+  "executive_verdict": {
+    "status": "production_gated",
+    "can_launch": "no",
+    "launch_status": "not_ready",
+    "top_blocker": "Décisions de lancement non verrouillées",
+    "owner_decision_needed": "Final launch gates require owner decisions.",
+    "evidence_confidence": "medium",
+    "canonical_url": "https://swing.appmiweb.com/"
+  },
+  "human_review_required": [
+    {
+      "area": "Production gates",
+      "reason": "La préproduction peut être saine tout en restant bloquée pour le lancement final.",
+      "decision": "Confirmer domaine final, hébergeur légal, réservations, mesure et politique de publication IA."
+    },
+    {
+      "area": "Canonical URL",
+      "reason": "L'URL auditée contient un fragment et peut montrer une première impression différente.",
+      "decision": "Utiliser https://swing.appmiweb.com/ pour les workflows SEO et partage."
+    },
+    {
+      "area": "Owner data",
+      "reason": "Les checks publics ne prouvent pas trafic, positions, conversions ou citations IA.",
+      "decision": "Valider GSC, GA4/GTM, Bing Webmaster Tools, logs et événements de conversion."
+    }
+  ],
+  "preproduction_assessment": {
+    "status": "production_gated",
+    "verdict": "Préproduction techniquement saine ; lancement final encore conditionné aux décisions propriétaire.",
+    "gate_count": 5
+  },
+  "production_gates": [
+    {
+      "area": "Final domain",
+      "next_now": "Conserver les checks crawl et couche IA verts en préproduction.",
+      "defer_until_prod": "Déclarer et vérifier le domaine final HTTPS.",
+      "proof_needed": "Domaine propriétaire confirmé, canoniques, sitemap et redirections."
+    },
+    {
+      "area": "Legal host",
+      "next_now": "Identifier l'hébergeur légal réel.",
+      "defer_until_prod": "Publier les mentions légales complètes.",
+      "proof_needed": "Mention propriétaire validée."
+    },
+    {
+      "area": "Reservations",
+      "next_now": "Décider si Réservations reste informatif ou devient transactionnel.",
+      "defer_until_prod": "Activer ou différer explicitement le parcours de réservation.",
+      "proof_needed": "CTA validé et événement de conversion défini."
+    },
+    {
+      "area": "Measurement",
+      "next_now": "Préparer l'intake owner-data.",
+      "defer_until_prod": "Connecter GSC, GA4/GTM, Bing Webmaster Tools, logs et conversions.",
+      "proof_needed": "Accès ou exports propriétaire."
+    },
+    {
+      "area": "AI publication policy",
+      "next_now": "Relire /llms.txt, /for-ai, JSON et TXT contre les faits visibles.",
+      "defer_until_prod": "Valider claims citables et limites do-not-extrapolate.",
+      "proof_needed": "Validation propriétaire des fichiers IA."
+    }
+  ],
+  "scorecards": [
+    {
+      "label": "Preproduction readiness",
+      "score": 7,
+      "max": 10,
+      "note": "Technique saine, gates propriétaire ouverts."
+    },
+    {
+      "label": "AI-readable layer",
+      "score": 8,
+      "max": 10,
+      "note": "Endpoints IA présents, politique de publication à valider."
+    },
+    {
+      "label": "Launch confidence",
+      "score": 5,
+      "max": 10,
+      "note": "Données propriétaire et décisions de lancement manquantes."
+    }
+  ],
+  "design_watch": {
+    "score": "6/10",
+    "verdict": "Lisible, mais l'URL fragmentée peut fausser la première impression.",
+    "summary": "La capture d'un fragment ne doit pas être confondue avec l'expérience canonique de la page d'accueil.",
+    "confidence": "needs_human_review",
+    "first_impression_risk": "Le fragment #page-1 peut ouvrir une section secondaire au lieu de la promesse principale.",
+    "limits": [
+      "La preuve visuelle de cette fixture est déclarative.",
+      "Le score final doit être confirmé par capture réelle du domaine final."
+    ],
+    "observed": [
+      "URL auditée avec fragment #page-1.",
+      "Couche IA publique déclarée présente."
+    ],
+    "inferred": [
+      "Le partage de l'URL fragmentée peut dégrader la première impression."
+    ],
+    "recommended": [
+      "Utiliser l'URL canonique sans fragment pour le lancement et le partage."
+    ]
+  },
+  "responsive_study": {
+    "method": "fixture",
+    "summary": {
+      "status": "warning",
+      "verdict": "Responsive evidence should be recaptured on the final production domain."
+    },
+    "viewports": []
+  },
+  "screenshot_status": "unavailable: committed preproduction fixture; capture the live final domain before launch.",
+  "ai_layer_current_state": {
+    "llms_txt": true,
+    "for_ai": true,
+    "for_ai_json": true,
+    "for_ai_txt": true
+  },
+  "ai_layer_endpoint_checks": [
+    {
+      "label": "/llms.txt",
+      "url": "https://swing.appmiweb.com/llms.txt",
+      "status_code": 200,
+      "present": true
+    },
+    {
+      "label": "/for-ai",
+      "url": "https://swing.appmiweb.com/for-ai",
+      "status_code": 200,
+      "present": true
+    },
+    {
+      "label": "/for-ai.json",
+      "url": "https://swing.appmiweb.com/for-ai.json",
+      "status_code": 200,
+      "present": true
+    },
+    {
+      "label": "/for-ai.txt",
+      "url": "https://swing.appmiweb.com/for-ai.txt",
+      "status_code": 200,
+      "present": true
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P1",
+      "title": "Fragment URL should not become the canonical SEO URL",
+      "observed": [
+        "The audited URL contains #page-1.",
+        "Canonical/share target should be https://swing.appmiweb.com/."
+      ],
+      "inferred": [
+        "A fragment URL can open the page at a different first impression than the canonical homepage."
+      ],
+      "recommended": [
+        "Use the fragment-free URL for SEO, sharing, reports, and production handoff unless the fragment is intentionally canonicalized."
+      ],
+      "evidence": [
+        {
+          "label": "Audited URL",
+          "url": "https://swing.appmiweb.com/#page-1",
+          "status": "fragment_detected"
+        }
+      ]
+    }
+  ],
+  "public_measurements": [
+    {
+      "source": "Public HTTP checks",
+      "access": "public",
+      "metric": "AI-readable endpoint presence",
+      "limit": "No visit counts, rankings, conversions, or AI citation metrics"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Preproduction homepage",
+      "url": "https://swing.appmiweb.com/"
+    },
+    {
+      "label": "Audited fragment URL",
+      "url": "https://swing.appmiweb.com/#page-1"
+    }
+  ]
+}</script>
   <script>
     const audit = JSON.parse(document.getElementById('audit-data').textContent);
     const app = document.getElementById('app');
@@ -1730,97 +1926,3 @@ HTML_TEMPLATE = """<!doctype html>
   </script>
 </body>
 </html>
-"""
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", required=True, type=Path, help="Path to audit JSON.")
-    parser.add_argument("--output-dir", required=True, type=Path, help="Directory for index.html and audit.json.")
-    return parser.parse_args()
-
-
-def skill_version() -> str:
-    manifest_path = Path(__file__).resolve().parents[1] / "manifest.json"
-    try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (FileNotFoundError, json.JSONDecodeError):
-        return "unknown"
-    return str(manifest.get("version") or "unknown")
-
-
-def load_audit(path: Path) -> dict:
-    with path.open(encoding="utf-8") as handle:
-        data = json.load(handle)
-    if not isinstance(data, dict):
-        raise SystemExit("Audit JSON must be an object.")
-    data.setdefault("generated_at", datetime.now(timezone.utc).isoformat())
-    data.setdefault("summary", {})
-    data.setdefault("findings", [])
-    data.setdefault("sources", [])
-    return data
-
-
-def safe_json_for_script(data: dict) -> str:
-    raw = json.dumps(data, ensure_ascii=False, indent=2)
-    return raw.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
-
-
-def copy_visual_sources(audit: dict, output_dir: Path) -> None:
-    for key in ("site_visual_evidence", "visual_evidence"):
-        for visual in audit.get(key, []):
-            source_path = visual.get("source_path")
-            report_path = visual.get("path")
-            if not source_path or not report_path:
-                continue
-            source = Path(source_path)
-            destination = output_dir / report_path
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            if source.is_file() and source.resolve() != destination.resolve():
-                shutil.copy2(source, destination)
-
-
-def write_latest_receipt(audit: dict, output_dir: Path, local_url: str = "not served yet") -> None:
-    summary = audit.get("summary") if isinstance(audit.get("summary"), dict) else {}
-    context = audit.get("context") if isinstance(audit.get("context"), dict) else {}
-    ai_layer = audit.get("ai_layer_package") if isinstance(audit.get("ai_layer_package"), dict) else {}
-    environment = audit.get("environment") or context.get("environment") or "unknown"
-    lines = [
-        "# Latest SEO/GEO Report",
-        "",
-        f"- Site: {audit.get('site', 'unknown')}",
-        f"- Audited URL: {audit.get('audited_url') or audit.get('url') or audit.get('site', 'unknown')}",
-        f"- Generated at: {audit.get('generated_at', 'unknown')}",
-        f"- Environment: {environment}",
-        f"- Skill version: v{skill_version()}",
-        f"- HTML path: {output_dir / 'index.html'}",
-        f"- Audit JSON: {output_dir / 'audit.json'}",
-        f"- Local URL: {local_url}",
-        f"- Summary: {summary.get('headline', 'unknown')}",
-        f"- Screenshot status: {audit.get('screenshot_status', 'see audit.json')}",
-        f"- AI layer package: {ai_layer.get('zip_path', 'not generated')}",
-        "",
-    ]
-    (output_dir / "LATEST-SEO-GEO-REPORT.md").write_text("\n".join(lines), encoding="utf-8")
-
-
-def main() -> None:
-    args = parse_args()
-    audit = load_audit(args.input)
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-
-    copied_audit = args.output_dir / "audit.json"
-    copied_audit.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-    html = HTML_TEMPLATE.replace("__AUDIT_JSON__", safe_json_for_script(audit))
-    html_path = args.output_dir / "index.html"
-    html_path.write_text(html, encoding="utf-8")
-
-    copy_visual_sources(audit, args.output_dir)
-    write_latest_receipt(audit, args.output_dir)
-
-    print(f"Wrote {html_path}")
-
-
-if __name__ == "__main__":
-    main()

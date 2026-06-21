@@ -6,7 +6,7 @@ description: |-
 
 # SEO + GEO Growth Agent Skill
 
-Version: v1.3.3
+Version: v1.3.4
 
 ## Purpose
 
@@ -47,6 +47,7 @@ Required deliverables:
 9. `report-validation.json` from `scripts/validate_audit_report.py`
 10. `LATEST-SEO-GEO-REPORT.md` in the report folder so the user can identify the current valid artifact
 11. `owner-data/owner-data-intake.csv` when owner data is requested or the full workflow generates owner-data request files
+12. `executive_verdict` and `human_review_required` in `audit.json` when launch readiness, production gates, owner data, URL scope, or visual interpretation need human judgment
 
 Do not stop at prose for a site audit. If screenshot capture fails because Agent Browser, Chrome, network, permissions, or a hostile WAF is unavailable, still generate `audit.json`, generate `index.html`, start the report server when possible, and mark screenshots as unavailable with the reason.
 

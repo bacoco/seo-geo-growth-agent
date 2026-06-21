@@ -20,3 +20,20 @@ Validate it with:
 ```bash
 python3 scripts/validate_audit_report.py --report-dir examples/reference-audit
 ```
+
+## Preprod Gated Audit
+
+`examples/preprod-gated-audit/` is a compact golden fixture for a staging/preproduction site that is technically readable but not ready to launch. It exists to keep the workflow honest about owner decisions, canonical URLs, missing production data, and human review.
+
+It contains:
+
+- `audit.json`
+- `index.html`
+- `LATEST-SEO-GEO-REPORT.md`
+- `report-validation.json`
+
+Validate it with:
+
+```bash
+python3 scripts/validate_audit_report.py --report-dir examples/preprod-gated-audit
+```

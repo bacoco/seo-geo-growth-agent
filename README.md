@@ -27,23 +27,23 @@ Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.3/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.4/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.3/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.4/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.3/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.4/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.3.3 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.3.4 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -114,6 +114,7 @@ It helps an agent produce:
 - crawler and robots.txt policy matrices;
 - claim ledgers and citation-safe source registers;
 - tabbed dynamic HTML audit reports with local serving, executive overview, animated readiness signal, lazy-load aware responsive mobile/desktop study, site screenshot analysis, Design Watch scoring, and analysis cohorts;
+- Executive Verdict and Human Review Required blocks so pre-audits separate launch decisions from automated findings;
 - Evidence Engine outputs for Console Watch, Network Watch, Cache/CDN Watch, and measurable first-screen Design Watch facts;
 - ARD / `ai-catalog.json` drafts for agentic resource discovery, clearly marked as draft/optional;
 - Owner Data Mode requests for GSC, GA4, Bing Webmaster Tools, server logs, Cloudflare Analytics, and paid-tool consent boundaries;
@@ -193,6 +194,7 @@ templates/
 runbooks/
 evals/
 examples/reference-audit/
+examples/preprod-gated-audit/
 scripts/generate_html_audit_report.py
 scripts/run_full_audit.py
 scripts/validate_audit_report.py

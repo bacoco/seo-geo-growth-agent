@@ -56,6 +56,37 @@ class ReferenceExamplesTest(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_preprod_gated_reference_audit_is_complete_and_valid(self) -> None:
+        example_dir = ROOT / "examples" / "preprod-gated-audit"
+        expected = [
+            "audit.json",
+            "index.html",
+            "LATEST-SEO-GEO-REPORT.md",
+            "report-validation.json",
+        ]
+        for relative in expected:
+            self.assertTrue((example_dir / relative).exists(), relative)
+
+        audit = json.loads((example_dir / "audit.json").read_text(encoding="utf-8"))
+        self.assertEqual(audit["environment"], "preprod")
+        self.assertEqual(audit["summary"]["status"], "production_gated")
+        self.assertEqual(audit["executive_verdict"]["launch_status"], "not_ready")
+        self.assertTrue(audit["url_scope"]["has_fragment"])
+        self.assertTrue(any(item["area"] == "Final domain" for item in audit["production_gates"]))
+        self.assertTrue(any(item["area"] == "Production gates" for item in audit["human_review_required"]))
+
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "validate_audit_report.py"),
+                "--report-dir",
+                str(example_dir),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

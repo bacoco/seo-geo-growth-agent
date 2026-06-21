@@ -198,6 +198,95 @@ def preproduction_defaults(environment: str, base: dict[str, Any]) -> tuple[dict
     return assessment, gates
 
 
+def has_priority(findings: list[dict[str, Any]], priority: str) -> bool:
+    return any(text_priority(finding) == priority for finding in findings)
+
+
+def text_priority(finding: dict[str, Any]) -> str:
+    return str(finding.get("priority", "")).upper()
+
+
+def executive_verdict(
+    summary: dict[str, Any],
+    preprod_assessment: dict[str, Any],
+    findings: list[dict[str, Any]],
+    scope: dict[str, Any],
+) -> dict[str, str]:
+    is_preprod_gated = preprod_assessment.get("status") == "production_gated"
+    has_p0 = has_priority(findings, "P0")
+    status = str(summary.get("status") or "unknown")
+    can_launch = "no" if is_preprod_gated or has_p0 else ("review" if status in {"partial", "unknown"} else "yes")
+    launch_status = "not_ready" if can_launch == "no" else ("human_review_required" if can_launch == "review" else "ready_from_public_evidence")
+    if is_preprod_gated:
+        owner_decision = "Final launch gates require owner decisions."
+    elif scope.get("has_fragment"):
+        owner_decision = "Confirm the fragment-free canonical URL before sharing or launching."
+    elif status in {"partial", "unknown"}:
+        owner_decision = "Human review is required before treating this as a launch verdict."
+    else:
+        owner_decision = "Confirm owner data and claims before publication changes."
+    return {
+        "status": status,
+        "can_launch": can_launch,
+        "launch_status": launch_status,
+        "top_blocker": str(summary.get("biggest_blocker") or "Unknown blocker"),
+        "owner_decision_needed": owner_decision,
+        "evidence_confidence": str(summary.get("data_confidence") or "unknown"),
+        "canonical_url": str(scope.get("canonical_without_fragment") or scope.get("audited_url") or ""),
+    }
+
+
+def human_review_required(
+    summary: dict[str, Any],
+    preprod_assessment: dict[str, Any],
+    production_gates: list[dict[str, str]],
+    scope: dict[str, Any],
+    ai_current: dict[str, bool],
+) -> list[dict[str, str]]:
+    reviews: list[dict[str, str]] = []
+    if preprod_assessment.get("status") == "production_gated" and production_gates:
+        reviews.append(
+            {
+                "area": "Production gates",
+                "reason": "Preproduction can be healthy while final launch decisions remain open.",
+                "decision": "Confirm final domain, legal notice, reservations, measurement, and AI publication policy.",
+            }
+        )
+    if scope.get("has_fragment"):
+        reviews.append(
+            {
+                "area": "Canonical URL",
+                "reason": "The audited URL contains a fragment and may not represent the canonical first impression.",
+                "decision": f"Use {scope.get('canonical_without_fragment')} for SEO/share workflows unless the owner says otherwise.",
+            }
+        )
+    if str(summary.get("data_confidence", "")).lower() in {"", "unknown", "low", "medium"}:
+        reviews.append(
+            {
+                "area": "Owner data",
+                "reason": "Public checks cannot prove traffic, rankings, conversions, or AI citations.",
+                "decision": "Validate GSC, GA4/GTM, Bing Webmaster Tools, logs, and conversion events before making performance claims.",
+            }
+        )
+    if all(ai_current.get(key) for key in AI_ENDPOINTS):
+        reviews.append(
+            {
+                "area": "Existing AI layer",
+                "reason": "AI-readable files already exist and should not be overwritten blindly.",
+                "decision": "Compare existing /llms.txt, /for-ai, JSON, and TXT against generated drafts before changing production.",
+            }
+        )
+    elif any(value is False for value in ai_current.values()):
+        reviews.append(
+            {
+                "area": "AI publication policy",
+                "reason": "Generated AI-layer files are drafts built from audit evidence.",
+                "decision": "Owner must approve facts, claims, and do-not-extrapolate rules before publication.",
+            }
+        )
+    return reviews
+
+
 def unavailable_responsive(skip_browser: bool) -> dict[str, Any]:
     reason = "Browser capture skipped by --skip-browser." if skip_browser else "Browser evidence unavailable."
     return {"method": "not_captured", "summary": {"status": "unavailable", "verdict": reason}, "viewports": []}
@@ -252,6 +341,12 @@ def draft_audit(
         "data_confidence": summary.get("data_confidence") or "medium",
         "decision": summary.get("decision") or "Use generated files as owner-review drafts; do not treat unknown metrics as zero.",
     }
+    review_items = base.get("human_review_required")
+    if not isinstance(review_items, list):
+        review_items = human_review_required(summary, preprod_assessment, production_gates, scope, ai_current)
+    verdict = base.get("executive_verdict")
+    if not isinstance(verdict, dict):
+        verdict = executive_verdict(summary, preprod_assessment, findings, scope)
 
     audit = {
         **base,
@@ -262,6 +357,8 @@ def draft_audit(
         "url_scope": scope,
         "report_language": language,
         "summary": summary,
+        "executive_verdict": verdict,
+        "human_review_required": review_items,
         "findings": findings,
         "sources": base.get("sources")
         if isinstance(base.get("sources"), list) and base.get("sources")

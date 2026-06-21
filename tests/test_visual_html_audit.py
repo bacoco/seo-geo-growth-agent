@@ -29,6 +29,29 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                             "biggest_blocker": "No /llms.txt or /for-ai package",
                             "fastest_win": "Add structured summaries to key pages",
                             "data_confidence": "medium",
+                            "decision": "Do not launch until owner evidence is reviewed.",
+                        },
+                        "executive_verdict": {
+                            "status": "production_gated",
+                            "can_launch": "no",
+                            "launch_status": "not_ready",
+                            "top_blocker": "No /llms.txt or /for-ai package",
+                            "owner_decision_needed": "Approve AI publication policy.",
+                            "evidence_confidence": "medium",
+                        },
+                        "human_review_required": [
+                            {
+                                "area": "AI publication policy",
+                                "reason": "Generated files require owner approval.",
+                                "decision": "Approve or adapt before publication.",
+                            }
+                        ],
+                        "url_scope": {
+                            "audited_url": "https://example.com/#page-1",
+                            "canonical_without_fragment": "https://example.com/",
+                            "fragment": "page-1",
+                            "has_fragment": True,
+                            "share_url_recommendation": "Use the fragment-free canonical URL for SEO, sharing, and production references.",
                         },
                         "metrics": [
                             {"label": "Crawl", "value": "OK", "detail": "Homepage returns 200"}
@@ -51,6 +74,9 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                             "score": "6/10",
                             "verdict": "Clear content, weak first impression",
                             "summary": "The page is readable, but the visual identity does not match the expertise implied by the content.",
+                            "confidence": "needs_human_review",
+                            "limits": ["Screenshot review cannot confirm conversion intent alone."],
+                            "first_impression_risk": "The first viewport does not prove the value proposition fast enough.",
                             "observed": ["Homepage screenshot is readable on mobile."],
                             "inferred": ["The site may lose trust before the article content is evaluated."],
                             "recommended": ["Replace generic visual assets with topic-relevant editorial identity."],
@@ -217,6 +243,14 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
             self.assertIn("Analysis cohorts", html)
             self.assertIn("tab-shell", html)
             self.assertIn("Readiness signal", html)
+            self.assertIn("Executive Verdict", html)
+            self.assertIn("Can launch?", html)
+            self.assertIn("Human review required", html)
+            self.assertIn("Approve AI publication policy.", html)
+            self.assertIn("Canonical URL without fragment", html)
+            self.assertIn("https://example.com/", html)
+            self.assertIn("Visual judgment", html)
+            self.assertIn("first viewport does not prove", html)
             self.assertIn("Readable but visually under-positioned", html)
             self.assertIn("Clear content, weak first impression", html)
             self.assertIn("site-screenshots/mobile.png", html)

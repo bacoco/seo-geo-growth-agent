@@ -87,6 +87,9 @@ class OraclePreAuditTest(unittest.TestCase):
             )
 
         self.assertEqual(audit["summary"]["status"], "production_gated")
+        self.assertEqual(audit["executive_verdict"]["launch_status"], "not_ready")
+        self.assertEqual(audit["executive_verdict"]["owner_decision_needed"], "Final launch gates require owner decisions.")
+        self.assertTrue(any(item["area"] == "Production gates" for item in audit["human_review_required"]))
         self.assertEqual(audit["url_scope"]["canonical_without_fragment"], "https://swing.appmiweb.com/")
         self.assertTrue(audit["url_scope"]["has_fragment"])
         self.assertTrue(any(finding["title"] == "Fragment URL should not become the canonical SEO URL" for finding in audit["findings"]))
