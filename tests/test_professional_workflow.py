@@ -139,7 +139,7 @@ class ProfessionalWorkflowTest(unittest.TestCase):
 
     def test_runtime_manifest_installs_demo_script_and_owner_data_template(self) -> None:
         manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["version"], "1.3.2")
+        self.assertEqual(manifest["version"], "1.3.3")
         self.assertEqual(manifest["scripts"]["skill_demo"], "scripts/skill_demo.py")
         self.assertEqual(manifest["scripts"]["runtime_config"], "scripts/runtime_config.py")
         self.assertIn("templates/owner-data-intake.csv", manifest["templates"])
@@ -166,6 +166,23 @@ class ProfessionalWorkflowTest(unittest.TestCase):
             self.assertIn("Python", text)
             self.assertIn("Node", text)
             self.assertIn("Chrome", text)
+
+    def test_skill_description_stays_under_agent_metadata_limit(self) -> None:
+        text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        frontmatter = text.split("---", 2)[1]
+        description_lines = []
+        in_description = False
+        for line in frontmatter.splitlines():
+            if line.startswith("description:"):
+                in_description = True
+                continue
+            if in_description and line and not line.startswith(" "):
+                break
+            if in_description:
+                description_lines.append(line.strip())
+        description = "\n".join(line for line in description_lines if line)
+        self.assertLessEqual(len(description), 1024)
+        self.assertTrue(description.startswith("Use when"))
 
 
 if __name__ == "__main__":

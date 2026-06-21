@@ -372,7 +372,7 @@ Verify every file before publishing. This package is evidence-led and must not b
     path.write_text(guide, encoding="utf-8")
 
 
-def file_manifest(include_ard: bool = False) -> list[dict[str, str]]:
+def file_manifest(include_ard: bool = False, include_diff: bool = False) -> list[dict[str, str]]:
     files = [
         {"label": "llms.txt", "path": f"{PACKAGE_DIR}/llms.txt", "purpose": "Site-level AI assistant index"},
         {"label": "/for-ai", "path": f"{PACKAGE_DIR}/for-ai/index.html", "purpose": "Agent-readable page context"},
@@ -388,6 +388,14 @@ def file_manifest(include_ard: bool = False) -> list[dict[str, str]]:
                 "purpose": "Draft ARD manifest for agentic resource discovery",
             }
         )
+    if include_diff:
+        files.append(
+            {
+                "label": "AI_LAYER_DIFF.md",
+                "path": f"{PACKAGE_DIR}/AI_LAYER_DIFF.md",
+                "purpose": "Owner review checklist comparing existing AI files with generated drafts",
+            }
+        )
     files.extend(
         [
             {"label": "AI_LAYER_INSTALL.md", "path": f"{PACKAGE_DIR}/AI_LAYER_INSTALL.md", "purpose": "Owner publishing checklist"},
@@ -395,6 +403,11 @@ def file_manifest(include_ard: bool = False) -> list[dict[str, str]]:
         ]
     )
     return files
+
+
+def existing_ai_layer_present(audit: dict[str, Any]) -> bool:
+    current = audit.get("ai_layer_current_state") if isinstance(audit.get("ai_layer_current_state"), dict) else {}
+    return bool(current.get("llms_txt") and current.get("for_ai") and current.get("for_ai_json") and current.get("for_ai_txt"))
 
 
 def _entry_queries(entry: dict[str, Any], audit: dict[str, Any], payload: dict[str, Any]) -> list[str]:
@@ -486,7 +499,7 @@ def publication_status(audit: dict[str, Any]) -> tuple[str, str]:
             "conflict_with_existing_source",
             "The audit reports an existing AI layer conflict; compare files before publishing generated drafts.",
         )
-    if current.get("llms_txt") and current.get("for_ai") and current.get("for_ai_json") and current.get("for_ai_txt"):
+    if existing_ai_layer_present(audit):
         return (
             "already_present",
             "The audited site appears to already expose the expected AI-readable layer.",
@@ -503,10 +516,51 @@ def publication_status(audit: dict[str, Any]) -> tuple[str, str]:
     )
 
 
+def write_ai_layer_diff(path: Path, audit: dict[str, Any], payload: dict[str, Any]) -> None:
+    current = audit.get("ai_layer_current_state") if isinstance(audit.get("ai_layer_current_state"), dict) else {}
+    checks = audit.get("ai_layer_endpoint_checks") if isinstance(audit.get("ai_layer_endpoint_checks"), list) else []
+    lines = [
+        "# AI Layer Diff",
+        "",
+        "This package was generated even though the audited site already appears to expose the expected AI-readable layer.",
+        "Do not publish these drafts blindly. Use them to compare existing files against the owner-approved facts and citation limits.",
+        "",
+        "## Current public state",
+        "",
+    ]
+    for key in ("llms_txt", "for_ai", "for_ai_json", "for_ai_txt"):
+        lines.append(f"- `{key}`: {'present' if current.get(key) else 'missing_or_unknown'}")
+    if checks:
+        lines.extend(["", "## Endpoint checks", ""])
+        for check in checks:
+            if isinstance(check, dict):
+                lines.append(f"- {check.get('label', 'endpoint')}: {check.get('status_code') or check.get('error') or 'unknown'}")
+    lines.extend(
+        [
+            "",
+            "## Compare before changing",
+            "",
+            "- Existing `/llms.txt` still points to the right canonical pages.",
+            "- Existing `/for-ai` explains fit, limits, and do-not-extrapolate rules without manipulating agents.",
+            "- Existing `/for-ai.json` matches visible content and owner-approved facts.",
+            "- Existing `/for-ai.txt` is compact, current, and not contradictory.",
+            "- Generated drafts improve clarity without overwriting verified owner language.",
+            "",
+            "## Generated draft scope",
+            "",
+            f"- Canonical URL: {payload['canonical_url']}",
+            f"- Generated status: {payload['summary']['status']}",
+            f"- Data confidence: {payload['summary']['data_confidence']}",
+        ]
+    )
+    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+
+
 def write_package(audit: dict[str, Any], output_dir: Path) -> dict[str, Any]:
     payload = package_payload(audit)
     ard_catalog = ard_catalog_from_audit(audit, payload)
     include_ard = ard_catalog is not None
+    include_diff = existing_ai_layer_present(audit)
     publish_status, status_reason = publication_status(audit)
     package_dir = output_dir / PACKAGE_DIR
     package_dir.mkdir(parents=True, exist_ok=True)
@@ -522,6 +576,8 @@ def write_package(audit: dict[str, Any], output_dir: Path) -> dict[str, Any]:
             json.dumps(ard_catalog, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
+    if include_diff:
+        write_ai_layer_diff(package_dir / "AI_LAYER_DIFF.md", audit, payload)
     write_install_guide(package_dir / "AI_LAYER_INSTALL.md", payload, include_ard=include_ard)
 
     package_manifest = {
@@ -530,7 +586,7 @@ def write_package(audit: dict[str, Any], output_dir: Path) -> dict[str, Any]:
         "generated_at": payload["generated_at"],
         "site": payload["site"],
         "canonical_url": payload["canonical_url"],
-        "files": file_manifest(include_ard=include_ard),
+        "files": file_manifest(include_ard=include_ard, include_diff=include_diff),
     }
     (package_dir / "manifest.json").write_text(
         json.dumps(package_manifest, ensure_ascii=False, indent=2) + "\n",
@@ -547,9 +603,10 @@ def write_package(audit: dict[str, Any], output_dir: Path) -> dict[str, Any]:
         "status": "generated",
         "publication_status": publish_status,
         "status_reason": status_reason,
+        "comparison_status": "compare_existing_before_change" if include_diff else "new_publication_draft",
         "path": PACKAGE_DIR,
         "zip_path": PACKAGE_ZIP,
-        "files": file_manifest(include_ard=include_ard),
+        "files": file_manifest(include_ard=include_ard, include_diff=include_diff),
     }
 
 

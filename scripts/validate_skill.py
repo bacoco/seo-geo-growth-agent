@@ -63,6 +63,31 @@ def check_required_files() -> None:
             fail(f"missing required root file: {rel}")
 
 
+def check_skill_description() -> None:
+    text = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+    try:
+        frontmatter = text.split("---", 2)[1]
+    except IndexError:
+        fail("SKILL.md is missing YAML frontmatter")
+    description_lines: list[str] = []
+    in_description = False
+    for line in frontmatter.splitlines():
+        if line.startswith("description:"):
+            in_description = True
+            continue
+        if in_description and line and not line.startswith(" "):
+            break
+        if in_description:
+            description_lines.append(line.strip())
+    description = "\n".join(line for line in description_lines if line)
+    if not description:
+        fail("SKILL.md description is missing")
+    if len(description) > 1024:
+        fail(f"SKILL.md description exceeds 1024 characters: {len(description)}")
+    if not description.startswith("Use when"):
+        fail('SKILL.md description must start with "Use when"')
+
+
 def check_manifest_paths(manifest: dict) -> None:
     entrypoint = manifest.get("entrypoint")
     if not isinstance(entrypoint, str) or not entrypoint:
@@ -334,6 +359,7 @@ def check_no_obvious_secrets() -> None:
 
 def main() -> None:
     check_required_files()
+    check_skill_description()
     manifest = read_manifest()
     check_manifest_paths(manifest)
     check_manifest_directory_sync(manifest)

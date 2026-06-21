@@ -7,7 +7,7 @@ import shutil
 from pathlib import Path
 from urllib.parse import urlparse
 
-VERSION = "1.3.2"
+VERSION = "1.3.3"
 USER_AGENT = f"seo-geo-growth-agent/{VERSION}"
 
 

@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, urlunparse
 from urllib.request import Request, urlopen
 
 from runtime_config import USER_AGENT, validate_network_url
@@ -106,6 +106,98 @@ def endpoint_findings(checks: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
+def url_scope(target_url: str) -> dict[str, Any]:
+    parsed = urlparse(target_url)
+    canonical_without_fragment = urlunparse(parsed._replace(fragment=""))
+    return {
+        "audited_url": target_url,
+        "canonical_without_fragment": canonical_without_fragment,
+        "fragment": parsed.fragment,
+        "has_fragment": bool(parsed.fragment),
+        "share_url_recommendation": "Use the fragment-free canonical URL for SEO, sharing, and production references."
+        if parsed.fragment
+        else "Audited URL has no fragment.",
+    }
+
+
+def fragment_url_finding(scope: dict[str, Any]) -> list[dict[str, Any]]:
+    if not scope.get("has_fragment"):
+        return []
+    return [
+        {
+            "priority": "P1",
+            "title": "Fragment URL should not become the canonical SEO URL",
+            "observed": [
+                f"The audited URL contains #{scope.get('fragment')}.",
+                f"Canonical/share target should be {scope.get('canonical_without_fragment')}.",
+            ],
+            "inferred": [
+                "A fragment URL can open the page at a different first impression than the canonical homepage."
+            ],
+            "recommended": [
+                "Use the fragment-free URL for SEO, sharing, reports, and production handoff unless the fragment is intentionally canonicalized."
+            ],
+            "evidence": [
+                {
+                    "label": "Audited URL",
+                    "url": str(scope.get("audited_url", "")),
+                    "status": "fragment_detected",
+                }
+            ],
+        }
+    ]
+
+
+def preproduction_defaults(environment: str, base: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    is_preprod = environment in {"preprod", "preproduction", "staging", "preview"}
+    existing = base.get("production_gates") or base.get("preprod_gates")
+    if isinstance(existing, list) and existing:
+        gates = [gate for gate in existing if isinstance(gate, dict)]
+    elif is_preprod:
+        gates = [
+            {
+                "area": "Final domain",
+                "next_now": "Keep crawl and AI-layer checks green on preproduction.",
+                "defer_until_prod": "Declare and verify the final HTTPS production domain.",
+                "proof_needed": "Owner-confirmed domain, canonical URLs, sitemap, and redirects.",
+            },
+            {
+                "area": "Legal host",
+                "next_now": "Identify the legal hosting requirement before launch.",
+                "defer_until_prod": "Publish complete legal hosting and notice information.",
+                "proof_needed": "Owner-approved legal notice and hosting entity.",
+            },
+            {
+                "area": "Reservations",
+                "next_now": "State whether the reservation path is informative or transactional.",
+                "defer_until_prod": "Enable or explicitly defer booking/payment flows.",
+                "proof_needed": "Validated CTA behavior and conversion event definition.",
+            },
+            {
+                "area": "Measurement",
+                "next_now": "Prepare the owner-data intake and analytics plan.",
+                "defer_until_prod": "Connect GSC, GA4/GTM, Bing Webmaster Tools, logs, and conversion events.",
+                "proof_needed": "Owner access or exports; never infer traffic from public crawl checks.",
+            },
+            {
+                "area": "AI publication policy",
+                "next_now": "Review existing or generated AI-readable files against visible facts.",
+                "defer_until_prod": "Approve citation guidance, claims, and do-not-extrapolate limits.",
+                "proof_needed": "Owner-approved /llms.txt, /for-ai, JSON, TXT, and claim ledger.",
+            },
+        ]
+    else:
+        gates = []
+    assessment = {
+        "status": "production_gated" if is_preprod else "not_preproduction",
+        "verdict": "Preproduction can be technically healthy while still blocked from final launch."
+        if is_preprod
+        else "No preproduction launch gate was inferred from the selected environment.",
+        "gate_count": len(gates),
+    }
+    return assessment, gates
+
+
 def unavailable_responsive(skip_browser: bool) -> dict[str, Any]:
     reason = "Browser capture skipped by --skip-browser." if skip_browser else "Browser evidence unavailable."
     return {"method": "not_captured", "summary": {"status": "unavailable", "verdict": reason}, "viewports": []}
@@ -126,6 +218,8 @@ def draft_audit(
     generated_at = base.get("generated_at") or datetime.now(timezone.utc).isoformat()
     findings = list(base.get("findings", [])) if isinstance(base.get("findings"), list) else []
     findings.extend(endpoint_findings(ai_checks))
+    scope = url_scope(target_url)
+    findings.extend(fragment_url_finding(scope))
     responsive = load_json(output_dir / "responsive-study.json", unavailable_responsive(skip_browser))
     visual_evidence = load_json(output_dir / "site-visual-evidence.json", [])
     evidence_engine = load_json(output_dir / "evidence-engine.json", {})
@@ -138,11 +232,23 @@ def draft_audit(
 
     summary = base.get("summary") if isinstance(base.get("summary"), dict) else {}
     missing_ai = any(value is False for value in ai_current.values())
+    preprod_assessment, production_gates = preproduction_defaults(environment, base)
+    is_preprod = preprod_assessment["status"] == "production_gated"
     summary = {
         "headline": summary.get("headline") or f"{site} needs owner-reviewed AI-readable publication files.",
-        "status": summary.get("status") or ("partial" if missing_ai else "ok"),
-        "biggest_blocker": summary.get("biggest_blocker") or ("Missing AI-readable files" if missing_ai else "No P0 blocker observed from public checks"),
-        "fastest_win": summary.get("fastest_win") or ("Review and publish the generated AI-layer package" if missing_ai else "Validate owner data and monitor"),
+        "status": summary.get("status") or ("production_gated" if is_preprod else ("partial" if missing_ai else "ok")),
+        "biggest_blocker": summary.get("biggest_blocker")
+        or (
+            "Production launch gates are not owner-locked"
+            if is_preprod
+            else ("Missing AI-readable files" if missing_ai else "No P0 blocker observed from public checks")
+        ),
+        "fastest_win": summary.get("fastest_win")
+        or (
+            "Lock final domain, legal notice, reservation behavior, measurement, and AI publication policy"
+            if is_preprod
+            else ("Review and publish the generated AI-layer package" if missing_ai else "Validate owner data and monitor")
+        ),
         "data_confidence": summary.get("data_confidence") or "medium",
         "decision": summary.get("decision") or "Use generated files as owner-review drafts; do not treat unknown metrics as zero.",
     }
@@ -153,6 +259,7 @@ def draft_audit(
         "audited_url": target_url,
         "generated_at": generated_at,
         "environment": environment,
+        "url_scope": scope,
         "report_language": language,
         "summary": summary,
         "findings": findings,
@@ -164,6 +271,8 @@ def draft_audit(
         "responsive_study": responsive,
         "evidence_engine": evidence_engine if isinstance(evidence_engine, dict) else {},
         "ard_readiness": ard_readiness if isinstance(ard_readiness, dict) else {},
+        "preproduction_assessment": preprod_assessment,
+        "production_gates": production_gates,
         "ai_layer_current_state": ai_current,
         "ai_layer_endpoint_checks": ai_checks,
         "public_measurements": base.get("public_measurements")

@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.3 — Pre-audit judgment hardening
+
+### Added
+
+- Fragment URL detection now records `url_scope`, adds a finding, and recommends the fragment-free canonical URL for SEO/share workflows.
+- Preproduction audits now default to `production_gated` with explicit final-domain, legal-host, reservation, measurement, and AI-publication gates.
+- AI-layer packages now include `AI_LAYER_DIFF.md` when `/llms.txt`, `/for-ai`, `/for-ai.json`, and `/for-ai.txt` already exist, so generated files are treated as comparison drafts.
+
+### Changed
+
+- Report validation accepts real `site-screenshots/desktop.png` and `mobile.png` evidence without forcing a redundant `screenshot_status`.
+- `SKILL.md` metadata description is shortened below the agent metadata limit and the validator now enforces that limit.
+
 ## 1.3.2 — Runtime cleanup and URL guardrails
 
 ### Added

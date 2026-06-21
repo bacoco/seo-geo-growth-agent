@@ -52,6 +52,9 @@ def report_member_path(report_dir: Path, value: Any) -> Path | None:
 
 
 def has_visual_evidence(audit: dict[str, Any], report_dir: Path) -> bool:
+    screenshot_dir = report_dir / "site-screenshots"
+    if (screenshot_dir / "desktop.png").is_file() and (screenshot_dir / "mobile.png").is_file():
+        return True
     for key in ("site_visual_evidence", "visual_evidence"):
         visuals = audit.get(key)
         if not isinstance(visuals, list):
