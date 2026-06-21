@@ -591,6 +591,12 @@ HTML_TEMPLATE = """<!doctype html>
         documentWidth: 'Document width',
         documentHeight: 'Document height',
         missingImages: 'Missing images',
+        imagesLoadedInitially: 'Images loaded initially',
+        imagesLoadedAfterScroll: 'Images loaded after scroll',
+        brokenImages: 'Broken images after scroll',
+        deferredImages: 'Images still deferred after scroll',
+        initialMissingImages: 'Initially missing images',
+        finalMissingImages: 'Missing images after scroll',
         siteScreenshot: 'Site screenshot',
         screenshotFile: 'Screenshot file:',
         viewport: 'Viewport',
@@ -687,6 +693,12 @@ HTML_TEMPLATE = """<!doctype html>
         documentWidth: 'Largeur du document',
         documentHeight: 'Hauteur du document',
         missingImages: 'Images manquantes',
+        imagesLoadedInitially: 'Images chargées au départ',
+        imagesLoadedAfterScroll: 'Images chargées après scroll',
+        brokenImages: 'Images cassées après scroll',
+        deferredImages: 'Images encore différées après scroll',
+        initialMissingImages: 'Images manquantes au départ',
+        finalMissingImages: 'Images manquantes après scroll',
         siteScreenshot: 'Capture du site',
         screenshotFile: 'Fichier de capture :',
         viewport: 'Viewport',
@@ -1156,13 +1168,22 @@ HTML_TEMPLATE = """<!doctype html>
           ])]),
           el('tbody', {}, viewports.map(item => {
             const metrics = item.metrics || {};
+            const imageStates = metrics.imageLoadStates || {};
             const observed = [
               `${t('pageTitle')}: ${text(metrics.title, t('unknown'))}`,
               `${t('h1')}: ${asArray(metrics.h1Text).join(' | ') || t('unknown')}`,
               `${t('horizontalOverflow')}: ${metrics.horizontalOverflow ? t('yes') : t('no')}`,
               `${t('documentWidth')}: ${text(metrics.scrollWidth, t('unknown'))}px`,
               `${t('documentHeight')}: ${text(metrics.documentHeight, t('unknown'))}px`,
-              `${t('missingImages')}: ${text(metrics.missingImages, '0')}`
+              `${t('missingImages')}: ${text(metrics.missingImages, '0')}`,
+              ...(Object.keys(imageStates).length ? [
+                `${t('imagesLoadedInitially')}: ${text(imageStates.loaded_initially, '0')}`,
+                `${t('imagesLoadedAfterScroll')}: ${text(imageStates.loaded_after_scroll, '0')}`,
+                `${t('brokenImages')}: ${text(imageStates.broken, '0')}`,
+                `${t('deferredImages')}: ${text(imageStates.still_deferred, '0')}`,
+                `${t('initialMissingImages')}: ${text(imageStates.initial_missing, '0')}`,
+                `${t('finalMissingImages')}: ${text(imageStates.missing_after_scroll, '0')}`
+              ] : [])
             ];
             return el('tr', {}, [
               el('td', { text: text(item.viewport || item.label, '') }),

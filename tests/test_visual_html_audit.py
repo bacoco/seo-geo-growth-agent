@@ -92,6 +92,14 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
                                         "horizontalOverflow": False,
                                         "h1Text": ["Example"],
                                         "missingImages": 0,
+                                        "imageLoadStates": {
+                                            "loaded_initially": 8,
+                                            "loaded_after_scroll": 26,
+                                            "broken": 0,
+                                            "still_deferred": 0,
+                                            "initial_missing": 26,
+                                            "missing_after_scroll": 0,
+                                        },
                                     },
                                 }
                             ],
@@ -163,6 +171,8 @@ class VisualHtmlAuditReportTest(unittest.TestCase):
             self.assertIn("AI layer package", html)
             self.assertIn("ai-layer-package.zip", html)
             self.assertIn("ai-layer-package/llms.txt", html)
+            self.assertIn("Images loaded after scroll", html)
+            self.assertIn("26", html)
 
     def test_serve_report_check_mode_validates_report_directory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

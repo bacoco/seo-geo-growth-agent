@@ -127,6 +127,7 @@ Use Agent Browser to:
 - open the audited site, not the generated report;
 - capture desktop and mobile screenshots of the audited URL;
 - run a dynamic responsive study of at least the homepage in mobile and desktop viewports;
+- scroll the page before treating lazy images as broken or missing;
 - inspect first impression, visible hierarchy, brand trust, content clarity, mobile wrapping, horizontal overflow, broken images, and topic fit;
 - write a `design_watch` object with score, verdict, observed facts, inferred risks, and recommended fixes;
 - write a `responsive_study` object with method, pass/warning status, viewport metrics, issues, and a short verdict;
@@ -146,6 +147,17 @@ node scripts/capture_site_screenshots.mjs \
 Then copy the relevant entries into `audit.json` under `site_visual_evidence[]`, copy `responsive-study.json` under `responsive_study`, add `design_watch`, and regenerate the HTML report.
 
 For the responsive study, read `templates/responsive-dynamic-study.md`.
+
+For image loading decisions, use `responsive_study.viewports[].metrics.imageLoadStates` when available:
+
+| State | Decision |
+|---|---|
+| `broken > 0` after scroll | Site issue: image resource is broken or invalid. |
+| `still_deferred > 0` after scroll | Warning: image remains unloaded after exposure; investigate. |
+| `loaded_after_scroll > 0`, `broken = 0`, `still_deferred = 0` | Positive evidence: lazy loading works. |
+| `initial_missing > 0`, `missing_after_scroll = 0` | No image fix required. |
+
+Do not recommend removing `loading="lazy"` when images load after scroll. That is an audit false positive, not a site defect.
 
 Use this scoring frame:
 
@@ -262,7 +274,15 @@ Each cohort should include `name`, `score`, `status`, `what_it_checks`,
           "hasViewportMeta": true,
           "h1Count": 1,
           "h1Text": ["Example"],
-          "missingImages": 0
+          "missingImages": 0,
+          "imageLoadStates": {
+            "loaded_initially": 8,
+            "loaded_after_scroll": 26,
+            "broken": 0,
+            "still_deferred": 0,
+            "initial_missing": 26,
+            "missing_after_scroll": 0
+          }
         }
       }
     ]

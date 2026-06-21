@@ -1,7 +1,7 @@
 {
   "name": "seo-geo-growth-agent",
-  "version": "1.2.3",
-  "description": "Agent-ready SEO + GEO skill for auditing, Design Watch screenshot analysis, responsive studies, visual HTML reports, downloadable AI-layer packages, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
+  "version": "1.2.4",
+  "description": "Agent-ready SEO + GEO skill for auditing, Design Watch screenshot analysis, lazy-load aware responsive studies, visual HTML reports, downloadable AI-layer packages, strategy, content production, daily operations, AI-search citation readiness, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
   "install_protocol": "INSTALL_FOR_AGENTS.md",
   "license": "MIT",
@@ -30,6 +30,7 @@
     "design-watch",
     "analysis-cohorts",
     "responsive-study",
+    "lazy-load",
     "screenshots",
     "ai-layer-package",
     "downloadable-deliverables"
@@ -39,7 +40,8 @@
     "gstack_gbrain_improvement_map": "runbooks/gstack-gbrain-improvement-map.md",
     "skill_optimization": "runbooks/skill-optimization.md",
     "visual_html_audit": "runbooks/visual-html-audit.md",
-    "public_measurement_access": "runbooks/public-measurement-access.md"
+    "public_measurement_access": "runbooks/public-measurement-access.md",
+    "postmortem_product_patterns": "runbooks/postmortem-product-patterns.md"
   },
   "scripts": {
     "generate_html_audit_report": "scripts/generate_html_audit_report.py",

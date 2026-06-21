@@ -110,17 +110,7 @@ async function connectWebSocket(url) {
   return { socket, send };
 }
 
-async function captureViewport(send, url, viewport, outputPath) {
-  await send("Page.enable");
-  await send("Runtime.enable");
-  await send("Emulation.setDeviceMetricsOverride", {
-    width: viewport.width,
-    height: viewport.height,
-    deviceScaleFactor: 1,
-    mobile: viewport.mobile,
-  });
-  await send("Page.navigate", { url });
-  await sleep(1400);
+async function readLayout(send) {
   const layout = await send("Runtime.evaluate", {
     expression: `JSON.stringify((() => {
       const doc = document.documentElement;
@@ -132,7 +122,22 @@ async function captureViewport(send, url, viewport, outputPath) {
       const navLinks = Array.from(document.querySelectorAll("nav a, [role='navigation'] a, header a"))
         .map((node) => (node.innerText || node.textContent || "").trim())
         .filter(Boolean);
-      const images = Array.from(document.images || []);
+      const images = Array.from(document.images || []).map((img, index) => {
+        const rect = img.getBoundingClientRect();
+        return {
+          index,
+          src: img.currentSrc || img.src || img.getAttribute("src") || "",
+          loading: img.getAttribute("loading") || "",
+          complete: Boolean(img.complete),
+          naturalWidth: img.naturalWidth || 0,
+          naturalHeight: img.naturalHeight || 0,
+          renderedWidth: Math.round(rect.width),
+          renderedHeight: Math.round(rect.height),
+          top: Math.round(rect.top + window.scrollY),
+          bottom: Math.round(rect.bottom + window.scrollY),
+          inViewport: rect.bottom >= 0 && rect.top <= window.innerHeight
+        };
+      });
       const missingImages = images.filter((img) => !img.complete || img.naturalWidth === 0).length;
       return {
         title: document.title,
@@ -148,19 +153,126 @@ async function captureViewport(send, url, viewport, outputPath) {
         navLinkCount: navLinks.length,
         imageCount: images.length,
         missingImages,
+        images,
         visibleTextLength: (body.innerText || "").trim().length,
         textSample: (body.innerText || "").trim().replace(/\\s+/g, " ").slice(0, 240)
       };
     })())`,
     returnByValue: true,
   });
+  return JSON.parse(layout.result.value);
+}
+
+async function scrollThroughPage(send) {
+  const metricsResult = await send("Runtime.evaluate", {
+    expression: `JSON.stringify((() => {
+      const doc = document.documentElement;
+      const body = document.body || {};
+      const documentHeight = Math.max(doc.scrollHeight, body.scrollHeight || 0);
+      return {
+        innerHeight: window.innerHeight,
+        documentHeight,
+        maxScroll: Math.max(0, documentHeight - window.innerHeight)
+      };
+    })())`,
+    returnByValue: true,
+  });
+  const metrics = JSON.parse(metricsResult.result.value);
+  const stepSize = Math.max(320, Math.floor(metrics.innerHeight * 0.75));
+  let steps = 0;
+  for (let y = 0; y < metrics.maxScroll; y += stepSize) {
+    await send("Runtime.evaluate", { expression: `window.scrollTo(0, ${y}); true`, returnByValue: true });
+    steps += 1;
+    await sleep(260);
+  }
+  if (metrics.maxScroll > 0) {
+    await send("Runtime.evaluate", { expression: `window.scrollTo(0, ${metrics.maxScroll}); true`, returnByValue: true });
+    steps += 1;
+    await sleep(360);
+  }
+  await send("Runtime.evaluate", {
+    expression: `(async () => {
+      const pending = Array.from(document.images || []).filter((img) => !img.complete);
+      await Promise.all(pending.map((img) => new Promise((resolve) => {
+        img.addEventListener("load", resolve, { once: true });
+        img.addEventListener("error", resolve, { once: true });
+        setTimeout(resolve, 1200);
+      })));
+      return true;
+    })()`,
+    awaitPromise: true,
+    returnByValue: true,
+  });
+  await send("Runtime.evaluate", { expression: "window.scrollTo(0, 0); true", returnByValue: true });
+  await sleep(160);
+  return {
+    scrollSteps: steps,
+    maxScroll: metrics.maxScroll,
+    documentHeight: metrics.documentHeight,
+  };
+}
+
+function imageKey(image) {
+  return image.src || `image-${image.index}`;
+}
+
+function isLoaded(image) {
+  return Boolean(image.complete && image.naturalWidth > 0);
+}
+
+function summarizeImageLoading(initialImages = [], finalImages = []) {
+  const initialByKey = new Map(initialImages.map((image) => [imageKey(image), image]));
+  const loadedInitially = finalImages.filter((image) => isLoaded(initialByKey.get(imageKey(image)) || {})).length;
+  const loadedAfterScroll = finalImages.filter((image) => isLoaded(image) && !isLoaded(initialByKey.get(imageKey(image)) || {})).length;
+  const broken = finalImages.filter((image) => image.complete && image.naturalWidth === 0).length;
+  const stillDeferred = finalImages.filter((image) => !image.complete).length;
+  const unresolved = finalImages
+    .filter((image) => !isLoaded(image))
+    .slice(0, 5)
+    .map((image) => ({
+      src: image.src,
+      loading: image.loading,
+      complete: image.complete,
+      naturalWidth: image.naturalWidth,
+      top: image.top,
+    }));
+  return {
+    total: finalImages.length,
+    lazy: finalImages.filter((image) => image.loading.toLowerCase() === "lazy").length,
+    loaded_initially: loadedInitially,
+    loaded_after_scroll: loadedAfterScroll,
+    broken,
+    still_deferred: stillDeferred,
+    initial_missing: initialImages.filter((image) => !isLoaded(image)).length,
+    missing_after_scroll: broken + stillDeferred,
+    unresolved_sample: unresolved,
+  };
+}
+
+async function captureViewport(send, url, viewport, outputPath) {
+  await send("Page.enable");
+  await send("Runtime.enable");
+  await send("Emulation.setDeviceMetricsOverride", {
+    width: viewport.width,
+    height: viewport.height,
+    deviceScaleFactor: 1,
+    mobile: viewport.mobile,
+  });
+  await send("Page.navigate", { url });
+  await sleep(1400);
+  const initialLayout = await readLayout(send);
+  const scrollProbe = await scrollThroughPage(send);
+  const finalLayout = await readLayout(send);
+  finalLayout.initialMissingImages = initialLayout.missingImages;
+  finalLayout.imageLoadStates = summarizeImageLoading(initialLayout.images, finalLayout.images);
+  finalLayout.scrollProbe = scrollProbe;
   const screenshot = await send("Page.captureScreenshot", {
     format: "png",
     fromSurface: true,
     captureBeyondViewport: false,
   });
   writeFileSync(outputPath, Buffer.from(screenshot.data, "base64"));
-  return JSON.parse(layout.result.value);
+  return finalLayout;
 }
 
 function analyzeViewport(layout) {
@@ -170,7 +282,13 @@ function analyzeViewport(layout) {
   if (!layout.title) issues.push("Missing document title.");
   if (layout.h1Count === 0) issues.push("No visible H1 detected.");
   if (layout.h1Count > 2) issues.push(`Multiple H1 elements detected (${layout.h1Count}).`);
-  if (layout.missingImages > 0) issues.push(`${layout.missingImages} image(s) did not load.`);
+  const imageStates = layout.imageLoadStates || null;
+  if (imageStates) {
+    if (imageStates.broken > 0) issues.push(`${imageStates.broken} image(s) are broken after scroll.`);
+    if (imageStates.still_deferred > 0) issues.push(`${imageStates.still_deferred} image(s) remain deferred after scroll.`);
+  } else if (layout.missingImages > 0) {
+    issues.push(`${layout.missingImages} image(s) did not load.`);
+  }
   if (layout.visibleTextLength < 120) issues.push("Very little visible text detected.");
   return {
     status: issues.length ? "warning" : "pass",

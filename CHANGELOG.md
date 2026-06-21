@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.4 — Lazy-load aware responsive evidence
+
+### Added
+
+- Responsive screenshot capture now records image state before and after scrolling the page.
+- `responsive_study.viewports[].metrics.imageLoadStates` distinguishes images loaded initially, loaded after scroll, broken after scroll, and still deferred after scroll.
+- HTML reports render lazy-load image counters in the responsive study.
+- Post-mortem product patterns runbook captures reusable ideas from field reports, including current-report receipts, preproduction mode, comparison reports, Console Watch, sync-and-doctor, and real GEO/Citation panels.
+
+### Changed
+
+- Image findings now use `missing_after_scroll` instead of treating initially unloaded lazy images as site defects.
+- The visual audit runbook explicitly forbids recommending removal of `loading="lazy"` when images load after scroll.
+
 ## 1.2.3 — Downloadable AI-layer packages
 
 ### Added
