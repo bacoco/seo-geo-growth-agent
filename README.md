@@ -1,7 +1,7 @@
 # SEO + GEO Growth Agent
 
 <p align="center">
-  <img src="assets/hero.png" alt="SEO + GEO Growth Agent turns a website into crawlable, understandable, citable AI-ready content" width="820">
+  <img src="assets/hero.png" alt="From website to decision-ready AI visibility audit: the agent audits, packages, validates, and flags human review gates" width="820">
 </p>
 
 Make your AI agent turn any website or institutional page into content that search engines can crawl, AI systems can understand, and assistants can cite without inventing facts.
