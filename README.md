@@ -18,23 +18,23 @@ Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.0/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.1/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.0/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.1/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.0/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.3.1/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.3.0 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.3.1 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -183,6 +183,7 @@ references/
 templates/
 runbooks/
 evals/
+examples/reference-audit/
 scripts/generate_html_audit_report.py
 scripts/run_full_audit.py
 scripts/validate_audit_report.py

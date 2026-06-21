@@ -1,6 +1,6 @@
 {
   "name": "seo-geo-growth-agent",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Agent-ready SEO + GEO skill for professional audit orchestration, report validation, deterministic demos, Evidence Engine diagnostics, Owner Data Mode, ARD validation/readiness, visual HTML reports, downloadable owner-review improvement packages, strategy, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
   "install_protocol": "INSTALL_FOR_AGENTS.md",

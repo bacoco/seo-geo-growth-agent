@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.1 — Installed demo self-check
+
+### Fixed
+
+- Runtime installs now include `examples/reference-audit/` so installed `scripts/skill_demo.py` is self-contained.
+- `skill_doctor.py`, `validate_skill.py`, README, and install instructions now treat the golden audit as part of the runtime package.
+
 ## 1.3.0 — Professional audit workflow
 
 ### Added
