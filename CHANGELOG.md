@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.7 — ARD validation and generated improvement packages
+
+### Added
+
+- `scripts/validate_ard_catalog.py` validates ARD / `ai-catalog.json` manifests for `specVersion`, `urn:air:` identifiers, `url` vs `data`, and representative query bounds.
+- `scripts/check_ard_readiness.py` checks live sites for `/.well-known/ai-catalog.json`, `<link rel="ai-catalog">`, and `Agentmap:` in `robots.txt`, then emits an `ard_readiness` JSON block.
+- AI-layer packages now include an owner-review `ai-catalog.json` draft when ARD or agentic resources are in scope.
+- README now explains why ARD matters, where it fits, and why it is not a ranking factor.
+
+### Changed
+
+- The visual audit workflow now checks ARD before generating downloadable files so `ai-catalog.json` can be included in the ZIP when relevant.
+- Runtime install, doctor, manifest, and validation coverage include the ARD checker and validator scripts.
+
 ## 1.2.6 — Evidence Engine, Owner Data Mode, CLI, and ARD drafts
 
 ### Added

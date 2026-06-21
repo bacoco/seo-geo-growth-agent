@@ -39,6 +39,25 @@ class AiLayerPackageTest(unittest.TestCase):
                                 "recommended": ["Publish /for-ai and /for-ai.json"],
                             }
                         ],
+                        "ard_readiness": {
+                            "status": "missing",
+                            "catalog_url": "https://example.com/.well-known/ai-catalog.json",
+                            "recommended": [
+                                "Publish an ARD ai-catalog only if the owner wants this AI service to be discoverable."
+                            ],
+                            "entries": [
+                                {
+                                    "identifier": "urn:air:example.com:skill:seo-geo-growth-agent",
+                                    "displayName": "SEO GEO Growth Agent",
+                                    "type": "application/ai-skill+md",
+                                    "url": "https://github.com/bacoco/seo-geo-growth-agent",
+                                    "representativeQueries": [
+                                        "audit my website for AI search readiness",
+                                        "generate a citation-safe for-ai package",
+                                    ],
+                                }
+                            ],
+                        },
                         "sources": [{"label": "Homepage", "url": "https://example.com/"}],
                     },
                     indent=2,
@@ -68,6 +87,7 @@ class AiLayerPackageTest(unittest.TestCase):
                 "for-ai.json",
                 "for-ai.txt",
                 "schema-webpage.jsonld",
+                "ai-catalog.json",
                 "AI_LAYER_INSTALL.md",
                 "manifest.json",
             ]
@@ -79,6 +99,12 @@ class AiLayerPackageTest(unittest.TestCase):
             self.assertEqual(generated_json["canonical_url"], "https://example.com/")
             self.assertIn("do_not", generated_json)
             self.assertIn("citation_guidance", generated_json)
+            generated_catalog = json.loads((package_dir / "ai-catalog.json").read_text(encoding="utf-8"))
+            self.assertEqual(generated_catalog["specVersion"], "1.0")
+            self.assertEqual(
+                generated_catalog["entries"][0]["identifier"],
+                "urn:air:example.com:skill:seo-geo-growth-agent",
+            )
 
             updated_audit = json.loads(audit_path.read_text(encoding="utf-8"))
             self.assertEqual(updated_audit["ai_layer_package"]["zip_path"], "ai-layer-package.zip")
@@ -90,6 +116,7 @@ class AiLayerPackageTest(unittest.TestCase):
                 names = set(archive.namelist())
             self.assertIn("ai-layer-package/llms.txt", names)
             self.assertIn("ai-layer-package/for-ai/index.html", names)
+            self.assertIn("ai-layer-package/ai-catalog.json", names)
 
 
 if __name__ == "__main__":

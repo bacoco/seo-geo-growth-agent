@@ -1,7 +1,7 @@
 {
   "name": "seo-geo-growth-agent",
-  "version": "1.2.6",
-  "description": "Agent-ready SEO + GEO skill for auditing, Evidence Engine console/network/cache diagnostics, Owner Data Mode, a simple audit CLI, Design Watch screenshot analysis, responsive studies, visual HTML reports, downloadable AI-layer packages, report comparisons, GEO citation panels, strategy, agent-friendly UX, crawler policy, and measurement.",
+  "version": "1.2.7",
+  "description": "Agent-ready SEO + GEO skill for auditing, Evidence Engine diagnostics, Owner Data Mode, ARD validation/readiness, visual HTML reports, downloadable AI-layer packages, report comparisons, GEO citation panels, strategy, agent-friendly UX, crawler policy, and measurement.",
   "entrypoint": "SKILL.md",
   "install_protocol": "INSTALL_FOR_AGENTS.md",
   "license": "MIT",
@@ -68,6 +68,8 @@
     "generate_ai_layer_package": "scripts/generate_ai_layer_package.py",
     "generate_owner_data_request": "scripts/generate_owner_data_request.py",
     "generate_ard_catalog": "scripts/generate_ard_catalog.py",
+    "validate_ard_catalog": "scripts/validate_ard_catalog.py",
+    "check_ard_readiness": "scripts/check_ard_readiness.py",
     "compare_audit_reports": "scripts/compare_audit_reports.py",
     "generate_geo_citation_panel": "scripts/generate_geo_citation_panel.py",
     "serve_report": "scripts/serve_report.py",

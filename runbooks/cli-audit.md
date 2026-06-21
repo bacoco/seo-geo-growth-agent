@@ -28,10 +28,13 @@ This starts browser capture and owner-data request generation. It does not fabri
 After writing `audit.json`, run:
 
 ```bash
+python3 scripts/check_ard_readiness.py --url https://example.com/ --output reports/example.com/2026-06-21/ard-readiness.json
 python3 scripts/generate_ai_layer_package.py --input reports/example.com/2026-06-21/audit.json --output-dir reports/example.com/2026-06-21 --update-audit
 python3 scripts/generate_html_audit_report.py --input reports/example.com/2026-06-21/audit.json --output-dir reports/example.com/2026-06-21
 python3 scripts/serve_report.py --dir reports/example.com/2026-06-21 --port 8766 --open
 ```
+
+Run the ARD check only when agentic resources are in scope, then merge `ard-readiness.json` into `audit.json.ard_readiness` before generating the package if `ai-catalog.json` should be included.
 
 ## Rule
 

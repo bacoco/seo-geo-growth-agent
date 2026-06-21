@@ -48,6 +48,7 @@ def command_strings(target_url: str, output_dir: Path, language: str) -> list[st
     return [
         f"node scripts/capture_site_screenshots.mjs --url {target_url} --output-dir {screenshots} --evidence-out {output_dir / 'site-visual-evidence.json'} --study-out {output_dir / 'responsive-study.json'} --evidence-engine-out {output_dir / 'evidence-engine.json'}",
         f"python3 scripts/generate_owner_data_request.py --site {target_url} --output-dir {output_dir / 'owner-data'} --language {language if language in ('en', 'fr') else 'en'}",
+        f"python3 scripts/check_ard_readiness.py --url {target_url} --output {output_dir / 'ard-readiness.json'}",
         f"python3 scripts/generate_ai_layer_package.py --input {output_dir / 'audit.json'} --output-dir {output_dir} --update-audit",
         f"python3 scripts/generate_html_audit_report.py --input {output_dir / 'audit.json'} --output-dir {output_dir}",
         f"python3 scripts/serve_report.py --dir {output_dir} --port 8766 --open",

@@ -247,6 +247,8 @@ def check_install_script() -> None:
             "scripts/generate_ai_layer_package.py",
             "scripts/generate_owner_data_request.py",
             "scripts/generate_ard_catalog.py",
+            "scripts/validate_ard_catalog.py",
+            "scripts/check_ard_readiness.py",
             "scripts/compare_audit_reports.py",
             "scripts/generate_geo_citation_panel.py",
             "scripts/serve_report.py",

@@ -8,29 +8,31 @@ Make your AI agent turn any website or institutional page into content that sear
 
 Search is no longer just a list of blue links. AI assistants now read, summarize, compare, recommend, and sometimes act. This skill gives your agent a reusable operating system for that new layer: SEO fundamentals, GEO structure, agent-facing pages, crawler policy, measurement, templates, and hard guardrails against fake metrics or manipulative prompt tricks.
 
+It does not stop at diagnosis: when AI-readable layers are missing, it generates an owner-review ZIP with the files to publish, the checks to run, and the limits the agent must preserve.
+
 ## Install
 
 Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.6/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.7/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.6/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.7/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.6/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.7/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.2.6 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.2.7 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -89,7 +91,7 @@ It helps an agent produce:
 - keyword, fan-out, and grounding-query maps;
 - direct-answer and evidence-led content briefs;
 - `/for-ai`, `/for-ai.json`, `/for-ai.txt`, and `llms.txt` structures;
-- downloadable AI-layer packages with `/llms.txt`, `/for-ai`, JSON, TXT, JSON-LD, and an owner install checklist when those files are missing;
+- downloadable AI-layer packages with `/llms.txt`, `/for-ai`, JSON, TXT, JSON-LD, optional `ai-catalog.json`, and an owner install checklist when those files are missing;
 - crawler and robots.txt policy matrices;
 - claim ledgers and citation-safe source registers;
 - tabbed dynamic HTML audit reports with local serving, executive overview, animated readiness signal, lazy-load aware responsive mobile/desktop study, site screenshot analysis, Design Watch scoring, and analysis cohorts;
@@ -129,6 +131,16 @@ JSON-LD in the HTML
 
 The human page persuades and informs. The agent page clarifies context, fit, limits, and citation guidance. The JSON and TXT versions reduce ambiguity. `llms.txt` gives assistants a site map. JSON-LD keeps standard structured data aligned with visible content.
 
+## Why ARD Matters
+
+ARD / `ai-catalog.json` is for agentic resource discovery: skills, MCP servers, A2A agents, callable AI services, and other resources that an assistant may need to find before it can use them.
+
+It answers a different question from SEO or `/for-ai`: not “should this page rank?” but “what agentic resource exists here, who publishes it, where is it, what can it do, and which honest representative queries describe when it is relevant?”
+
+That is useful when a site exposes something operational, such as a skill, service, API, or agent workflow. The catalog can include `identifier`, `type`, `url` or inline `data`, `representativeQueries`, capabilities, and optional trust/provenance fields. It should be published at `/.well-known/ai-catalog.json`, referenced with `<link rel="ai-catalog">`, or pointed to from `robots.txt` with `Agentmap:` only after owner review.
+
+Guardrail: ARD is draft discovery infrastructure, not a ranking factor, not a shortcut to Google visibility, and not a replacement for crawlable human content, schema.org, `/for-ai`, or verifiable sources.
+
 ## Make It Yours
 
 After installing, start with:
@@ -162,6 +174,8 @@ scripts/generate_html_audit_report.py
 scripts/generate_ai_layer_package.py
 scripts/generate_owner_data_request.py
 scripts/generate_ard_catalog.py
+scripts/validate_ard_catalog.py
+scripts/check_ard_readiness.py
 scripts/compare_audit_reports.py
 scripts/generate_geo_citation_panel.py
 scripts/seo_geo_audit.py
@@ -182,7 +196,7 @@ Before publishing changes to the repo:
 python3 scripts/validate_skill.py
 ```
 
-The validator checks required files, manifest paths, internal references, JSON/JSONL files, reference numbering, install smoke tests, backup behavior, and obvious secret patterns.
+The validator checks required files, manifest paths, internal references, JSON/JSONL files, reference numbering, runtime script syntax, install smoke tests, backup behavior, and obvious secret patterns.
 
 ## Attribution
 

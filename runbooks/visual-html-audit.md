@@ -74,16 +74,17 @@ Optional:
 2. Capture desktop and mobile screenshots of the audited URL and run a dynamic responsive study plus Evidence Engine. If this fails, record why in `screenshot_status`.
 3. Analyze the screenshots and write a `design_watch` verdict. Analyze mobile/desktop rendering and write `responsive_study`. If screenshots are unavailable, write lower-confidence blocks based only on rendered/HTML evidence and state the limit.
 4. Convert the audit into `audit.json` in the user's language. Set `report_language` to the language of the user's request.
-5. If `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, or aligned JSON-LD are missing or recommended, generate the downloadable AI-layer publication pack:
+5. If the site exposes a skill, MCP server, A2A agent, or callable AI service, check ARD discovery signals and add the result as `ard_readiness` before generating downloadable files:
 
 ```bash
-python scripts/generate_ai_layer_package.py \
-  --input reports/<site-slug>/<YYYY-MM-DD>/audit.json \
-  --output-dir reports/<site-slug>/<YYYY-MM-DD> \
-  --update-audit
+python scripts/check_ard_readiness.py \
+  --url https://example.com/ \
+  --output reports/<site-slug>/<YYYY-MM-DD>/ard-readiness.json
 ```
 
-6. If the site exposes a skill, MCP server, A2A agent, or callable AI service, add `ard_readiness` and optionally generate an ARD draft:
+Then copy that JSON object into `audit.json` as `ard_readiness`. If ARD is absent but relevant, add the recommended draft `entries[]` before generating the package so `ai-catalog.json` is included in the ZIP.
+
+If ARD is in scope and absent, optionally generate an ARD draft:
 
 ```bash
 python scripts/generate_ard_catalog.py \
@@ -92,6 +93,21 @@ python scripts/generate_ard_catalog.py \
   --resource-name example-resource \
   --resource-url https://example.com/resource \
   --output reports/<site-slug>/<YYYY-MM-DD>/ai-catalog.json
+```
+
+Validate the draft before owner review:
+
+```bash
+python scripts/validate_ard_catalog.py reports/<site-slug>/<YYYY-MM-DD>/ai-catalog.json
+```
+
+6. If `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, aligned JSON-LD, or in-scope ARD files are missing or recommended, generate the downloadable AI-layer publication pack:
+
+```bash
+python scripts/generate_ai_layer_package.py \
+  --input reports/<site-slug>/<YYYY-MM-DD>/audit.json \
+  --output-dir reports/<site-slug>/<YYYY-MM-DD> \
+  --update-audit
 ```
 
 7. Generate the dynamic HTML report and current-report receipt:
@@ -135,7 +151,7 @@ Before finalizing, verify that all applicable deliverables exist:
 | `design_watch` | yes |
 | `analysis_cohorts[]` | yes for global reports |
 | `report_language` matching the user's language | yes |
-| downloadable AI-layer package | yes, when AI-readable layers are missing or recommended |
+| downloadable AI-layer package | yes, when AI-readable layers or in-scope ARD files are missing or recommended |
 | `ard_readiness` | yes, when agentic resources are in scope |
 | report desktop/mobile screenshots | yes, when UI quality is requested |
 

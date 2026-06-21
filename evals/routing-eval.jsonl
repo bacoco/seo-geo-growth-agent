@@ -18,6 +18,8 @@
 {"input":"Run Evidence Engine with Console Watch, Network Watch and Cache/CDN Watch for this homepage audit.","should_trigger":true,"expected_mode":"visual_html_audit"}
 {"input":"Generate an owner-data request for GSC, GA4, Bing Webmaster Tools, server logs and Cloudflare Analytics.","should_trigger":true,"expected_mode":"owner_data_mode"}
 {"input":"Create an ARD /.well-known/ai-catalog.json draft with representativeQueries for this AI skill.","should_trigger":true,"expected_mode":"ard_ai_catalog"}
+{"input":"Validate this /.well-known/ai-catalog.json manifest and explain any ARD errors.","should_trigger":true,"expected_mode":"ard_ai_catalog"}
+{"input":"Check whether this site exposes ARD through well-known, rel=ai-catalog, or Agentmap.","should_trigger":true,"expected_mode":"ard_ai_catalog"}
 {"input":"Use seo-geo-audit to create a repeatable audit workspace and plan-only command receipt.","should_trigger":true,"expected_mode":"cli_audit"}
 {"input":"Make the logo bigger in the navbar and change the button color.","should_trigger":false,"expected_mode":"not_seo_geo"}
 {"input":"Write a generic motivational LinkedIn post about productivity.","should_trigger":false,"expected_mode":"not_seo_geo"}

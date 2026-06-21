@@ -41,7 +41,7 @@ no local report.
 | Evidence Engine audit | The user wants console/network/cache/CDN evidence or a more defensible technical report | `evidence-engine.json`, Console Watch, Network Watch, Cache/CDN Watch, first-screen metrics |
 | Owner Data Mode | The user owns the site and wants real search, traffic, crawl, cache, or conversion evidence | owner-data request markdown and JSON checklist |
 | CLI audit workspace | The user wants a repeatable local audit workflow | `audit-plan.json`, workspace folders, next commands |
-| ARD / ai-catalog | The user exposes a skill, MCP server, A2A agent, or AI service and wants agentic resource discovery | `ai-catalog.json` draft and ARD readiness notes |
+| ARD / ai-catalog | The user exposes a skill, MCP server, A2A agent, or AI service and wants agentic resource discovery | ARD readiness check, `ai-catalog.json` draft, validation result |
 | `/for-ai` package | The page is important enough to be cited by agents | `/for-ai`, `/for-ai.json`, `/for-ai.txt`, `llms.txt` plan |
 | Content brief | The user wants to create or rewrite a strategic page | keyword map, brief, outline, claim ledger |
 | Crawler and measurement policy | The user asks about AI bots, robots.txt, visibility, or reporting | crawler matrix, robots draft, measurement plan |
@@ -60,7 +60,7 @@ no local report.
 8. For visual HTML audits, read `runbooks/visual-html-audit.md`, capture screenshots of the audited site, run the responsive mobile/desktop study, run Evidence Engine, run Design Watch, add analysis cohorts when useful, write `audit.json` in the user's language with `report_language`, and generate the report from that explicit evidence file. If screenshots fail, still generate the HTML report and document why screenshots are unavailable.
 9. For analytics or traffic data questions, read `runbooks/public-measurement-access.md` and never confuse public estimates with owner analytics.
 10. For skill improvement work, read `runbooks/gstack-gbrain-improvement-map.md` and `runbooks/skill-optimization.md`.
-11. For ARD / ai-catalog work, read `runbooks/ard-ai-catalog.md` and label it as draft/optional.
+11. For ARD / ai-catalog work, read `runbooks/ard-ai-catalog.md`, check live discovery signals first, validate generated catalogs, and label ARD as draft/optional.
 
 ## First Useful Prompt
 
