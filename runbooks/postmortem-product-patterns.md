@@ -13,18 +13,18 @@ Use this runbook after a real SEO/GEO audit session exposes workflow friction, f
 
 ## Ideas Worth Implementing
 
-| Priority | Idea | Why It Matters | Minimum Useful Output |
-|---:|---|---|---|
-| 10 | Current report receipt | Users lose time finding the valid report when ports, folders, or tunnels change. | `LATEST-SEO-GEO-REPORT.md` with HTML path, local URL, remote URL if any, target, date, skill version. |
-| 9 | Preproduction mode | Low measurement scores can be correct when analytics, GSC, Bing, and final domain are intentionally deferred. | `environment: preprod|production` plus `next_now`, `defer_until_prod`, `proof_needed`. |
-| 9 | Report comparison | Iterating audits requires explaining what changed and why, not only showing two score tables. | Narrative diff plus score deltas between two `audit.json` files. |
-| 8 | Console Watch | Browser console noise mixes first-party issues, third-party iframes, CDN messages, and browser policy warnings. | Classified console messages: `first_party`, `third_party`, `browser_policy`, `unknown`. |
-| 8 | Cache/CDN diagnostics | CDN cache can make public evidence differ from local state. | Tested URL, cache headers, asset version, stale/public/local verdict. |
-| 8 | Sync and doctor | Source, Codex, and Claude skill copies can drift. | Install to known destinations, run `skill_doctor.py`, print version receipt. |
-| 8 | GEO/Citation panel template | Structural readiness is not citation measurement. | CSV with prompts, engines, cited sources, competitors, facts reused, errors, and date. |
-| 7 | Paid-tool consent | MCP tools can consume credits. | Require explicit consent before Haloscan, Semrush, DataForSEO, or similar paid calls. |
-| 7 | Design Watch measurable first screen | A visual score is more useful when tied to viewport facts. | Hero height, CTA visible, trust signal visible, next section visible, tested viewport. |
-| 7 | AI-layer package status | Downloadable files need owner review when a site already has custom AI files. | `publish_as_is`, `adapt_before_publish`, `already_present`, or `conflict_with_existing_source`. |
+| Priority | Idea | Status | Why It Matters | Minimum Useful Output |
+|---:|---|---|---|---|
+| 10 | Current report receipt | Implemented v1.2.5 | Users lose time finding the valid report when ports, folders, or tunnels change. | `LATEST-SEO-GEO-REPORT.md` with HTML path, local URL, remote URL if any, target, date, skill version. |
+| 9 | Preproduction mode | Implemented v1.2.5 | Low measurement scores can be correct when analytics, GSC, Bing, and final domain are intentionally deferred. | `environment: preprod|production` plus `next_now`, `defer_until_prod`, `proof_needed`. |
+| 9 | Report comparison | Implemented v1.2.5 | Iterating audits requires explaining what changed and why, not only showing two score tables. | Narrative diff plus score deltas between two `audit.json` files. |
+| 8 | Console Watch | Backlog | Browser console noise mixes first-party issues, third-party iframes, CDN messages, and browser policy warnings. | Classified console messages: `first_party`, `third_party`, `browser_policy`, `unknown`. |
+| 8 | Cache/CDN diagnostics | Backlog | CDN cache can make public evidence differ from local state. | Tested URL, cache headers, asset version, stale/public/local verdict. |
+| 8 | Sync and doctor | Implemented v1.2.5 | Source, Codex, and Claude skill copies can drift. | Install to known destinations, run `skill_doctor.py`, print version receipt. |
+| 8 | GEO/Citation panel template | Implemented v1.2.5 | Structural readiness is not citation measurement. | CSV with prompts, engines, cited sources, competitors, facts reused, errors, and date. |
+| 7 | Paid-tool consent | Implemented v1.2.5 | MCP tools can consume credits. | Require explicit consent before Haloscan, Semrush, DataForSEO, or similar paid calls. |
+| 7 | Design Watch measurable first screen | Backlog | A visual score is more useful when tied to viewport facts. | Hero height, CTA visible, trust signal visible, next section visible, tested viewport. |
+| 7 | AI-layer package status | Backlog | Downloadable files need owner review when a site already has custom AI files. | `publish_as_is`, `adapt_before_publish`, `already_present`, or `conflict_with_existing_source`. |
 
 ## Rules From Field Evidence
 

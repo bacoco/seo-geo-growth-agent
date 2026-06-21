@@ -560,6 +560,9 @@ HTML_TEMPLATE = """<!doctype html>
         status: 'Status',
         confidence: 'Confidence',
         generated: 'Generated',
+        environment: 'Environment',
+        preproduction: 'Preproduction',
+        production: 'Production',
         unknown: 'unknown',
         unknownSite: 'unknown site',
         defaultStatusDetail: 'Overall readiness from supplied evidence.',
@@ -619,6 +622,11 @@ HTML_TEMPLATE = """<!doctype html>
         inferred: 'Inferred',
         noFindings: 'No findings match this filter.',
         technicalSnapshot: 'Technical snapshot',
+        productionGates: 'Production gates',
+        noProductionGates: 'No production gates supplied.',
+        nextNow: 'Now',
+        deferUntilProduction: 'Defer until production',
+        proofNeeded: 'Proof needed',
         area: 'Area',
         observedEvidence: 'Observed evidence',
         measurementAccess: 'Measurement access',
@@ -662,6 +670,9 @@ HTML_TEMPLATE = """<!doctype html>
         status: 'Statut',
         confidence: 'Confiance',
         generated: 'Généré',
+        environment: 'Environnement',
+        preproduction: 'Préproduction',
+        production: 'Production',
         unknown: 'inconnu',
         unknownSite: 'site inconnu',
         defaultStatusDetail: 'Niveau de préparation global d’après les preuves fournies.',
@@ -721,6 +732,11 @@ HTML_TEMPLATE = """<!doctype html>
         inferred: 'Inféré',
         noFindings: 'Aucun constat ne correspond à ce filtre.',
         technicalSnapshot: 'Instantané technique',
+        productionGates: 'Gates production',
+        noProductionGates: 'Aucun gate production fourni.',
+        nextNow: 'Maintenant',
+        deferUntilProduction: 'À différer en production',
+        proofNeeded: 'Preuve nécessaire',
         area: 'Zone',
         observedEvidence: 'Preuve observée',
         measurementAccess: 'Accès aux mesures',
@@ -813,6 +829,13 @@ HTML_TEMPLATE = """<!doctype html>
         return 'Fallback Chrome DevTools ; Agent Browser à privilégier quand disponible';
       }
       return raw;
+    }
+
+    function environmentLabel(value) {
+      const normalized = text(value, '').toLowerCase();
+      if (['preprod', 'preproduction', 'staging', 'preview'].includes(normalized)) return t('preproduction');
+      if (['prod', 'production', 'live'].includes(normalized)) return t('production');
+      return text(value, t('unknown'));
     }
 
     function el(tag, attrs = {}, children = []) {
@@ -951,6 +974,7 @@ HTML_TEMPLATE = """<!doctype html>
       );
       document.getElementById('report-meta').replaceChildren(
         metaRow(t('status'), displayStatus(audit.summary?.status)),
+        metaRow(t('environment'), environmentLabel(audit.environment || audit.context?.environment)),
         metaRow(t('confidence'), text(audit.summary?.data_confidence, t('unknown'))),
         metaRow(t('generated'), formatDateTime(generated))
       );
@@ -975,6 +999,7 @@ HTML_TEMPLATE = """<!doctype html>
     function renderExecutiveBrief() {
       const brief = asArray(audit.executive_brief);
       return section(t('executiveBrief'), [
+        el('p', {}, [badge(environmentLabel(audit.environment || audit.context?.environment))]),
         el('p', { text: text(audit.summary?.decision, audit.summary?.headline || t('fallbackDecision')) }),
         brief.length ? el('div', { class: 'callout' }, [list(brief)]) : null,
         el('p', { class: 'small', text: `${t('missingAnalytics')} ${text(audit.summary?.data_confidence, t('unknown'))}.` })
@@ -1285,6 +1310,29 @@ HTML_TEMPLATE = """<!doctype html>
       ]);
     }
 
+    function renderProductionGates() {
+      const gates = Array.isArray(audit.production_gates || audit.preprod_gates)
+        ? (audit.production_gates || audit.preprod_gates)
+        : [];
+      if (!gates.length) return section(t('productionGates'), [el('p', { class: 'empty', text: t('noProductionGates') })]);
+      return section(t('productionGates'), [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('area') }),
+            el('th', { text: t('nextNow') }),
+            el('th', { text: t('deferUntilProduction') }),
+            el('th', { text: t('proofNeeded') })
+          ])]),
+          el('tbody', {}, gates.map(item => el('tr', {}, [
+            el('td', { text: text(item.area || item.label, '') }),
+            el('td', { text: text(item.next_now, '') }),
+            el('td', { text: text(item.defer_until_prod || item.defer_until_production, '') }),
+            el('td', { text: text(item.proof_needed, '') })
+          ])))
+        ])
+      ]);
+    }
+
     function renderActionPlan() {
       const actions = Array.isArray(audit.action_plan) ? audit.action_plan : [];
       if (!actions.length) return section(t('actionPlan'), [el('p', { class: 'empty', text: t('noActionPlan') })]);
@@ -1352,6 +1400,7 @@ HTML_TEMPLATE = """<!doctype html>
     function renderTechnicalPage() {
       return [
         renderTechnicalSnapshot(),
+        renderProductionGates(),
         renderPublicMeasurements()
       ].filter(Boolean);
     }
@@ -1401,6 +1450,15 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def skill_version() -> str:
+    manifest_path = Path(__file__).resolve().parents[1] / "manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (FileNotFoundError, json.JSONDecodeError):
+        return "unknown"
+    return str(manifest.get("version") or "unknown")
+
+
 def load_audit(path: Path) -> dict:
     with path.open(encoding="utf-8") as handle:
         data = json.load(handle)
@@ -1432,6 +1490,30 @@ def copy_visual_sources(audit: dict, output_dir: Path) -> None:
                 shutil.copy2(source, destination)
 
 
+def write_latest_receipt(audit: dict, output_dir: Path, local_url: str = "not served yet") -> None:
+    summary = audit.get("summary") if isinstance(audit.get("summary"), dict) else {}
+    context = audit.get("context") if isinstance(audit.get("context"), dict) else {}
+    ai_layer = audit.get("ai_layer_package") if isinstance(audit.get("ai_layer_package"), dict) else {}
+    environment = audit.get("environment") or context.get("environment") or "unknown"
+    lines = [
+        "# Latest SEO/GEO Report",
+        "",
+        f"- Site: {audit.get('site', 'unknown')}",
+        f"- Audited URL: {audit.get('audited_url') or audit.get('url') or audit.get('site', 'unknown')}",
+        f"- Generated at: {audit.get('generated_at', 'unknown')}",
+        f"- Environment: {environment}",
+        f"- Skill version: v{skill_version()}",
+        f"- HTML path: {output_dir / 'index.html'}",
+        f"- Audit JSON: {output_dir / 'audit.json'}",
+        f"- Local URL: {local_url}",
+        f"- Summary: {summary.get('headline', 'unknown')}",
+        f"- Screenshot status: {audit.get('screenshot_status', 'see audit.json')}",
+        f"- AI layer package: {ai_layer.get('zip_path', 'not generated')}",
+        "",
+    ]
+    (output_dir / "LATEST-SEO-GEO-REPORT.md").write_text("\n".join(lines), encoding="utf-8")
+
+
 def main() -> None:
     args = parse_args()
     audit = load_audit(args.input)
@@ -1445,6 +1527,7 @@ def main() -> None:
     html_path.write_text(html, encoding="utf-8")
 
     copy_visual_sources(audit, args.output_dir)
+    write_latest_receipt(audit, args.output_dir)
 
     print(f"Wrote {html_path}")
 

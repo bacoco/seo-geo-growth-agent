@@ -14,23 +14,23 @@ Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.4/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.5/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.4/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.5/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.4/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.5/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.2.4 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.2.5 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -85,6 +85,8 @@ It helps an agent produce:
 - crawler and robots.txt policy matrices;
 - claim ledgers and citation-safe source registers;
 - tabbed dynamic HTML audit reports with local serving, executive overview, animated readiness signal, lazy-load aware responsive mobile/desktop study, site screenshot analysis, Design Watch scoring, and analysis cohorts;
+- `LATEST-SEO-GEO-REPORT.md` receipts, preproduction/production gates, and narrative comparison between two reports;
+- GEO/Citation prompt panels for ChatGPT, Perplexity, and Claude, clearly marked `ready_not_executed` until run;
 - public-vs-owner-only measurement matrices for traffic, Search Console, GA4, logs, and AI visibility;
 - daily and weekly SEO/GEO reports;
 - agent-readiness checks for DOM, accessibility tree, checkout, booking, and action flows.
@@ -146,6 +148,8 @@ runbooks/
 evals/
 scripts/generate_html_audit_report.py
 scripts/generate_ai_layer_package.py
+scripts/compare_audit_reports.py
+scripts/generate_geo_citation_panel.py
 scripts/serve_report.py
 scripts/capture_site_screenshots.mjs
 scripts/skill_doctor.py

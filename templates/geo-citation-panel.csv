@@ -1,0 +1,3 @@
+date,target_domain,engine,prompt_family,prompt,brand_mentioned,domain_cited,cited_urls,competitor_domains,facts_reused,errors_or_hallucinations,result_status,notes
+YYYY-MM-DD,example.com,ChatGPT,brand_discovery,"What is example.com, and what is it known for?",,,,,,,ready_not_executed,"Run manually or through approved answer-engine tooling."
+YYYY-MM-DD,example.com,Perplexity,source_integrity,"What facts about example.com can be cited safely, and which claims need verification?",,,,,,,ready_not_executed,"Do not treat blanks as zero visibility."

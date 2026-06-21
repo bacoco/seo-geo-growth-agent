@@ -31,6 +31,24 @@ class SkillDoctorTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("OK: installed skill doctor passed", result.stdout)
 
+    def test_sync_and_doctor_dry_run_lists_codex_and_claude_targets(self) -> None:
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "sync_and_doctor.py"),
+                "--target",
+                "all",
+                "--dry-run",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("codex", result.stdout)
+        self.assertIn("claude", result.stdout)
+        self.assertIn("dry-run", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

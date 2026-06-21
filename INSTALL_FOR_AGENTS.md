@@ -18,7 +18,7 @@ If both Codex and Claude Code are present and the user did not specify a host, a
 
 ```bash
 INSTALL_TMP="$(mktemp -d)"
-git clone --depth 1 --branch v1.2.4 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
+git clone --depth 1 --branch v1.2.5 https://github.com/bacoco/seo-geo-growth-agent.git "$INSTALL_TMP/seo-geo-growth-agent"
 cd "$INSTALL_TMP/seo-geo-growth-agent"
 ```
 
@@ -71,6 +71,8 @@ runbooks/
 evals/
 scripts/generate_html_audit_report.py
 scripts/generate_ai_layer_package.py
+scripts/compare_audit_reports.py
+scripts/generate_geo_citation_panel.py
 scripts/serve_report.py
 scripts/capture_site_screenshots.mjs
 scripts/skill_doctor.py

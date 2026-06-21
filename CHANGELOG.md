@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.5 — Receipts, preproduction gates, comparisons, and citation panels
+
+### Added
+
+- HTML report generation now writes `LATEST-SEO-GEO-REPORT.md` so the current valid report is explicit.
+- Served reports update the receipt with the active local URL.
+- Reports render `environment` and `production_gates[]` for preproduction vs production decisions.
+- `scripts/compare_audit_reports.py` generates narrative Markdown and JSON comparisons between two audit runs.
+- `scripts/generate_geo_citation_panel.py` creates ready-not-executed ChatGPT/Perplexity/Claude prompt panels.
+- `scripts/sync_and_doctor.py` synchronizes Codex/Claude local installs from the source repo and runs doctors.
+- Paid-tool consent runbook and approval template for tools that may consume credits.
+
 ## 1.2.4 — Lazy-load aware responsive evidence
 
 ### Added

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import functools
 import http.server
+import json
 import socket
 import webbrowser
 from pathlib import Path
@@ -49,6 +50,36 @@ def choose_port(host: str, preferred: int) -> int:
     raise SystemExit(f"No free port found near {preferred}")
 
 
+def update_receipt(report_dir: Path, url: str) -> None:
+    audit_path = report_dir / "audit.json"
+    receipt_path = report_dir / "LATEST-SEO-GEO-REPORT.md"
+    if not audit_path.is_file():
+        return
+    try:
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return
+    summary = audit.get("summary") if isinstance(audit.get("summary"), dict) else {}
+    context = audit.get("context") if isinstance(audit.get("context"), dict) else {}
+    ai_layer = audit.get("ai_layer_package") if isinstance(audit.get("ai_layer_package"), dict) else {}
+    lines = [
+        "# Latest SEO/GEO Report",
+        "",
+        f"- Site: {audit.get('site', 'unknown')}",
+        f"- Audited URL: {audit.get('audited_url') or audit.get('url') or audit.get('site', 'unknown')}",
+        f"- Generated at: {audit.get('generated_at', 'unknown')}",
+        f"- Environment: {audit.get('environment') or context.get('environment') or 'unknown'}",
+        f"- HTML path: {report_dir / 'index.html'}",
+        f"- Audit JSON: {audit_path}",
+        f"- Local URL: {url}",
+        f"- Summary: {summary.get('headline', 'unknown')}",
+        f"- Screenshot status: {audit.get('screenshot_status', 'see audit.json')}",
+        f"- AI layer package: {ai_layer.get('zip_path', 'not generated')}",
+        "",
+    ]
+    receipt_path.write_text("\n".join(lines), encoding="utf-8")
+
+
 def main() -> None:
     args = parse_args()
     report_dir = validate_report_dir(args.dir)
@@ -60,6 +91,7 @@ def main() -> None:
     handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(report_dir))
     server = http.server.ThreadingHTTPServer((args.host, port), handler)
     url = f"http://{args.host}:{port}/"
+    update_receipt(report_dir, url)
     print(f"Serving report: {url}")
     print("Press Ctrl-C to stop.")
     if args.open:

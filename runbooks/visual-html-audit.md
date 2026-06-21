@@ -10,6 +10,7 @@ Produce an evidence-led report that can be opened in a browser:
 reports/<site-slug>/<YYYY-MM-DD>/
 ├── audit.json
 ├── index.html
+├── LATEST-SEO-GEO-REPORT.md
 ├── ai-layer-package.zip
 ├── ai-layer-package/
 └── screenshots/
@@ -39,6 +40,7 @@ Collect or infer from evidence:
 |---|---|
 | `site` | Domain or page being audited |
 | `report_language` | Language used by the user, such as `fr` or `en` |
+| `environment` | `preprod`, `production`, or `unknown` |
 | `generated_at` | ISO timestamp |
 | `summary.headline` | One-sentence finding |
 | `summary.status` | `ok`, `partial`, `missing`, or `unknown` |
@@ -60,6 +62,7 @@ Optional:
 - `public_measurements[]`
 - `action_plan[]`
 - `ai_layer_package`
+- `production_gates[]`
 
 ## Workflow
 
@@ -76,7 +79,7 @@ python scripts/generate_ai_layer_package.py \
   --update-audit
 ```
 
-6. Generate the dynamic HTML report:
+6. Generate the dynamic HTML report and current-report receipt:
 
 ```bash
 python scripts/generate_html_audit_report.py \
@@ -109,6 +112,7 @@ Before finalizing, verify that all applicable deliverables exist:
 | `audit.json` | yes |
 | `index.html` | yes |
 | local report URL or exact `index.html` path | yes |
+| `LATEST-SEO-GEO-REPORT.md` | yes |
 | desktop and mobile site screenshots | yes, unless unavailable |
 | `responsive_study` for mobile and desktop | yes |
 | `screenshot_status` reason when screenshots are missing | yes, if screenshots failed |
@@ -192,6 +196,7 @@ Each cohort should include `name`, `score`, `status`, `what_it_checks`,
 {
   "site": "example.com",
   "report_language": "en",
+  "environment": "preprod",
   "generated_at": "2026-06-20T18:00:00+02:00",
   "summary": {
     "headline": "Make example.com easier for agents to cite.",
@@ -308,6 +313,14 @@ Each cohort should include `name`, `score`, `status`, `what_it_checks`,
       "when": "Day 1",
       "action": "Fix sitemaped 500 URLs",
       "outcome": "No known server errors in sampled sitemap URLs"
+    }
+  ],
+  "production_gates": [
+    {
+      "area": "Measurement",
+      "next_now": "Keep public crawl and rendering checks green.",
+      "defer_until_prod": "Connect GA4, GSC, and Bing Webmaster Tools after final domain launch.",
+      "proof_needed": "Owner access to analytics and webmaster properties."
     }
   ],
   "ai_layer_package": {

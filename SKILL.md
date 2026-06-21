@@ -1,8 +1,8 @@
 ---
 name: seo-geo-growth-agent
 description: |-
-  SEO + GEO Growth Agent Skill v1.2.4. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, Design Watch screenshot analysis, dynamic responsive study, lazy-load image diagnostics, first-impression scoring, analysis cohorts, dynamic HTML audit reports, browser-readable reports, downloadable AI-layer packages, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
-  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, Design Watch, design audit, responsive audit, responsive study, lazy-load audit, mobile homepage audit, dynamic responsive study, first impression audit, analysis cohorts, HTML audit report, visual audit, local audit server, downloadable files, AI layer package, /for-ai package, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
+  SEO + GEO Growth Agent Skill v1.2.5. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, Design Watch screenshot analysis, dynamic responsive study, lazy-load image diagnostics, first-impression scoring, analysis cohorts, dynamic HTML audit reports, latest report receipts, report comparison, preproduction gates, GEO/Citation prompt panels, browser-readable reports, downloadable AI-layer packages, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
+  Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, Design Watch, design audit, responsive audit, responsive study, lazy-load audit, preprod audit, production gates, latest SEO/GEO report, compare reports, report diff, GEO citation panel, prompt panel, mobile homepage audit, dynamic responsive study, first impression audit, analysis cohorts, HTML audit report, visual audit, local audit server, downloadable files, AI layer package, /for-ai package, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
 ---
 
 # SEO + GEO Growth Agent Skill
@@ -43,6 +43,7 @@ Required deliverables:
 6. `design_watch` and `analysis_cohorts[]` in `audit.json`
 7. `report_language` set from the user's language, with the audit content written in that language
 8. `ai_layer_package` plus downloadable files when `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, or aligned JSON-LD are missing or recommended
+9. `LATEST-SEO-GEO-REPORT.md` in the report folder so the user can identify the current valid artifact
 
 Do not stop at prose for a site audit. If screenshot capture fails because Agent Browser, Chrome, network, permissions, or a hostile WAF is unavailable, still generate `audit.json`, generate `index.html`, start the report server when possible, and mark screenshots as unavailable with the reason.
 
@@ -54,7 +55,7 @@ Use this sequence:
 4. Analyze screenshots with `templates/design-watch-audit.md` and responsive evidence with `templates/responsive-dynamic-study.md`.
 5. Write `audit.json` in the user's language, with `report_language`, findings, Design Watch, responsive study, cohorts, sources, and missing-data notes.
 6. If AI-readable layers are missing or recommended, run `python scripts/generate_ai_layer_package.py --input ... --output-dir ... --update-audit` to create the downloadable publication pack.
-7. Run `python scripts/generate_html_audit_report.py --input ... --output-dir ...`.
+7. Run `python scripts/generate_html_audit_report.py --input ... --output-dir ...`; this writes `LATEST-SEO-GEO-REPORT.md`.
 8. Run `python scripts/serve_report.py --dir ... --port 8766 --open` or `--check` if serving is impossible.
 9. Final response must include the report URL or exact `index.html` path, plus screenshot status and AI-layer package status.
 
@@ -94,6 +95,17 @@ When the user asks for “deep research”, “latest”, AI crawler policies, A
 6. Convert findings into action items only when they pass the **Evidence → Impact → Effort → Risk** test.
 
 Use `templates/source-led-deepresearch.md` to record source, date checked, finding, confidence, and proposed change.
+
+## Paid-tool consent
+
+Before calling a tool that may consume credits or paid quota, such as Haloscan, Semrush, DataForSEO, Ahrefs, Similarweb, or SerpApi, ask the user for explicit approval. If approval is missing, continue with public evidence and label the missing data as `requires paid/owner data`. Use `runbooks/paid-tool-consent.md` and `templates/paid-tool-approval.md`.
+
+## Preproduction, comparisons, and citation panels
+
+- If the target is preproduction/staging, set `environment: "preprod"` and separate `next_now`, `defer_until_prod`, and `proof_needed` in `production_gates[]`.
+- To compare two audit runs, use `runbooks/report-comparison.md` and `scripts/compare_audit_reports.py`; explain the narrative conclusion, not just score deltas.
+- To prepare real GEO/Citation measurement, use `runbooks/geo-citation-panel.md` and `scripts/generate_geo_citation_panel.py`. The CSV is `ready_not_executed`; real citation metrics stay `unknown` until the panel is run.
+- After source changes, use `runbooks/sync-and-doctor.md` from the source repository when Codex and Claude installed copies may drift.
 
 ## Core mental model
 
