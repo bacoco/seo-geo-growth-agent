@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.2.8 — Full audit command and report validation
+
+### Added
+
+- `scripts/run_full_audit.py` orchestrates the repeatable SEO/GEO workflow: evidence capture, owner-data request, ARD readiness, AI-layer endpoint checks, conservative `audit.json`, downloadable improvement files, HTML report, validation, and optional local serving.
+- `scripts/validate_audit_report.py` fails incomplete reports before they are shared, including missing required files, missing screenshot status, missing responsive summary, and missing AI-layer package files.
+- `examples/reference-audit/` provides a committed reference report with `audit.json`, `index.html`, receipt, validation JSON, AI-layer package folder, and ZIP.
+
+### Changed
+
+- README, SKILL, bootstrap, CLI, and visual audit runbooks now position the repository as analysis plus generated owner-review improvements.
+- Runtime install, doctor, manifest, and validation coverage include the full-audit command and report validator.
+
 ## 1.2.7 — ARD validation and generated improvement packages
 
 ### Added

@@ -1,0 +1,44 @@
+{
+  "name": "ai-layer-package",
+  "generated_by": "seo-geo-growth-agent",
+  "generated_at": "2026-06-21T10:00:00+02:00",
+  "site": "reference.example",
+  "canonical_url": "https://reference.example/",
+  "files": [
+    {
+      "label": "llms.txt",
+      "path": "ai-layer-package/llms.txt",
+      "purpose": "Site-level AI assistant index"
+    },
+    {
+      "label": "/for-ai",
+      "path": "ai-layer-package/for-ai/index.html",
+      "purpose": "Agent-readable page context"
+    },
+    {
+      "label": "/for-ai.json",
+      "path": "ai-layer-package/for-ai.json",
+      "purpose": "Structured facts, limits, and citation guidance"
+    },
+    {
+      "label": "/for-ai.txt",
+      "path": "ai-layer-package/for-ai.txt",
+      "purpose": "Compact plain-text context for agents"
+    },
+    {
+      "label": "schema-webpage.jsonld",
+      "path": "ai-layer-package/schema-webpage.jsonld",
+      "purpose": "Schema.org WebPage JSON-LD draft"
+    },
+    {
+      "label": "AI_LAYER_INSTALL.md",
+      "path": "ai-layer-package/AI_LAYER_INSTALL.md",
+      "purpose": "Owner publishing checklist"
+    },
+    {
+      "label": "manifest.json",
+      "path": "ai-layer-package/manifest.json",
+      "purpose": "Package file inventory"
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "site": "reference.example",
+  "audited_url": "https://reference.example/",
+  "generated_at": "2026-06-21T10:00:00+02:00",
+  "environment": "production",
+  "report_language": "en",
+  "summary": {
+    "headline": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+    "status": "partial",
+    "biggest_blocker": "AI-readable publication files are absent in this fixture.",
+    "fastest_win": "Review the generated AI-layer package before adapting it to a real owned site.",
+    "data_confidence": "medium",
+    "decision": "Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims."
+  },
+  "findings": [
+    {
+      "priority": "P1",
+      "title": "Missing AI-readable publication layer",
+      "observed": [
+        "/llms.txt is marked missing in this fixture",
+        "/for-ai is marked missing in this fixture",
+        "/for-ai.json is marked missing in this fixture",
+        "/for-ai.txt is marked missing in this fixture"
+      ],
+      "inferred": [
+        "Assistants have less explicit context for citation guidance, source limits, and do-not-extrapolate boundaries."
+      ],
+      "recommended": [
+        "Review the generated AI-layer package, adapt it to owner-approved facts, and publish only after owner validation."
+      ],
+      "evidence": [
+        {
+          "label": "Fixture scope",
+          "url": "https://reference.example/",
+          "status": "example_only"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "label": "Reference fixture",
+      "url": "https://reference.example/"
+    }
+  ],
+  "screenshot_status": "unavailable: committed reference fixture does not include live browser screenshots",
+  "responsive_study": {
+    "method": "not_captured",
+    "summary": {
+      "status": "unavailable",
+      "verdict": "Browser evidence is intentionally omitted from this committed fixture."
+    },
+    "viewports": []
+  },
+  "site_visual_evidence": [],
+  "evidence_engine": {},
+  "ard_readiness": {
+    "status": "missing",
+    "catalog_url": "https://reference.example/.well-known/ai-catalog.json",
+    "signals": {
+      "well_known": {
+        "status": "missing",
+        "url": "https://reference.example/.well-known/ai-catalog.json"
+      },
+      "html_link": {
+        "status": "missing",
+        "url": ""
+      },
+      "robots_agentmap": {
+        "status": "missing",
+        "url": ""
+      }
+    },
+    "validation": {
+      "status": "not_checked",
+      "errors": []
+    },
+    "entries": [],
+    "observed": [
+      "No ARD ai-catalog discovery signal is included in this fixture."
+    ],
+    "recommended": [
+      "Use ARD only when a real skill, MCP server, A2A agent, or callable AI service should be discoverable."
+    ]
+  },
+  "ai_layer_current_state": {
+    "llms_txt": false,
+    "for_ai": false,
+    "for_ai_json": false,
+    "for_ai_txt": false
+  },
+  "ai_layer_endpoint_checks": [
+    {
+      "label": "/llms.txt",
+      "url": "https://reference.example/llms.txt",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    },
+    {
+      "label": "/for-ai",
+      "url": "https://reference.example/for-ai",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    },
+    {
+      "label": "/for-ai.json",
+      "url": "https://reference.example/for-ai.json",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    },
+    {
+      "label": "/for-ai.txt",
+      "url": "https://reference.example/for-ai.txt",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    }
+  ],
+  "public_measurements": [
+    {
+      "source": "Reference fixture",
+      "access": "public",
+      "metric": "Artifact structure only",
+      "limit": "No visits, rankings, conversions, traffic, or AI citation metrics"
+    }
+  ],
+  "ai_layer_package": {
+    "status": "generated",
+    "publication_status": "adapt_before_publish",
+    "status_reason": "Generated files are drafts built from audit evidence and require owner review before publication.",
+    "path": "ai-layer-package",
+    "zip_path": "ai-layer-package.zip",
+    "files": [
+      {
+        "label": "llms.txt",
+        "path": "ai-layer-package/llms.txt",
+        "purpose": "Site-level AI assistant index"
+      },
+      {
+        "label": "/for-ai",
+        "path": "ai-layer-package/for-ai/index.html",
+        "purpose": "Agent-readable page context"
+      },
+      {
+        "label": "/for-ai.json",
+        "path": "ai-layer-package/for-ai.json",
+        "purpose": "Structured facts, limits, and citation guidance"
+      },
+      {
+        "label": "/for-ai.txt",
+        "path": "ai-layer-package/for-ai.txt",
+        "purpose": "Compact plain-text context for agents"
+      },
+      {
+        "label": "schema-webpage.jsonld",
+        "path": "ai-layer-package/schema-webpage.jsonld",
+        "purpose": "Schema.org WebPage JSON-LD draft"
+      },
+      {
+        "label": "AI_LAYER_INSTALL.md",
+        "path": "ai-layer-package/AI_LAYER_INSTALL.md",
+        "purpose": "Owner publishing checklist"
+      },
+      {
+        "label": "manifest.json",
+        "path": "ai-layer-package/manifest.json",
+        "purpose": "Package file inventory"
+      }
+    ]
+  }
+}

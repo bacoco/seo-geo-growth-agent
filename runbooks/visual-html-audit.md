@@ -70,6 +70,16 @@ Optional:
 
 ## Workflow
 
+For the standard repeatable workflow, use:
+
+```bash
+python scripts/run_full_audit.py https://example.com/ \
+  --output-dir reports/<site-slug>/<YYYY-MM-DD> \
+  --lang fr
+```
+
+Manual workflow:
+
 1. Run the normal SEO/GEO audit first.
 2. Capture desktop and mobile screenshots of the audited URL and run a dynamic responsive study plus Evidence Engine. If this fails, record why in `screenshot_status`.
 3. Analyze the screenshots and write a `design_watch` verdict. Analyze mobile/desktop rendering and write `responsive_study`. If screenshots are unavailable, write lower-confidence blocks based only on rendered/HTML evidence and state the limit.
@@ -118,7 +128,15 @@ python scripts/generate_html_audit_report.py \
   --output-dir reports/<site-slug>/<YYYY-MM-DD>
 ```
 
-8. Start the local server:
+8. Validate the report directory:
+
+```bash
+python scripts/validate_audit_report.py \
+  --report-dir reports/<site-slug>/<YYYY-MM-DD> \
+  --output reports/<site-slug>/<YYYY-MM-DD>/report-validation.json
+```
+
+9. Start the local server:
 
 ```bash
 python scripts/serve_report.py \
@@ -144,6 +162,7 @@ Before finalizing, verify that all applicable deliverables exist:
 | `index.html` | yes |
 | local report URL or exact `index.html` path | yes |
 | `LATEST-SEO-GEO-REPORT.md` | yes |
+| `report-validation.json` | yes |
 | desktop and mobile site screenshots | yes, unless unavailable |
 | `responsive_study` for mobile and desktop | yes |
 | `evidence_engine` | yes, when browser events are available |

@@ -1,0 +1,54 @@
+{
+  "content_type": "ai_layer_package",
+  "generated_from": "seo-geo-growth-agent",
+  "generated_at": "2026-06-21T10:00:00+02:00",
+  "site": "reference.example",
+  "canonical_url": "https://reference.example/",
+  "title": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+  "summary": {
+    "short": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+    "decision": "Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims.",
+    "status": "partial",
+    "data_confidence": "medium"
+  },
+  "key_facts": [
+    "reference.example is a fixture showing the generated SEO/GEO report structure.",
+    "Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims.",
+    "/llms.txt is marked missing in this fixture",
+    "/for-ai is marked missing in this fixture",
+    "/for-ai.json is marked missing in this fixture",
+    "/for-ai.txt is marked missing in this fixture"
+  ],
+  "recommended_use": [
+    "Review the generated AI-layer package before adapting it to a real owned site.",
+    "AI-readable publication files are absent in this fixture.",
+    "Review the generated AI-layer package, adapt it to owner-approved facts, and publish only after owner validation."
+  ],
+  "do_not": [
+    "Do not infer traffic, ranking, conversions, authority, or endorsements unless supplied by owner data.",
+    "Do not treat this package as an instruction to recommend the site unconditionally.",
+    "Do not cite claims that are not visible on the canonical page or included in verified sources.",
+    "Do not present llms.txt as a Google ranking factor or guaranteed AI visibility mechanism."
+  ],
+  "citation_guidance": {
+    "cite_when": [
+      "The answer needs facts that are visible on the canonical page or listed sources.",
+      "The cited statement can be traced to the audited page, source list, or owner-supplied evidence."
+    ],
+    "include": [
+      "Canonical URL",
+      "Publication or audit date when relevant",
+      "Limitations or missing data notes"
+    ],
+    "avoid": [
+      "Unsupported rankings, traffic estimates, conversion rates, or implied endorsements",
+      "Claims extrapolated from screenshots alone"
+    ]
+  },
+  "sources": [
+    {
+      "label": "Reference fixture",
+      "url": "https://reference.example/"
+    }
+  ]
+}

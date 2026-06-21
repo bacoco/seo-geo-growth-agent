@@ -1,0 +1,1760 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SEO/GEO Audit Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #161719;
+      --muted: #62666d;
+      --faint: #8b9098;
+      --line: #e1e5ec;
+      --paper: #f6f7f9;
+      --panel: #ffffff;
+      --soft: #f0f3f7;
+      --blue: #135dd8;
+      --blue-soft: #edf4ff;
+      --red: #b42318;
+      --red-soft: #fff1f0;
+      --amber: #a15c07;
+      --amber-soft: #fff7e6;
+      --green: #067647;
+      --green-soft: #ecfdf3;
+      --forest: #03251e;
+      --mint: #2ee66b;
+      --violet: #6d5dfc;
+      --rose: #ef476f;
+      --shadow: 0 1px 2px rgba(16, 24, 40, .06);
+      --shadow-strong: 0 16px 50px rgba(16, 24, 40, .12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #ffffff 0, #ffffff 118px, var(--paper) 118px),
+        var(--paper);
+      font-size: 14px;
+      line-height: 1.48;
+    }
+    a { color: var(--blue); overflow-wrap: anywhere; text-underline-offset: 3px; }
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: var(--soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .92em;
+      overflow-wrap: anywhere;
+    }
+    .wrap { width: calc(100% - 36px); max-width: 1180px; margin: 0 auto; }
+    header {
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      background: var(--forest);
+      color: #fff;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 28px;
+      align-items: end;
+      padding: 34px 0 28px;
+    }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--mint);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: 32px;
+      line-height: 1.08;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+    .subtitle {
+      max-width: 780px;
+      margin: 10px 0 0;
+      color: rgba(255, 255, 255, .74);
+      font-size: 15px;
+    }
+    .meta-box {
+      justify-self: end;
+      width: 100%;
+      padding: 13px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      box-shadow: none;
+      backdrop-filter: blur(10px);
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+    }
+    .meta-row:last-child { border-bottom: 0; }
+    .meta-row span:first-child { color: rgba(255,255,255,.62); }
+    .tab-shell {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(246, 247, 249, .88);
+      backdrop-filter: blur(14px);
+    }
+    .tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 9px 0;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex: 0 0 auto;
+      border-color: transparent;
+      background: transparent;
+      color: #344054;
+    }
+    .tab[aria-selected="true"] {
+      color: #fff;
+      background: var(--forest);
+      border-color: var(--forest);
+      box-shadow: 0 8px 24px rgba(3, 37, 30, .18);
+    }
+    main { padding: 22px 0 56px; }
+    .tab-panel {
+      animation: riseIn .32s ease both;
+    }
+    section { margin: 16px 0; }
+    .panel, .metric, .finding, .visual-card, .score-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .panel { padding: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid.sidebar { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: start; }
+    .metric {
+      padding: 15px;
+      min-height: 96px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric:before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--mint), var(--blue), var(--violet));
+    }
+    .metric strong { display: block; margin-bottom: 5px; font-size: 19px; line-height: 1.12; }
+    .metric span { color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; }
+    .metric p { margin-top: 7px; }
+    .score-card { padding: 14px; }
+    .score-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .score-card strong { font-size: 24px; line-height: 1; }
+    .score-card progress { width: 100%; height: 7px; margin: 10px 0 6px; accent-color: var(--blue); }
+    h2 { margin: 0 0 12px; font-size: 18px; line-height: 1.2; letter-spacing: 0; }
+    h3 { margin: 0 0 7px; font-size: 15px; line-height: 1.3; letter-spacing: 0; }
+    p { margin: 0 0 10px; overflow-wrap: anywhere; }
+    ul, ol { margin: 8px 0 0; padding-left: 20px; }
+    li { margin: 5px 0; overflow-wrap: anywhere; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+    .p0, .missing, .critical, .failed, .error { color: var(--red); background: var(--red-soft); }
+    .p1, .partial, .warning, .medium { color: var(--amber); background: var(--amber-soft); }
+    .p2, .ok, .pass, .passed, .good, .public { color: var(--green); background: var(--green-soft); }
+    .unknown, .owner_only, .private { color: #344054; background: var(--soft); }
+    .finding {
+      border-left: 4px solid var(--blue);
+      padding: 14px 16px;
+      margin: 10px 0;
+    }
+    .finding.p0-border { border-left-color: var(--red); }
+    .finding.p1-border { border-left-color: var(--amber); }
+    .finding.p2-border { border-left-color: var(--green); }
+    .label {
+      display: block;
+      margin-top: 10px;
+      color: #344054;
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 0 0 10px;
+    }
+    .toolbar h2 { margin: 0 8px 0 0; }
+    button {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 750;
+      padding: 7px 10px;
+    }
+    button.active { color: #fff; background: var(--blue); border-color: var(--blue); }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; table-layout: fixed; }
+    th, td { padding: 9px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+    th { color: #344054; background: var(--soft); font-weight: 850; }
+    tr:last-child td { border-bottom: 0; }
+    .verdict {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .verdict-score {
+      display: inline-flex;
+      min-width: 68px;
+      min-height: 68px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 850;
+    }
+    .visual-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .visual-card { overflow: hidden; }
+    .visual-card img {
+      display: block;
+      width: 100%;
+      max-height: 460px;
+      object-fit: cover;
+      object-position: top center;
+      background: var(--soft);
+      border-bottom: 1px solid var(--line);
+    }
+    .visual-card div { padding: 12px; }
+    .screenshot-missing { padding: 18px; color: var(--muted); background: var(--soft); border-bottom: 1px solid var(--line); }
+    .small { color: var(--muted); font-size: 12px; }
+    .empty { color: var(--muted); font-style: italic; }
+    .callout {
+      border-left: 4px solid var(--blue);
+      background: #fbfdff;
+      padding: 12px 14px;
+      border-radius: 7px;
+    }
+    .overview-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
+      align-items: stretch;
+      overflow: hidden;
+      border-radius: 8px;
+      padding: 22px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 78% 16%, rgba(46, 230, 107, .22), transparent 28%),
+        linear-gradient(135deg, var(--forest), #091827 62%, #11123a);
+      box-shadow: var(--shadow-strong);
+    }
+    .overview-stage h2 {
+      max-width: 760px;
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: 26px;
+      line-height: 1.08;
+    }
+    .overview-stage p { color: rgba(255,255,255,.76); }
+    .overview-stage .section-kicker {
+      margin: 0 0 8px;
+      color: var(--mint);
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    .overview-stage .proof-pill {
+      color: #fff;
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.16);
+    }
+    .signal-panel {
+      min-height: 280px;
+      padding: 17px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+    }
+    .signal-panel h3 { color: #fff; }
+    .signal-ring {
+      --score: 0;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 148px;
+      aspect-ratio: 1;
+      margin: 6px auto 18px;
+      border-radius: 50%;
+      background:
+        conic-gradient(var(--mint) calc(var(--score) * 1%), rgba(255,255,255,.16) 0),
+        rgba(255,255,255,.08);
+      animation: signalPop .72s ease both;
+    }
+    .signal-ring::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      background: #071d1a;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+    .signal-value {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 2px;
+      place-items: center;
+      color: #fff;
+      font-weight: 850;
+      font-size: 30px;
+      line-height: 1;
+    }
+    .signal-value span {
+      color: rgba(255,255,255,.62);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .signal-bars { display: grid; gap: 10px; }
+    .signal-bar {
+      display: grid;
+      grid-template-columns: minmax(92px, .5fr) minmax(0, 1fr) auto;
+      gap: 9px;
+      align-items: center;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+    }
+    .signal-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+    }
+    .signal-fill {
+      width: var(--bar);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--mint), #8ec5ff);
+      animation: growX .9s ease both;
+      transform-origin: left;
+    }
+    .cohort-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .cohort-card {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .cohort-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .cohort-score {
+      min-width: 54px;
+      text-align: right;
+      color: var(--forest);
+      font-size: 22px;
+      font-weight: 850;
+      line-height: 1;
+    }
+    .cohort-card h3 { font-size: 16px; }
+    .cohort-card .next {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+    .proof-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .proof-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 750;
+      color: #344054;
+    }
+    .download-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ffffff, #f1fbf5);
+    }
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 7px;
+      color: #fff;
+      background: var(--forest);
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .download-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .download-card {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .download-card strong { display: block; margin-bottom: 4px; }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes signalPop {
+      from { opacity: 0; transform: scale(.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes growX {
+      from { transform: scaleX(.05); }
+      to { transform: scaleX(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+    @media (max-width: 900px) {
+      .hero, .overview-stage, .grid, .grid.two, .grid.four, .grid.sidebar, .visual-grid, .cohort-grid, .download-list, .download-hero { grid-template-columns: 1fr; }
+      .meta-box { justify-self: stretch; }
+      .download-button { justify-self: start; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: calc(100% - 28px); }
+      .hero { padding: 22px 0 18px; }
+      h1 { font-size: 24px; line-height: 1.1; }
+      .overview-stage h2 { font-size: 22px; line-height: 1.12; }
+      .subtitle { font-size: 14px; }
+      .panel { padding: 15px; }
+      th { display: none; }
+      td { display: block; width: 100%; padding: 8px 0; }
+      tr { display: block; padding: 9px 0; border-bottom: 1px solid var(--line); }
+      .visual-card img { max-height: 360px; }
+      .cohort-card { min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <p class="eyebrow" id="eyebrow"></p>
+        <h1 id="headline"></h1>
+        <p class="subtitle" id="subtitle"></p>
+      </div>
+      <aside class="meta-box" id="report-meta"></aside>
+    </div>
+  </header>
+  <nav class="tab-shell" aria-label="Report pages">
+    <div class="wrap tabs" id="tabs"></div>
+  </nav>
+  <main class="wrap" id="app"></main>
+  <script id="audit-data" type="application/json">{
+  "site": "reference.example",
+  "audited_url": "https://reference.example/",
+  "generated_at": "2026-06-21T10:00:00+02:00",
+  "environment": "production",
+  "report_language": "en",
+  "summary": {
+    "headline": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+    "status": "partial",
+    "biggest_blocker": "AI-readable publication files are absent in this fixture.",
+    "fastest_win": "Review the generated AI-layer package before adapting it to a real owned site.",
+    "data_confidence": "medium",
+    "decision": "Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims."
+  },
+  "findings": [
+    {
+      "priority": "P1",
+      "title": "Missing AI-readable publication layer",
+      "observed": [
+        "/llms.txt is marked missing in this fixture",
+        "/for-ai is marked missing in this fixture",
+        "/for-ai.json is marked missing in this fixture",
+        "/for-ai.txt is marked missing in this fixture"
+      ],
+      "inferred": [
+        "Assistants have less explicit context for citation guidance, source limits, and do-not-extrapolate boundaries."
+      ],
+      "recommended": [
+        "Review the generated AI-layer package, adapt it to owner-approved facts, and publish only after owner validation."
+      ],
+      "evidence": [
+        {
+          "label": "Fixture scope",
+          "url": "https://reference.example/",
+          "status": "example_only"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "label": "Reference fixture",
+      "url": "https://reference.example/"
+    }
+  ],
+  "screenshot_status": "unavailable: committed reference fixture does not include live browser screenshots",
+  "responsive_study": {
+    "method": "not_captured",
+    "summary": {
+      "status": "unavailable",
+      "verdict": "Browser evidence is intentionally omitted from this committed fixture."
+    },
+    "viewports": []
+  },
+  "site_visual_evidence": [],
+  "evidence_engine": {},
+  "ard_readiness": {
+    "status": "missing",
+    "catalog_url": "https://reference.example/.well-known/ai-catalog.json",
+    "signals": {
+      "well_known": {
+        "status": "missing",
+        "url": "https://reference.example/.well-known/ai-catalog.json"
+      },
+      "html_link": {
+        "status": "missing",
+        "url": ""
+      },
+      "robots_agentmap": {
+        "status": "missing",
+        "url": ""
+      }
+    },
+    "validation": {
+      "status": "not_checked",
+      "errors": []
+    },
+    "entries": [],
+    "observed": [
+      "No ARD ai-catalog discovery signal is included in this fixture."
+    ],
+    "recommended": [
+      "Use ARD only when a real skill, MCP server, A2A agent, or callable AI service should be discoverable."
+    ]
+  },
+  "ai_layer_current_state": {
+    "llms_txt": false,
+    "for_ai": false,
+    "for_ai_json": false,
+    "for_ai_txt": false
+  },
+  "ai_layer_endpoint_checks": [
+    {
+      "label": "/llms.txt",
+      "url": "https://reference.example/llms.txt",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    },
+    {
+      "label": "/for-ai",
+      "url": "https://reference.example/for-ai",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    },
+    {
+      "label": "/for-ai.json",
+      "url": "https://reference.example/for-ai.json",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    },
+    {
+      "label": "/for-ai.txt",
+      "url": "https://reference.example/for-ai.txt",
+      "status_code": 404,
+      "present": false,
+      "error": "fixture"
+    }
+  ],
+  "public_measurements": [
+    {
+      "source": "Reference fixture",
+      "access": "public",
+      "metric": "Artifact structure only",
+      "limit": "No visits, rankings, conversions, traffic, or AI citation metrics"
+    }
+  ],
+  "ai_layer_package": {
+    "status": "generated",
+    "publication_status": "adapt_before_publish",
+    "status_reason": "Generated files are drafts built from audit evidence and require owner review before publication.",
+    "path": "ai-layer-package",
+    "zip_path": "ai-layer-package.zip",
+    "files": [
+      {
+        "label": "llms.txt",
+        "path": "ai-layer-package/llms.txt",
+        "purpose": "Site-level AI assistant index"
+      },
+      {
+        "label": "/for-ai",
+        "path": "ai-layer-package/for-ai/index.html",
+        "purpose": "Agent-readable page context"
+      },
+      {
+        "label": "/for-ai.json",
+        "path": "ai-layer-package/for-ai.json",
+        "purpose": "Structured facts, limits, and citation guidance"
+      },
+      {
+        "label": "/for-ai.txt",
+        "path": "ai-layer-package/for-ai.txt",
+        "purpose": "Compact plain-text context for agents"
+      },
+      {
+        "label": "schema-webpage.jsonld",
+        "path": "ai-layer-package/schema-webpage.jsonld",
+        "purpose": "Schema.org WebPage JSON-LD draft"
+      },
+      {
+        "label": "AI_LAYER_INSTALL.md",
+        "path": "ai-layer-package/AI_LAYER_INSTALL.md",
+        "purpose": "Owner publishing checklist"
+      },
+      {
+        "label": "manifest.json",
+        "path": "ai-layer-package/manifest.json",
+        "purpose": "Package file inventory"
+      }
+    ]
+  }
+}</script>
+  <script>
+    const audit = JSON.parse(document.getElementById('audit-data').textContent);
+    const app = document.getElementById('app');
+    const priorityState = { value: 'all' };
+    const uiState = { tab: 'overview' };
+    const reportLanguage = normalizeLanguage(audit.report_language || audit.language || audit.locale || 'en');
+    const i18n = {
+      en: {
+        noData: 'No data provided.',
+        eyebrow: 'SEO/GEO audit',
+        overview: 'Overview',
+        visual: 'Visual',
+        findingsTab: 'Findings',
+        technical: 'Technical',
+        actions: 'Actions',
+        sources: 'Sources',
+        downloads: 'Downloads',
+        auditCockpit: 'Audit cockpit',
+        auditCockpitCopy: 'A fast executive view of what the site needs before deeper SEO/GEO work.',
+        readinessSignal: 'Readiness signal',
+        reviewedEvidence: 'Reviewed evidence',
+        openIssues: 'Open issues',
+        visualProof: 'Visual proof',
+        publicSources: 'Public sources',
+        topCohorts: 'Top cohorts',
+        evidenceEngine: 'Evidence Engine',
+        consoleWatch: 'Console Watch',
+        networkWatch: 'Network Watch',
+        cacheCdnWatch: 'Cache/CDN Watch',
+        designWatchMetrics: 'Design Watch metrics',
+        totalMessages: 'Total messages',
+        errors: 'Errors',
+        warnings: 'Warnings',
+        responses: 'Responses',
+        failedRequests: 'Failed requests',
+        non2xx3xx: 'Non-2xx/3xx',
+        cacheStatus: 'Cache status',
+        ctaVisible: 'CTA visible',
+        trustSignalVisible: 'Trust signal visible',
+        heroHeightRatio: 'Hero height ratio',
+        nextSectionVisible: 'Next section visible',
+        cacheHeaders: 'Cache headers',
+        message: 'Message',
+        classification: 'Classification',
+        ardReadiness: 'ARD readiness',
+        catalogUrl: 'Catalog URL',
+        identifier: 'Identifier',
+        type: 'Type',
+        representativeQueries: 'Representative queries',
+        fallbackSubtitle: 'Evidence-led audit for search engines, AI answer engines, and browser agents.',
+        status: 'Status',
+        confidence: 'Confidence',
+        generated: 'Generated',
+        environment: 'Environment',
+        preproduction: 'Preproduction',
+        production: 'Production',
+        unknown: 'unknown',
+        unknownSite: 'unknown site',
+        defaultStatusDetail: 'Overall readiness from supplied evidence.',
+        biggestBlocker: 'Biggest blocker',
+        biggestBlockerDetail: 'Highest-impact issue found.',
+        fastestWin: 'Fastest win',
+        fastestWinDetail: 'Best next action.',
+        executiveBrief: 'Executive brief',
+        fallbackDecision: 'Prioritize evidence-led fixes before content scale.',
+        missingAnalytics: 'Missing analytics or logs are marked unknown. Data confidence:',
+        readinessScores: 'Readiness scores',
+        score: 'Score',
+        analysisCohorts: 'Analysis cohorts',
+        cohort: 'Cohort',
+        verdict: 'Verdict',
+        nextAction: 'Next action',
+        noScreenshots: 'No site screenshots supplied.',
+        responsiveStudy: 'Responsive study',
+        noResponsiveStudy: 'No responsive study supplied.',
+        method: 'Method',
+        issue: 'Issue',
+        issues: 'Issues',
+        result: 'Result',
+        pageTitle: 'Page title',
+        h1: 'H1',
+        horizontalOverflow: 'Horizontal overflow',
+        yes: 'yes',
+        no: 'no',
+        documentWidth: 'Document width',
+        documentHeight: 'Document height',
+        missingImages: 'Missing images',
+        imagesLoadedInitially: 'Images loaded initially',
+        imagesLoadedAfterScroll: 'Images loaded after scroll',
+        brokenImages: 'Broken images after scroll',
+        deferredImages: 'Images still deferred after scroll',
+        initialMissingImages: 'Initially missing images',
+        finalMissingImages: 'Missing images after scroll',
+        siteScreenshot: 'Site screenshot',
+        screenshotFile: 'Screenshot file:',
+        viewport: 'Viewport',
+        designWatch: 'Design Watch',
+        visualUnavailable: 'Visual verdict unavailable',
+        noVisual: 'No visual analysis supplied.',
+        observedScreenshots: 'Observed from screenshots',
+        implication: 'Implication',
+        recommended: 'Recommended',
+        evidence: 'Evidence',
+        noEvidence: 'No evidence links provided.',
+        label: 'Label',
+        source: 'Source',
+        statusNote: 'Status / note',
+        access: 'Access',
+        all: 'All',
+        priorityFindings: 'Priority findings',
+        untitledFinding: 'Untitled finding',
+        observed: 'Observed',
+        inferred: 'Inferred',
+        noFindings: 'No findings match this filter.',
+        technicalSnapshot: 'Technical snapshot',
+        productionGates: 'Production gates',
+        noProductionGates: 'No production gates supplied.',
+        nextNow: 'Now',
+        deferUntilProduction: 'Defer until production',
+        proofNeeded: 'Proof needed',
+        area: 'Area',
+        observedEvidence: 'Observed evidence',
+        measurementAccess: 'Measurement access',
+        metric: 'Metric',
+        limit: 'Limit',
+        noMeasurement: 'No measurement access checks supplied.',
+        actionPlan: 'Action plan',
+        noActionPlan: 'No action plan supplied.',
+        when: 'When',
+        action: 'Action',
+        expectedEvidence: 'Expected evidence',
+        sourcesConsulted: 'Sources consulted',
+        noSources: 'No source list supplied.',
+        aiLayerPackage: 'AI layer package',
+        aiLayerPackageCopy: 'Ready-to-publish files for llms.txt, /for-ai, structured JSON, plain text, and JSON-LD when the audited site is missing an AI-readable layer.',
+        downloadZip: 'Download ZIP',
+        generatedFiles: 'Generated files',
+        file: 'File',
+        purpose: 'Purpose',
+        noDownloads: 'No downloadable AI layer package supplied.'
+      },
+      fr: {
+        noData: 'Aucune donnée fournie.',
+        eyebrow: 'Audit SEO/GEO',
+        overview: 'Vue générale',
+        visual: 'Visuel',
+        findingsTab: 'Constats',
+        technical: 'Technique',
+        actions: 'Actions',
+        sources: 'Sources',
+        downloads: 'Téléchargements',
+        auditCockpit: 'Cockpit d’audit',
+        auditCockpitCopy: 'Vue dirigeant rapide de ce que le site doit corriger avant d’aller plus loin en SEO/GEO.',
+        readinessSignal: 'Signal de préparation',
+        reviewedEvidence: 'Preuves revues',
+        openIssues: 'Points ouverts',
+        visualProof: 'Preuves visuelles',
+        publicSources: 'Sources publiques',
+        topCohorts: 'Cohortes clés',
+        evidenceEngine: 'Evidence Engine',
+        consoleWatch: 'Console Watch',
+        networkWatch: 'Network Watch',
+        cacheCdnWatch: 'Cache/CDN Watch',
+        designWatchMetrics: 'Métriques Design Watch',
+        totalMessages: 'Messages au total',
+        errors: 'Erreurs',
+        warnings: 'Avertissements',
+        responses: 'Réponses',
+        failedRequests: 'Requêtes échouées',
+        non2xx3xx: 'Hors 2xx/3xx',
+        cacheStatus: 'Statut cache',
+        ctaVisible: 'CTA visible',
+        trustSignalVisible: 'Signal de confiance visible',
+        heroHeightRatio: 'Ratio hauteur héros',
+        nextSectionVisible: 'Section suivante visible',
+        cacheHeaders: 'Headers cache',
+        message: 'Message',
+        classification: 'Classification',
+        ardReadiness: 'ARD readiness',
+        catalogUrl: 'URL du catalogue',
+        identifier: 'Identifiant',
+        type: 'Type',
+        representativeQueries: 'Requêtes représentatives',
+        fallbackSubtitle: 'Audit fondé sur des preuves pour les moteurs de recherche, les moteurs de réponse IA et les agents navigateur.',
+        status: 'Statut',
+        confidence: 'Confiance',
+        generated: 'Généré',
+        environment: 'Environnement',
+        preproduction: 'Préproduction',
+        production: 'Production',
+        unknown: 'inconnu',
+        unknownSite: 'site inconnu',
+        defaultStatusDetail: 'Niveau de préparation global d’après les preuves fournies.',
+        biggestBlocker: 'Blocage principal',
+        biggestBlockerDetail: 'Problème avec le plus fort impact.',
+        fastestWin: 'Gain rapide',
+        fastestWinDetail: 'Meilleure prochaine action.',
+        executiveBrief: 'Synthèse exécutive',
+        fallbackDecision: 'Prioriser les corrections fondées sur des preuves avant de produire plus de contenu.',
+        missingAnalytics: 'Les analytics ou logs manquants sont marqués inconnus. Niveau de confiance :',
+        readinessScores: 'Scores de préparation',
+        score: 'Score',
+        analysisCohorts: 'Cohortes d’analyse',
+        cohort: 'Cohorte',
+        verdict: 'Verdict',
+        nextAction: 'Prochaine action',
+        noScreenshots: 'Aucune capture du site fournie.',
+        responsiveStudy: 'Étude responsive',
+        noResponsiveStudy: 'Aucune étude responsive fournie.',
+        method: 'Méthode',
+        issue: 'Point à corriger',
+        issues: 'Points à corriger',
+        result: 'Résultat',
+        pageTitle: 'Titre de page',
+        h1: 'H1',
+        horizontalOverflow: 'Débordement horizontal',
+        yes: 'oui',
+        no: 'non',
+        documentWidth: 'Largeur du document',
+        documentHeight: 'Hauteur du document',
+        missingImages: 'Images manquantes',
+        imagesLoadedInitially: 'Images chargées au départ',
+        imagesLoadedAfterScroll: 'Images chargées après scroll',
+        brokenImages: 'Images cassées après scroll',
+        deferredImages: 'Images encore différées après scroll',
+        initialMissingImages: 'Images manquantes au départ',
+        finalMissingImages: 'Images manquantes après scroll',
+        siteScreenshot: 'Capture du site',
+        screenshotFile: 'Fichier de capture :',
+        viewport: 'Viewport',
+        designWatch: 'Design Watch',
+        visualUnavailable: 'Verdict visuel indisponible',
+        noVisual: 'Aucune analyse visuelle fournie.',
+        observedScreenshots: 'Observé dans les captures',
+        implication: 'Implication',
+        recommended: 'Recommandé',
+        evidence: 'Preuves',
+        noEvidence: 'Aucun lien de preuve fourni.',
+        label: 'Libellé',
+        source: 'Source',
+        statusNote: 'Statut / note',
+        access: 'Accès',
+        all: 'Tout',
+        priorityFindings: 'Constats prioritaires',
+        untitledFinding: 'Constat sans titre',
+        observed: 'Observé',
+        inferred: 'Inféré',
+        noFindings: 'Aucun constat ne correspond à ce filtre.',
+        technicalSnapshot: 'Instantané technique',
+        productionGates: 'Gates production',
+        noProductionGates: 'Aucun gate production fourni.',
+        nextNow: 'Maintenant',
+        deferUntilProduction: 'À différer en production',
+        proofNeeded: 'Preuve nécessaire',
+        area: 'Zone',
+        observedEvidence: 'Preuve observée',
+        measurementAccess: 'Accès aux mesures',
+        metric: 'Métrique',
+        limit: 'Limite',
+        noMeasurement: 'Aucun contrôle d’accès aux mesures fourni.',
+        actionPlan: 'Plan d’action',
+        noActionPlan: 'Aucun plan d’action fourni.',
+        when: 'Quand',
+        action: 'Action',
+        expectedEvidence: 'Preuve attendue',
+        sourcesConsulted: 'Sources consultées',
+        noSources: 'Aucune liste de sources fournie.',
+        aiLayerPackage: 'Pack couche IA',
+        aiLayerPackageCopy: 'Fichiers prêts à publier pour llms.txt, /for-ai, JSON structuré, texte compact et JSON-LD quand le site audité n’a pas encore de couche lisible par IA.',
+        downloadZip: 'Télécharger le ZIP',
+        generatedFiles: 'Fichiers générés',
+        file: 'Fichier',
+        purpose: 'Rôle',
+        noDownloads: 'Aucun pack couche IA téléchargeable fourni.'
+      }
+    };
+
+    function normalizeLanguage(value) {
+      const normalized = String(value || '').toLowerCase();
+      if (normalized.startsWith('fr')) return 'fr';
+      return 'en';
+    }
+
+    function t(key) {
+      return (i18n[reportLanguage] && i18n[reportLanguage][key]) || i18n.en[key] || key;
+    }
+
+    function text(value, fallback = '') {
+      if (value === undefined || value === null || value === '') return fallback;
+      return String(value);
+    }
+
+    function formatDateTime(value) {
+      if (!value) return t('unknown');
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return text(value, t('unknown'));
+      return new Intl.DateTimeFormat(reportLanguage === 'fr' ? 'fr-FR' : 'en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
+    }
+
+    function asArray(value) {
+      if (Array.isArray(value)) return value;
+      if (value === undefined || value === null || value === '') return [];
+      return [value];
+    }
+
+    function displayStatus(value) {
+      const raw = text(value, t('unknown'));
+      const normalized = raw.toLowerCase().replaceAll(' ', '_');
+      const labels = {
+        fr: {
+          partial: 'partiel',
+          missing: 'absent',
+          warning: 'à vérifier',
+          unknown: 'inconnu',
+          ok: 'ok',
+          pass: 'ok',
+          passed: 'ok',
+          good: 'bon',
+          failed: 'échec',
+          error: 'erreur',
+          critical: 'critique',
+          medium: 'moyen',
+          public: 'public',
+          private: 'privé',
+          owner_only: 'propriétaire',
+          owner_only_free: 'propriétaire',
+          public_partial: 'public partiel',
+          public_if_enough_traffic: 'public si trafic suffisant'
+        },
+        en: {}
+      };
+      return labels[reportLanguage]?.[normalized] || raw;
+    }
+
+    function displayMethod(value) {
+      const raw = text(value, '');
+      if (reportLanguage === 'fr' && raw.toLowerCase().includes('chrome devtools fallback')) {
+        return 'Fallback Chrome DevTools ; Agent Browser à privilégier quand disponible';
+      }
+      return raw;
+    }
+
+    function environmentLabel(value) {
+      const normalized = text(value, '').toLowerCase();
+      if (['preprod', 'preproduction', 'staging', 'preview'].includes(normalized)) return t('preproduction');
+      if (['prod', 'production', 'live'].includes(normalized)) return t('production');
+      return text(value, t('unknown'));
+    }
+
+    function el(tag, attrs = {}, children = []) {
+      const node = document.createElement(tag);
+      for (const [key, value] of Object.entries(attrs)) {
+        if (key === 'class') node.className = value;
+        else if (key === 'text') node.textContent = value;
+        else if (key === 'html') node.innerHTML = value;
+        else if (key === 'href') {
+          node.href = value;
+          node.rel = 'noopener noreferrer';
+        } else if (key === 'src') node.src = value;
+        else if (value !== undefined && value !== null) node.setAttribute(key, value);
+      }
+      for (const child of children) {
+        if (child === undefined || child === null) continue;
+        node.append(child.nodeType ? child : document.createTextNode(String(child)));
+      }
+      return node;
+    }
+
+    function list(items) {
+      const values = asArray(items);
+      if (!values.length) return el('p', { class: 'empty', text: t('noData') });
+      return el('ul', {}, values.map(item => el('li', { text: text(item) })));
+    }
+
+    function badge(value) {
+      const normalized = text(value, 'unknown').toLowerCase().replaceAll(' ', '_');
+      let klass = `badge ${normalized}`;
+      if (['p0', 'error', 'missing', 'failed', 'critical'].includes(normalized)) klass = 'badge p0';
+      if (['p1', 'warning', 'partial', 'medium'].includes(normalized)) klass = 'badge p1';
+      if (['p2', 'ok', 'pass', 'passed', 'good', 'public'].includes(normalized)) klass = 'badge p2';
+      if (['owner_only', 'owner_only_free', 'public_if_enough_traffic', 'public_partial', 'unknown'].includes(normalized)) klass = `badge ${normalized}`;
+      return el('span', { class: klass, text: displayStatus(value) });
+    }
+
+    function section(title, children, className = 'panel') {
+      return el('section', { class: className }, [el('h2', { text: title }), ...children]);
+    }
+
+    function metaRow(label, value) {
+      return el('div', { class: 'meta-row' }, [el('span', { text: label }), el('strong', { text: text(value, 'unknown') })]);
+    }
+
+    function scoreNumber(value) {
+      if (value === undefined || value === null || value === '') return null;
+      if (typeof value === 'number' && Number.isFinite(value)) return value;
+      const match = String(value).match(/([0-9]+(?:\.[0-9]+)?)/);
+      if (!match) return null;
+      return Number(match[1]);
+    }
+
+    function scoreMax(value, fallback = 10) {
+      const slash = String(value || '').match(/\/\s*([0-9]+(?:\.[0-9]+)?)/);
+      return slash ? Number(slash[1]) : fallback;
+    }
+
+    function readinessScore() {
+      const scorecards = Array.isArray(audit.scorecards) ? audit.scorecards : [];
+      const normalized = scorecards
+        .map(item => {
+          const score = scoreNumber(item.score);
+          const max = Number(item.max || scoreMax(item.score));
+          if (score === null || !max) return null;
+          return Math.max(0, Math.min(10, (score / max) * 10));
+        })
+        .filter(value => value !== null);
+      if (normalized.length) {
+        return normalized.reduce((sum, value) => sum + value, 0) / normalized.length;
+      }
+      const visualScore = scoreNumber(audit.design_watch?.score || audit.first_impression?.score);
+      if (visualScore !== null) {
+        return Math.max(0, Math.min(10, (visualScore / scoreMax(audit.design_watch?.score || audit.first_impression?.score)) * 10));
+      }
+      return 0;
+    }
+
+    function findingCounts() {
+      const findings = Array.isArray(audit.findings) ? audit.findings : [];
+      return {
+        total: findings.length,
+        p0: findings.filter(item => text(item.priority).toUpperCase() === 'P0').length,
+        p1: findings.filter(item => text(item.priority).toUpperCase() === 'P1').length,
+        p2: findings.filter(item => text(item.priority).toUpperCase() === 'P2').length
+      };
+    }
+
+    function evidenceCount() {
+      return [
+        ...(Array.isArray(audit.site_visual_evidence) ? audit.site_visual_evidence : []),
+        ...(Array.isArray(audit.visual_evidence) ? audit.visual_evidence : []),
+        ...(Array.isArray(audit.sources) ? audit.sources : [])
+      ].length;
+    }
+
+    function tabs() {
+      return [
+        { id: 'overview', label: t('overview') },
+        { id: 'visual', label: t('visual') },
+        { id: 'findings', label: t('findingsTab') },
+        { id: 'technical', label: t('technical') },
+        { id: 'actions', label: t('actions') },
+        { id: 'downloads', label: t('downloads') },
+        { id: 'sources', label: t('sources') }
+      ];
+    }
+
+    function renderTabs() {
+      const container = document.getElementById('tabs');
+      container.replaceChildren(...tabs().map(tab => {
+        const button = el('button', {
+          class: 'tab',
+          role: 'tab',
+          'aria-selected': String(uiState.tab === tab.id),
+          text: tab.label
+        });
+        button.addEventListener('click', () => {
+          uiState.tab = tab.id;
+          render();
+        });
+        return button;
+      }));
+    }
+
+    function renderHeader() {
+      const generated = text(audit.generated_at, new Date().toISOString());
+      const site = text(audit.site, t('unknownSite'));
+      document.documentElement.lang = reportLanguage;
+      document.title = `Audit SEO/GEO — ${site}`;
+      document.getElementById('eyebrow').textContent = t('eyebrow');
+      document.getElementById('headline').textContent = `Audit SEO/GEO — ${site}`;
+      document.getElementById('subtitle').textContent = text(
+        audit.summary?.headline,
+        t('fallbackSubtitle')
+      );
+      document.getElementById('report-meta').replaceChildren(
+        metaRow(t('status'), displayStatus(audit.summary?.status)),
+        metaRow(t('environment'), environmentLabel(audit.environment || audit.context?.environment)),
+        metaRow(t('confidence'), text(audit.summary?.data_confidence, t('unknown'))),
+        metaRow(t('generated'), formatDateTime(generated))
+      );
+    }
+
+    function renderMetrics() {
+      const metrics = Array.isArray(audit.metrics) ? audit.metrics : [];
+      const defaults = [
+        { label: t('status'), value: text(audit.summary?.status, t('unknown')), detail: t('defaultStatusDetail') },
+        { label: t('biggestBlocker'), value: text(audit.summary?.biggest_blocker, t('unknown')), detail: t('biggestBlockerDetail') },
+        { label: t('fastestWin'), value: text(audit.summary?.fastest_win, t('unknown')), detail: t('fastestWinDetail') }
+      ];
+      return el('section', { class: 'grid' }, (metrics.length ? metrics : defaults).map(metric =>
+        el('div', { class: 'metric' }, [
+          el('span', { text: text(metric.label, '') }),
+          el('strong', { text: text(metric.value, 'unknown') }),
+          metric.detail ? el('p', { class: 'small', text: metric.detail }) : null
+        ])
+      ));
+    }
+
+    function renderExecutiveBrief() {
+      const brief = asArray(audit.executive_brief);
+      return section(t('executiveBrief'), [
+        el('p', {}, [badge(environmentLabel(audit.environment || audit.context?.environment))]),
+        el('p', { text: text(audit.summary?.decision, audit.summary?.headline || t('fallbackDecision')) }),
+        brief.length ? el('div', { class: 'callout' }, [list(brief)]) : null,
+        el('p', { class: 'small', text: `${t('missingAnalytics')} ${text(audit.summary?.data_confidence, t('unknown'))}.` })
+      ].filter(Boolean));
+    }
+
+    function renderScorecards() {
+      const scorecards = Array.isArray(audit.scorecards) ? audit.scorecards : [];
+      if (!scorecards.length) return null;
+      return section(t('readinessScores'), [
+        el('div', { class: 'grid four' }, scorecards.map(scorecard => {
+          const score = Number(scorecard.score ?? 0);
+          const max = Number(scorecard.max ?? 10) || 10;
+          const clamped = Math.max(0, Math.min(score, max));
+          return el('article', { class: 'score-card' }, [
+            el('div', { class: 'score-top' }, [
+              el('span', { class: 'small', text: text(scorecard.label, t('score')) }),
+              el('strong', { text: `${clamped}/${max}` })
+            ]),
+            el('progress', { value: clamped, max }),
+            el('p', { class: 'small', text: text(scorecard.note, '') })
+          ]);
+        }))
+      ]);
+    }
+
+    function renderSignalPanel() {
+      const score = readinessScore();
+      const scoreText = score ? score.toFixed(score % 1 ? 1 : 0) : '0';
+      const percent = Math.max(0, Math.min(100, Math.round(score * 10)));
+      const scorecards = Array.isArray(audit.scorecards) ? audit.scorecards : [];
+      const bars = (scorecards.length ? scorecards : [
+        { label: t('status'), score: score, max: 10, note: text(audit.summary?.status, t('unknown')) }
+      ]).slice(0, 4);
+      return el('aside', { class: 'signal-panel' }, [
+        el('h3', { text: t('readinessSignal') }),
+        el('div', { class: 'signal-ring', style: `--score:${percent}` }, [
+          el('div', { class: 'signal-value' }, [
+            `${scoreText}/10`,
+            el('span', { text: t('score') })
+          ])
+        ]),
+        el('div', { class: 'signal-bars' }, bars.map(item => {
+          const value = scoreNumber(item.score);
+          const max = Number(item.max || scoreMax(item.score));
+          const barPercent = value === null || !max ? percent : Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+          return el('div', { class: 'signal-bar' }, [
+            el('span', { text: text(item.label, t('score')) }),
+            el('div', { class: 'signal-track' }, [
+              el('div', { class: 'signal-fill', style: `--bar:${barPercent}%` })
+            ]),
+            el('strong', { text: `${Math.round(barPercent)}%` })
+          ]);
+        }))
+      ]);
+    }
+
+    function renderOverviewStage() {
+      const counts = findingCounts();
+      const screenshots = [
+        ...(Array.isArray(audit.site_visual_evidence) ? audit.site_visual_evidence : []),
+        ...(Array.isArray(audit.visual_evidence) ? audit.visual_evidence : [])
+      ].length;
+      return el('section', { class: 'overview-stage' }, [
+        el('div', {}, [
+          el('p', { class: 'section-kicker', text: t('auditCockpit') }),
+          el('h2', { text: text(audit.summary?.headline || audit.summary?.decision, t('auditCockpitCopy')) }),
+          el('p', { text: text(audit.summary?.decision, t('auditCockpitCopy')) }),
+          el('div', { class: 'proof-strip' }, [
+            el('span', { class: 'proof-pill', text: `${t('openIssues')}: ${counts.total}` }),
+            el('span', { class: 'proof-pill', text: `P0: ${counts.p0}` }),
+            el('span', { class: 'proof-pill', text: `P1: ${counts.p1}` }),
+            el('span', { class: 'proof-pill', text: `${t('visualProof')}: ${screenshots}` }),
+            el('span', { class: 'proof-pill', text: `${t('publicSources')}: ${Array.isArray(audit.sources) ? audit.sources.length : 0}` })
+          ])
+        ]),
+        renderSignalPanel()
+      ]);
+    }
+
+    function renderOverviewPage() {
+      return [
+        renderOverviewStage(),
+        renderMetrics(),
+        renderScorecards(),
+        cohortCards(3) ? section(t('topCohorts'), [cohortCards(3)]) : null,
+        renderExecutiveBrief()
+      ].filter(Boolean);
+    }
+
+    function cohortCards(limit = null) {
+      const cohorts = Array.isArray(audit.analysis_cohorts || audit.cohorts)
+        ? (audit.analysis_cohorts || audit.cohorts)
+        : [];
+      const visible = limit ? cohorts.slice(0, limit) : cohorts;
+      if (!visible.length) return null;
+      return el('div', { class: 'cohort-grid' }, visible.map(item =>
+        el('article', { class: 'cohort-card' }, [
+          el('div', { class: 'cohort-head' }, [
+            el('div', {}, [
+              el('h3', { text: text(item.name, t('cohort')) }),
+              item.status ? badge(item.status) : null,
+              item.what_it_checks ? el('p', { class: 'small', text: text(item.what_it_checks) }) : null
+            ]),
+            el('div', { class: 'cohort-score', text: text(item.score, 'n/a') })
+          ]),
+          item.verdict ? el('p', { text: text(item.verdict, '') }) : null,
+          item.evidence ? el('p', { class: 'small', text: text(item.evidence) }) : null,
+          el('div', { class: 'next' }, [
+            el('span', { class: 'label', text: t('nextAction') }),
+            el('p', { text: text(item.next_action, '') })
+          ])
+        ].filter(Boolean))
+      ));
+    }
+
+    function renderCohorts() {
+      const cards = cohortCards();
+      if (!cards) return null;
+      return section(t('analysisCohorts'), [cards]);
+    }
+
+    function visualCards(items) {
+      const visuals = Array.isArray(items) ? items : [];
+      if (!visuals.length) return el('p', { class: 'empty', text: t('noScreenshots') });
+      return el('div', { class: 'visual-grid' }, visuals.map(item => {
+        const image = item.path ? el('img', { src: item.path, alt: text(item.label, t('siteScreenshot')) }) : null;
+        if (image) {
+          image.addEventListener('error', () => {
+            image.replaceWith(el('div', { class: 'screenshot-missing', text: `${t('screenshotFile')} ${item.path}` }));
+          });
+        }
+        return el('article', { class: 'visual-card' }, [
+          image,
+          el('div', {}, [
+            el('h3', { text: text(item.label, t('siteScreenshot')) }),
+            el('p', { class: 'small', text: `${t('viewport')}: ${text(item.viewport, t('unknown'))}` }),
+            list(item.notes)
+          ])
+        ]);
+      }));
+    }
+
+    function renderFirstImpression() {
+      const first = audit.design_watch || audit.first_impression || audit.visual_verdict || {};
+      const visuals = audit.site_visual_evidence || audit.visual_evidence || [];
+      if (!Object.keys(first).length && !visuals.length) return null;
+      return section(t('designWatch'), [
+        el('div', { class: 'grid sidebar' }, [
+          el('article', { class: 'panel' }, [
+            el('div', { class: 'verdict' }, [
+              el('div', { class: 'verdict-score', text: text(first.score, 'n/a') }),
+              el('div', {}, [
+                el('h3', { text: text(first.verdict, t('visualUnavailable')) }),
+                el('p', { text: text(first.summary, t('noVisual')) }),
+                first.confidence ? badge(`${t('confidence').toLowerCase()}: ${first.confidence}`) : null
+              ])
+            ]),
+            el('span', { class: 'label', text: t('observedScreenshots') }),
+            list(first.observed),
+            el('span', { class: 'label', text: t('implication') }),
+            list(first.inferred || first.implications),
+            el('span', { class: 'label', text: t('recommended') }),
+            list(first.recommended)
+          ]),
+          visualCards(visuals)
+        ])
+      ]);
+    }
+
+    function renderResponsiveStudy() {
+      const study = audit.responsive_study || audit.dynamic_responsive_study || null;
+      if (!study) return section(t('responsiveStudy'), [el('p', { class: 'empty', text: t('noResponsiveStudy') })]);
+      const viewports = Array.isArray(study.viewports) ? study.viewports : [];
+      const summary = study.summary || {};
+      return section(t('responsiveStudy'), [
+        el('div', { class: 'callout' }, [
+          el('p', {}, [
+            summary.status ? badge(summary.status) : null,
+            ' ',
+            text(summary.verdict, '')
+          ]),
+          study.method ? el('p', { class: 'small', text: `${t('method')}: ${displayMethod(study.method)}` }) : null
+        ]),
+        viewports.length ? el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('viewport') }),
+            el('th', { text: t('result') }),
+            el('th', { text: t('observedEvidence') }),
+            el('th', { text: t('issues') })
+          ])]),
+          el('tbody', {}, viewports.map(item => {
+            const metrics = item.metrics || {};
+            const imageStates = metrics.imageLoadStates || {};
+            const observed = [
+              `${t('pageTitle')}: ${text(metrics.title, t('unknown'))}`,
+              `${t('h1')}: ${asArray(metrics.h1Text).join(' | ') || t('unknown')}`,
+              `${t('horizontalOverflow')}: ${metrics.horizontalOverflow ? t('yes') : t('no')}`,
+              `${t('documentWidth')}: ${text(metrics.scrollWidth, t('unknown'))}px`,
+              `${t('documentHeight')}: ${text(metrics.documentHeight, t('unknown'))}px`,
+              `${t('missingImages')}: ${text(metrics.missingImages, '0')}`,
+              ...(Object.keys(imageStates).length ? [
+                `${t('imagesLoadedInitially')}: ${text(imageStates.loaded_initially, '0')}`,
+                `${t('imagesLoadedAfterScroll')}: ${text(imageStates.loaded_after_scroll, '0')}`,
+                `${t('brokenImages')}: ${text(imageStates.broken, '0')}`,
+                `${t('deferredImages')}: ${text(imageStates.still_deferred, '0')}`,
+                `${t('initialMissingImages')}: ${text(imageStates.initial_missing, '0')}`,
+                `${t('finalMissingImages')}: ${text(imageStates.missing_after_scroll, '0')}`
+              ] : [])
+            ];
+            return el('tr', {}, [
+              el('td', { text: text(item.viewport || item.label, '') }),
+              el('td', {}, [badge(text(item.status, t('unknown')))]),
+              el('td', {}, [list(observed)]),
+              el('td', {}, [list(item.issues)])
+            ]);
+          }))
+        ]) : el('p', { class: 'empty', text: t('noData') })
+      ]);
+    }
+
+    function evidenceTable(items) {
+      const values = Array.isArray(items) ? items : [];
+      if (!values.length) return el('p', { class: 'empty', text: t('noEvidence') });
+      const rows = values.map(item => el('tr', {}, [
+        el('td', {}, [text(item.label, t('evidence'))]),
+        el('td', {}, item.url ? [el('a', { href: item.url, text: item.url })] : [text(item.path || item.value || '')]),
+        el('td', {}, [item.status ? badge(item.status) : text(item.note || '')])
+      ]));
+      return el('table', {}, [
+        el('thead', {}, [el('tr', {}, [el('th', { text: t('label') }), el('th', { text: t('source') }), el('th', { text: t('statusNote') })])]),
+        el('tbody', {}, rows)
+      ]);
+    }
+
+    function renderFindings() {
+      const findings = Array.isArray(audit.findings) ? audit.findings : [];
+      const buttons = ['all', 'P0', 'P1', 'P2'].map(value => {
+        const button = el('button', { text: value === 'all' ? t('all') : value });
+        button.classList.toggle('active', priorityState.value === value);
+        button.addEventListener('click', () => {
+          priorityState.value = value;
+          render();
+        });
+        return button;
+      });
+      const filtered = findings.filter(f => priorityState.value === 'all' || text(f.priority).toUpperCase() === priorityState.value);
+      return el('section', {}, [
+        el('div', { class: 'toolbar' }, [el('h2', { text: t('priorityFindings') }), ...buttons]),
+        ...(filtered.length ? filtered.map(finding => {
+          const priority = text(finding.priority, 'P1').toUpperCase();
+          return el('article', { class: `finding ${priority.toLowerCase()}-border` }, [
+            el('h3', {}, [badge(priority), ' ', text(finding.title, t('untitledFinding'))]),
+            el('span', { class: 'label', text: t('observed') }),
+            list(finding.observed),
+            el('span', { class: 'label', text: t('inferred') }),
+            list(finding.inferred),
+            el('span', { class: 'label', text: t('recommended') }),
+            list(finding.recommended),
+            finding.evidence ? el('details', {}, [el('summary', { text: t('evidence') }), evidenceTable(finding.evidence)]) : null
+          ]);
+        }) : [el('p', { class: 'empty', text: t('noFindings') })])
+      ]);
+    }
+
+    function renderTechnicalSnapshot() {
+      const checks = Array.isArray(audit.technical_checks) ? audit.technical_checks : [];
+      if (!checks.length) return null;
+      return section(t('technicalSnapshot'), [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('area') }),
+            el('th', { text: t('status') }),
+            el('th', { text: t('observedEvidence') }),
+            el('th', { text: t('implication') })
+          ])]),
+          el('tbody', {}, checks.map(item => el('tr', {}, [
+            el('td', { text: text(item.area, '') }),
+            el('td', {}, [badge(text(item.status, 'unknown'))]),
+            el('td', { text: text(item.observed, '') }),
+            el('td', { text: text(item.implication, '') })
+          ])))
+        ])
+      ]);
+    }
+
+    function renderPublicMeasurements() {
+      const measurements = Array.isArray(audit.public_measurements) ? audit.public_measurements : [];
+      if (!measurements.length) return section(t('measurementAccess'), [
+        el('p', { class: 'empty', text: t('noMeasurement') })
+      ]);
+      const rows = measurements.map(item => el('tr', {}, [
+        el('td', { text: text(item.source, '') }),
+        el('td', {}, [badge(text(item.access, 'unknown'))]),
+        el('td', { text: text(item.metric, '') }),
+        el('td', { text: text(item.limit, '') })
+      ]));
+      return section(t('measurementAccess'), [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('source') }),
+            el('th', { text: t('access') }),
+            el('th', { text: t('metric') }),
+            el('th', { text: t('limit') })
+          ])]),
+          el('tbody', {}, rows)
+        ])
+      ]);
+    }
+
+    function renderEvidenceEngine() {
+      const engine = audit.evidence_engine || audit.evidenceEngine || null;
+      if (!engine) return null;
+      const consoleSummary = engine.console_watch?.summary || {};
+      const networkSummary = engine.network_watch?.summary || {};
+      const cache = engine.cache_cdn_watch || {};
+      const designMetrics = engine.design_watch_metrics || {};
+      const consoleSample = Array.isArray(engine.console_watch?.sample) ? engine.console_watch.sample : [];
+      const cacheHeaders = cache.headers || {};
+      return section(t('evidenceEngine'), [
+        el('div', { class: 'grid four' }, [
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('consoleWatch') }),
+            el('p', { text: `${t('totalMessages')}: ${text(consoleSummary.total, '0')}` }),
+            el('p', { class: 'small', text: `${t('errors')}: ${text(consoleSummary.errors, '0')} · ${t('warnings')}: ${text(consoleSummary.warnings, '0')}` })
+          ]),
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('networkWatch') }),
+            el('p', { text: `${t('responses')}: ${text(networkSummary.response_count, '0')}` }),
+            el('p', { class: 'small', text: `${t('failedRequests')}: ${text(networkSummary.failed_requests, '0')} · ${t('non2xx3xx')}: ${text(networkSummary.non_2xx_3xx, '0')}` })
+          ]),
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('cacheCdnWatch') }),
+            cache.status ? badge(cache.status) : null,
+            el('p', { class: 'small', text: text(cache.verdict, '') })
+          ].filter(Boolean)),
+          el('article', { class: 'score-card' }, [
+            el('h3', { text: t('designWatchMetrics') }),
+            el('p', { text: Object.keys(designMetrics).join(', ') || t('unknown') }),
+            el('p', { class: 'small', text: text(engine.method, '') })
+          ])
+        ]),
+        consoleSample.length ? el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('consoleWatch') }),
+            el('th', { text: t('classification') }),
+            el('th', { text: t('message') })
+          ])]),
+          el('tbody', {}, consoleSample.map(item => el('tr', {}, [
+            el('td', {}, [badge(text(item.level, 'log'))]),
+            el('td', { text: text(item.classification, t('unknown')) }),
+            el('td', { text: text(item.text || item.url, '') })
+          ])))
+        ]) : null,
+        Object.keys(cacheHeaders).length ? el('div', {}, [
+          el('h3', { text: t('cacheHeaders') }),
+          el('table', {}, [
+            el('tbody', {}, Object.entries(cacheHeaders).map(([key, value]) => el('tr', {}, [
+              el('td', { text: key }),
+              el('td', { text: text(value, '') })
+            ])))
+          ])
+        ]) : null,
+        Object.keys(designMetrics).length ? el('div', {}, [
+          el('h3', { text: t('designWatchMetrics') }),
+          el('table', {}, [
+            el('thead', {}, [el('tr', {}, [
+              el('th', { text: t('viewport') }),
+              el('th', { text: t('ctaVisible') }),
+              el('th', { text: t('trustSignalVisible') }),
+              el('th', { text: t('heroHeightRatio') }),
+              el('th', { text: t('nextSectionVisible') })
+            ])]),
+            el('tbody', {}, Object.entries(designMetrics).map(([viewport, metrics]) => el('tr', {}, [
+              el('td', { text: viewport }),
+              el('td', { text: metrics.cta_visible ? t('yes') : t('no') }),
+              el('td', { text: metrics.trust_signal_visible ? t('yes') : t('no') }),
+              el('td', { text: text(metrics.hero_height_ratio, t('unknown')) }),
+              el('td', { text: metrics.next_section_visible ? t('yes') : t('no') })
+            ])))
+          ])
+        ]) : null
+      ].filter(Boolean));
+    }
+
+    function renderArdReadiness() {
+      const ard = audit.ard_readiness || audit.ardReadiness || null;
+      if (!ard) return null;
+      const entries = Array.isArray(ard.entries) ? ard.entries : [];
+      return section(t('ardReadiness'), [
+        el('div', { class: 'callout' }, [
+          ard.status ? badge(ard.status) : null,
+          ard.catalog_url ? el('p', {}, [
+            `${t('catalogUrl')}: `,
+            el('a', { href: ard.catalog_url, text: ard.catalog_url })
+          ]) : null,
+          list(ard.observed),
+          list(ard.recommended)
+        ].filter(Boolean)),
+        entries.length ? el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('identifier') }),
+            el('th', { text: t('type') }),
+            el('th', { text: t('representativeQueries') })
+          ])]),
+          el('tbody', {}, entries.map(item => el('tr', {}, [
+            el('td', { text: text(item.identifier, '') }),
+            el('td', { text: text(item.type, '') }),
+            el('td', {}, [list(item.representativeQueries)])
+          ])))
+        ]) : null
+      ].filter(Boolean));
+    }
+
+    function renderProductionGates() {
+      const gates = Array.isArray(audit.production_gates || audit.preprod_gates)
+        ? (audit.production_gates || audit.preprod_gates)
+        : [];
+      if (!gates.length) return section(t('productionGates'), [el('p', { class: 'empty', text: t('noProductionGates') })]);
+      return section(t('productionGates'), [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [
+            el('th', { text: t('area') }),
+            el('th', { text: t('nextNow') }),
+            el('th', { text: t('deferUntilProduction') }),
+            el('th', { text: t('proofNeeded') })
+          ])]),
+          el('tbody', {}, gates.map(item => el('tr', {}, [
+            el('td', { text: text(item.area || item.label, '') }),
+            el('td', { text: text(item.next_now, '') }),
+            el('td', { text: text(item.defer_until_prod || item.defer_until_production, '') }),
+            el('td', { text: text(item.proof_needed, '') })
+          ])))
+        ])
+      ]);
+    }
+
+    function renderActionPlan() {
+      const actions = Array.isArray(audit.action_plan) ? audit.action_plan : [];
+      if (!actions.length) return section(t('actionPlan'), [el('p', { class: 'empty', text: t('noActionPlan') })]);
+      const rows = actions.map(item => el('tr', {}, [
+        el('td', { text: text(item.when || item.day || item.priority, '') }),
+        el('td', { text: text(item.action, '') }),
+        el('td', { text: text(item.outcome || item.metric, '') })
+      ]));
+      return section(t('actionPlan'), [
+        el('table', {}, [
+          el('thead', {}, [el('tr', {}, [el('th', { text: t('when') }), el('th', { text: t('action') }), el('th', { text: t('expectedEvidence') })])]),
+          el('tbody', {}, rows)
+        ])
+      ]);
+    }
+
+    function renderSources() {
+      const sources = Array.isArray(audit.sources) ? audit.sources : [];
+      return section(t('sourcesConsulted'), [
+        sources.length ? el('ul', {}, sources.map(source =>
+          el('li', {}, [source.url ? el('a', { href: source.url, text: text(source.label, source.url) }) : text(source.label || source)])
+        )) : el('p', { class: 'empty', text: t('noSources') })
+      ]);
+    }
+
+    function renderAiLayerPackage() {
+      const packageData = audit.ai_layer_package || null;
+      if (!packageData) {
+        return section(t('aiLayerPackage'), [el('p', { class: 'empty', text: t('noDownloads') })]);
+      }
+      const files = Array.isArray(packageData.files) ? packageData.files : [];
+      return section(t('aiLayerPackage'), [
+        el('div', { class: 'download-hero' }, [
+          el('div', {}, [
+            el('h3', { text: t('aiLayerPackage') }),
+            el('p', { text: t('aiLayerPackageCopy') }),
+            packageData.status ? badge(packageData.status) : null,
+            packageData.publication_status ? badge(packageData.publication_status) : null,
+            packageData.status_reason ? el('p', { class: 'small', text: text(packageData.status_reason, '') }) : null
+          ].filter(Boolean)),
+          packageData.zip_path ? el('a', { class: 'download-button', href: packageData.zip_path, text: t('downloadZip') }) : null
+        ].filter(Boolean)),
+        el('h3', { text: t('generatedFiles') }),
+        files.length ? el('div', { class: 'download-list' }, files.map(item =>
+          el('article', { class: 'download-card' }, [
+            el('strong', {}, [
+              item.path ? el('a', { href: item.path, text: text(item.label, item.path) }) : text(item.label, t('file'))
+            ]),
+            el('p', { class: 'small', text: text(item.path, '') }),
+            el('p', { text: text(item.purpose, '') })
+          ])
+        )) : el('p', { class: 'empty', text: t('noData') })
+      ]);
+    }
+
+    function renderVisualPage() {
+      return [
+        renderFirstImpression(),
+        renderResponsiveStudy()
+      ].filter(Boolean);
+    }
+
+    function renderFindingsPage() {
+      return [renderFindings()];
+    }
+
+    function renderTechnicalPage() {
+      return [
+        renderTechnicalSnapshot(),
+        renderProductionGates(),
+        renderEvidenceEngine(),
+        renderArdReadiness(),
+        renderPublicMeasurements()
+      ].filter(Boolean);
+    }
+
+    function renderActionsPage() {
+      return [
+        renderActionPlan(),
+        renderCohorts()
+      ].filter(Boolean);
+    }
+
+    function renderSourcesPage() {
+      return [renderSources()];
+    }
+
+    function renderDownloadsPage() {
+      return [renderAiLayerPackage()];
+    }
+
+    function activePage() {
+      if (uiState.tab === 'visual') return renderVisualPage();
+      if (uiState.tab === 'findings') return renderFindingsPage();
+      if (uiState.tab === 'technical') return renderTechnicalPage();
+      if (uiState.tab === 'actions') return renderActionsPage();
+      if (uiState.tab === 'downloads') return renderDownloadsPage();
+      if (uiState.tab === 'sources') return renderSourcesPage();
+      return renderOverviewPage();
+    }
+
+    function render() {
+      renderTabs();
+      app.replaceChildren(el('div', { class: 'tab-panel', role: 'tabpanel' }, activePage()));
+    }
+
+    renderHeader();
+    render();
+  </script>
+</body>
+</html>

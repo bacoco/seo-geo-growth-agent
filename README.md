@@ -10,29 +10,31 @@ Search is no longer just a list of blue links. AI assistants now read, summarize
 
 It does not stop at diagnosis: when AI-readable layers are missing, it generates an owner-review ZIP with the files to publish, the checks to run, and the limits the agent must preserve.
 
+In short: it audits the site, explains the gaps, generates the missing AI-readable files as drafts, renders a browser report, and validates that the report is complete enough to share.
+
 ## Install
 
 Paste this into Codex or Claude Code:
 
 ```text
 Retrieve and follow the installation instructions at:
-https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.7/INSTALL_FOR_AGENTS.md
+https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.8/INSTALL_FOR_AGENTS.md
 ```
 
 Or run it directly from a CLI:
 
 ```bash
-codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.7/INSTALL_FOR_AGENTS.md"
+codex "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.8/INSTALL_FOR_AGENTS.md"
 ```
 
 ```bash
-claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.7/INSTALL_FOR_AGENTS.md"
+claude "Retrieve and follow the installation instructions at https://raw.githubusercontent.com/bacoco/seo-geo-growth-agent/v1.2.8/INSTALL_FOR_AGENTS.md"
 ```
 
 Manual fallback:
 
 ```bash
-git clone --depth 1 --branch v1.2.7 https://github.com/bacoco/seo-geo-growth-agent.git
+git clone --depth 1 --branch v1.2.8 https://github.com/bacoco/seo-geo-growth-agent.git
 cd seo-geo-growth-agent
 ./scripts/install.sh codex
 ```
@@ -57,6 +59,10 @@ Use seo-geo-growth-agent to audit this site for SEO/GEO and rank the P0 fixes.
 
 ```text
 Use seo-geo-growth-agent on this site and generate a dynamic HTML audit report served locally. Capture desktop/mobile screenshots of the audited site, run a responsive mobile/desktop study, run Design Watch, and add analysis cohorts.
+```
+
+```text
+Use seo-geo-growth-agent to run the full audit workflow: collect evidence, generate missing AI-layer files, validate the report, and serve the HTML page.
 ```
 
 ```text
@@ -99,6 +105,8 @@ It helps an agent produce:
 - ARD / `ai-catalog.json` drafts for agentic resource discovery, clearly marked as draft/optional;
 - Owner Data Mode requests for GSC, GA4, Bing Webmaster Tools, server logs, Cloudflare Analytics, and paid-tool consent boundaries;
 - a simple `scripts/seo_geo_audit.py` CLI that creates an audit workspace, browser evidence, owner-data request files, and next commands;
+- a one-command `scripts/run_full_audit.py` workflow that collects evidence, creates a conservative `audit.json`, generates improvement files, renders the report, validates it, and can serve it locally;
+- `scripts/validate_audit_report.py` to fail incomplete reports before they are shared;
 - `LATEST-SEO-GEO-REPORT.md` receipts, preproduction/production gates, and narrative comparison between two reports;
 - GEO/Citation prompt panels for ChatGPT, Perplexity, and Claude, clearly marked `ready_not_executed` until run;
 - public-vs-owner-only measurement matrices for traffic, Search Console, GA4, logs, and AI visibility;
@@ -171,6 +179,8 @@ templates/
 runbooks/
 evals/
 scripts/generate_html_audit_report.py
+scripts/run_full_audit.py
+scripts/validate_audit_report.py
 scripts/generate_ai_layer_package.py
 scripts/generate_owner_data_request.py
 scripts/generate_ard_catalog.py

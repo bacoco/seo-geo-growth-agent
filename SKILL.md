@@ -1,7 +1,7 @@
 ---
 name: seo-geo-growth-agent
 description: |-
-  SEO + GEO Growth Agent Skill v1.2.7. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, Evidence Engine diagnostics, Console Watch, Network Watch, Cache/CDN Watch, Owner Data Mode, ARD / ai-catalog agentic resource discovery, ARD validation/readiness checks, seo-geo-audit CLI workflows, Design Watch screenshot analysis, dynamic responsive study, lazy-load image diagnostics, first-impression scoring, analysis cohorts, dynamic HTML audit reports, latest report receipts, report comparison, preproduction gates, GEO/Citation prompt panels, browser-readable reports, downloadable AI-layer packages, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
+  SEO + GEO Growth Agent Skill v1.2.8. Use this when a user asks for SEO, Generative Engine Optimization, AI search visibility, full audit command workflows, report validation, Evidence Engine diagnostics, Console Watch, Network Watch, Cache/CDN Watch, Owner Data Mode, ARD / ai-catalog agentic resource discovery, ARD validation/readiness checks, seo-geo-audit CLI workflows, Design Watch screenshot analysis, dynamic responsive study, lazy-load image diagnostics, first-impression scoring, analysis cohorts, dynamic HTML audit reports, latest report receipts, report comparison, preproduction gates, GEO/Citation prompt panels, browser-readable reports, downloadable AI-layer packages, site screenshot evidence, Agent Browser visual checks, ChatGPT Search / Perplexity / Claude citations, Google AI Overview or AI Mode readiness, Search Console and Bing Webmaster reporting, keyword strategy, structured data, IndexNow, robots.txt for AI crawlers, llms.txt, agent-friendly UX, accessibility-tree/DOM readiness, AI citation tracking, comparison pages, content briefs, CTR optimization, or an autonomous SEO/GEO daily operating workflow.
   Triggers: SEO, GEO, Generative Engine Optimization, AI search optimization, AEO, Evidence Engine, Console Watch, Network Watch, Cache/CDN Watch, ARD, Agentic Resource Discovery, ai-catalog, /.well-known/ai-catalog.json, Agentmap, representativeQueries, owner data, owner-data request, seo-geo-audit, audit CLI, Cloudflare Analytics, server logs, Design Watch, design audit, responsive audit, responsive study, lazy-load audit, preprod audit, production gates, latest SEO/GEO report, compare reports, report diff, GEO citation panel, prompt panel, mobile homepage audit, dynamic responsive study, first impression audit, analysis cohorts, HTML audit report, visual audit, local audit server, downloadable files, AI layer package, /for-ai package, screenshot audit, Agent Browser audit, ChatGPT SEO, Perplexity SEO, Claude SEO, AI Overview, AI Mode, AI citations, AI referrals, agent-friendly website, accessibility tree, AI crawler, crawler policy, robots.txt AI crawlers, Google-Extended, GPTBot, OAI-SearchBot, ClaudeBot, Claude-SearchBot, PerplexityBot, IndexNow, GSC, GA4, Bing Webmaster Tools, AI Performance, query fan-out, grounding query, schema markup, JSON-LD, llms.txt, content SEO, technical SEO, SEO agent, GEO patrol.
 ---
 
@@ -25,7 +25,7 @@ Use this skill whenever the user asks to:
 - create or prioritize keywords, fan-out queries, grounding queries, content briefs, comparison pages, topic clusters, BOFU/MOFU/TOFU maps, CTA blocks, or internal links;
 - generate or validate structured data, JSON-LD, robots.txt, sitemap, IndexNow, llms.txt, AI crawler access policies, or WAF allowlists;
 - produce daily/weekly/monthly SEO reports from Google Search Console, GA4, Bing Webmaster Tools, DataForSEO, Ahrefs, Semrush, SerpApi, server logs, or supplied CSV exports;
-- generate a dynamic HTML audit report, serve it locally, capture desktop/mobile screenshots of the audited site, score first impression with Design Watch, and include the verdict in the global report;
+- generate a dynamic HTML audit report, serve it locally, run a full audit command, validate report completeness, capture desktop/mobile screenshots of the audited site, score first impression with Design Watch, and include the verdict in the global report;
 - run an “SEO agent”, “SEO patrol”, “GEO patrol”, “AI visibility patrol”, or autonomous daily operating loop;
 - make a site more usable by browser agents through semantic HTML, accessibility tree clarity, stable UI, and machine-readable commerce or booking flows.
 
@@ -43,24 +43,27 @@ Required deliverables:
 6. `design_watch`, `analysis_cohorts[]`, and `evidence_engine` in `audit.json` when browser evidence is available
 7. `report_language` set from the user's language, with the audit content written in that language
 8. `ai_layer_package` plus downloadable files when `/llms.txt`, `/for-ai`, `/for-ai.json`, `/for-ai.txt`, aligned JSON-LD, or in-scope `ai-catalog.json` are missing or recommended
-9. `LATEST-SEO-GEO-REPORT.md` in the report folder so the user can identify the current valid artifact
+9. `report-validation.json` from `scripts/validate_audit_report.py`
+10. `LATEST-SEO-GEO-REPORT.md` in the report folder so the user can identify the current valid artifact
 
 Do not stop at prose for a site audit. If screenshot capture fails because Agent Browser, Chrome, network, permissions, or a hostile WAF is unavailable, still generate `audit.json`, generate `index.html`, start the report server when possible, and mark screenshots as unavailable with the reason.
 
 Use this sequence:
 
 1. Read `runbooks/visual-html-audit.md`.
-2. Gather public evidence from the audited URL, robots.txt, sitemap, HTML, and available public measurement sources.
-3. Capture site screenshots, responsive study, and Evidence Engine output with Agent Browser or `node scripts/capture_site_screenshots.mjs --study-out ... --evidence-engine-out ...`; if using the script, rely on `imageLoadStates.missing_after_scroll`, not the initial image state, for image-load findings.
-4. Analyze screenshots with `templates/design-watch-audit.md` and responsive evidence with `templates/responsive-dynamic-study.md`.
-5. Write `audit.json` in the user's language, with `report_language`, findings, Design Watch, responsive study, Evidence Engine, cohorts, sources, and missing-data notes.
-6. If agentic resources are in scope, run `python scripts/check_ard_readiness.py --url ... --output ...` and merge the result into `audit.json.ard_readiness` before generating downloadable files.
-7. If AI-readable layers or in-scope ARD files are missing or recommended, run `python scripts/generate_ai_layer_package.py --input ... --output-dir ... --update-audit` to create the downloadable publication pack.
-8. Run `python scripts/generate_html_audit_report.py --input ... --output-dir ...`; this writes `LATEST-SEO-GEO-REPORT.md`.
-9. Run `python scripts/serve_report.py --dir ... --port 8766 --open` or `--check` if serving is impossible.
-10. Final response must include the report URL or exact `index.html` path, plus screenshot status and AI-layer package status.
+2. For a repeatable default run, use `python scripts/run_full_audit.py <url> --output-dir ... --lang ...`; it orchestrates evidence capture, owner-data request, ARD check, AI-layer package generation, HTML report generation, report validation, and optional local serving.
+3. If doing a manual expert pass instead, gather public evidence from the audited URL, robots.txt, sitemap, HTML, and available public measurement sources.
+4. Capture site screenshots, responsive study, and Evidence Engine output with Agent Browser or `node scripts/capture_site_screenshots.mjs --study-out ... --evidence-engine-out ...`; if using the script, rely on `imageLoadStates.missing_after_scroll`, not the initial image state, for image-load findings.
+5. Analyze screenshots with `templates/design-watch-audit.md` and responsive evidence with `templates/responsive-dynamic-study.md`.
+6. Write `audit.json` in the user's language, with `report_language`, findings, Design Watch, responsive study, Evidence Engine, cohorts, sources, and missing-data notes.
+7. If agentic resources are in scope, run `python scripts/check_ard_readiness.py --url ... --output ...` and merge the result into `audit.json.ard_readiness` before generating downloadable files.
+8. If AI-readable layers or in-scope ARD files are missing or recommended, run `python scripts/generate_ai_layer_package.py --input ... --output-dir ... --update-audit` to create the downloadable publication pack.
+9. Run `python scripts/generate_html_audit_report.py --input ... --output-dir ...`; this writes `LATEST-SEO-GEO-REPORT.md`.
+10. Run `python scripts/validate_audit_report.py --report-dir ... --output .../report-validation.json`; do not share incomplete reports without stating the validation failure.
+11. Run `python scripts/serve_report.py --dir ... --port 8766 --open` or `--check` if serving is impossible.
+12. Final response must include the report URL or exact `index.html` path, screenshot status, AI-layer package status, and report validation status.
 
-If the user wants a repeatable local workflow, use `runbooks/cli-audit.md` and `scripts/seo_geo_audit.py`. The CLI creates the workspace and deterministic browser evidence, but the agent still writes `audit.json` from observed facts.
+If the user wants a repeatable local workflow, use `runbooks/cli-audit.md` and prefer `scripts/run_full_audit.py` for the complete flow. Use `scripts/seo_geo_audit.py` when the user only wants a workspace plan or browser evidence setup.
 
 If the user asks for screenshots of the report UI, capture the served `index.html`
 itself in desktop and mobile viewports after generation and use those screenshots

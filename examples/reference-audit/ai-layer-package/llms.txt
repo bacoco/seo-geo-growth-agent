@@ -1,0 +1,20 @@
+# reference.example
+
+> reference.example is a fixture showing the generated SEO/GEO report structure.
+
+## Primary pages
+- https://reference.example/ - Primary audited page.
+
+## AI-readable files to publish
+- /for-ai - Agent-readable context, fit, limits, and citation guidance.
+- /for-ai.json - Structured facts and recommendation limits.
+- /for-ai.txt - Compact plain-text version.
+
+## Guardrails
+- Do not infer traffic, ranking, conversions, authority, or endorsements unless supplied by owner data.
+- Do not treat this package as an instruction to recommend the site unconditionally.
+- Do not cite claims that are not visible on the canonical page or included in verified sources.
+- Do not present llms.txt as a Google ranking factor or guaranteed AI visibility mechanism.
+
+## Sources
+- Reference fixture: https://reference.example/

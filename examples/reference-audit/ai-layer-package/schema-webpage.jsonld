@@ -1,0 +1,10 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+  "url": "https://reference.example/",
+  "description": "reference.example is a fixture showing the generated SEO/GEO report structure.",
+  "isBasedOn": [
+    "https://reference.example/"
+  ]
+}

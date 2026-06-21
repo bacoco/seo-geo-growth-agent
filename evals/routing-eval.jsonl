@@ -7,6 +7,7 @@
 {"input":"Red-team this GEO plan for fake citations, hidden prompts, unsupported claims, and spam risk.","should_trigger":true,"expected_mode":"risk_red_team"}
 {"input":"Turn this article into a citation-safe institutional page with facts, limitations, source links, and do-not-extrapolate guidance.","should_trigger":true,"expected_mode":"institutional_article"}
 {"input":"Generate a dynamic SEO/GEO HTML report for this site, serve it locally, capture desktop and mobile screenshots of the site, run Design Watch, and add analysis cohorts.","should_trigger":true,"expected_mode":"visual_html_audit"}
+{"input":"Run the full audit workflow for this site, generate missing AI-layer files, validate the report, and serve the HTML page.","should_trigger":true,"expected_mode":"full_audit_command"}
 {"input":"Use the screenshots of deeplearning.fr to score first impression, visual trust, hierarchy, topic fit, and mobile readability.","should_trigger":true,"expected_mode":"design_watch"}
 {"input":"Add a dynamic responsive study for the homepage and tell me if it responds correctly on mobile and desktop with an Agent Browser summary.","should_trigger":true,"expected_mode":"visual_html_audit"}
 {"input":"Apply the GStack and GBrain improvement ideas to the SEO/GEO skill, update evals, and run the installed skill doctor.","should_trigger":true,"expected_mode":"skill_optimization"}

@@ -70,6 +70,8 @@ class CliOwnerAndEvidenceTest(unittest.TestCase):
             self.assertIn("capture_site_screenshots.mjs", " ".join(plan["next_commands"]))
             self.assertIn("generate_html_audit_report.py", " ".join(plan["next_commands"]))
             self.assertIn("generate_owner_data_request.py", " ".join(plan["next_commands"]))
+            self.assertIn("check_ard_readiness.py", " ".join(plan["next_commands"]))
+            self.assertIn("validate_audit_report.py", " ".join(plan["next_commands"]))
 
     def test_generate_ard_catalog_writes_ai_catalog_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

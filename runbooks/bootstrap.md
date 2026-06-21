@@ -30,13 +30,14 @@ Collect or infer only from supplied evidence:
 
 ## Choose One Starting Mode
 
-For a domain or URL audit, choose **Visual HTML audit** by default. Choose plain
+For a domain or URL audit, choose **Full audit command** or **Visual HTML audit** by default. Choose plain
 `Audit` only when the user explicitly asks for a chat-only answer, no files, or
 no local report.
 
 | Mode | Use when | First outputs |
 |---|---|---|
 | Audit | The user explicitly wants a chat-only audit or no generated files | P0/P1/P2 fixes, evidence table, next actions |
+| Full audit command | The user wants a repeatable analysis plus generated improvement files | `audit.json`, screenshots when available, AI-layer ZIP, `index.html`, `report-validation.json`, local URL |
 | Visual HTML audit | The user wants a browser-readable report, local server, site screenshots, responsive mobile/desktop checks, Design Watch, analysis cohorts, or visual proof | `audit.json`, `index.html`, local URL, site screenshot evidence, responsive study, Design Watch verdict |
 | Evidence Engine audit | The user wants console/network/cache/CDN evidence or a more defensible technical report | `evidence-engine.json`, Console Watch, Network Watch, Cache/CDN Watch, first-screen metrics |
 | Owner Data Mode | The user owns the site and wants real search, traffic, crawl, cache, or conversion evidence | owner-data request markdown and JSON checklist |
@@ -57,15 +58,22 @@ no local report.
 5. Never claim a metric, citation, source, customer, ranking, date, or crawler rule without evidence.
 6. Treat `llms.txt` as optional and never as a Google ranking factor.
 7. Show what cannot be concluded from the available data.
-8. For visual HTML audits, read `runbooks/visual-html-audit.md`, capture screenshots of the audited site, run the responsive mobile/desktop study, run Evidence Engine, run Design Watch, add analysis cohorts when useful, write `audit.json` in the user's language with `report_language`, and generate the report from that explicit evidence file. If screenshots fail, still generate the HTML report and document why screenshots are unavailable.
-9. For analytics or traffic data questions, read `runbooks/public-measurement-access.md` and never confuse public estimates with owner analytics.
-10. For skill improvement work, read `runbooks/gstack-gbrain-improvement-map.md` and `runbooks/skill-optimization.md`.
-11. For ARD / ai-catalog work, read `runbooks/ard-ai-catalog.md`, check live discovery signals first, validate generated catalogs, and label ARD as draft/optional.
+8. For full audit command work, read `runbooks/cli-audit.md` and use `scripts/run_full_audit.py` to collect evidence, generate improvement files, render HTML, validate the report, and optionally serve it.
+9. For visual HTML audits, read `runbooks/visual-html-audit.md`, capture screenshots of the audited site, run the responsive mobile/desktop study, run Evidence Engine, run Design Watch, add analysis cohorts when useful, write `audit.json` in the user's language with `report_language`, and generate the report from that explicit evidence file. If screenshots fail, still generate the HTML report and document why screenshots are unavailable.
+10. For analytics or traffic data questions, read `runbooks/public-measurement-access.md` and never confuse public estimates with owner analytics.
+11. For skill improvement work, read `runbooks/gstack-gbrain-improvement-map.md` and `runbooks/skill-optimization.md`.
+12. For ARD / ai-catalog work, read `runbooks/ard-ai-catalog.md`, check live discovery signals first, validate generated catalogs, and label ARD as draft/optional.
 
 ## First Useful Prompt
 
 ```text
 Use seo-geo-growth-agent on [URL or page]. Generate the default visual HTML audit report, serve it locally, capture audited-site screenshots, run a mobile/desktop responsive study, rank P0 fixes, and mark missing data as unknown.
+```
+
+For a repeatable one-command run:
+
+```text
+Use seo-geo-growth-agent to run the full audit workflow on [URL], generate missing AI-layer files, validate the report, and serve the HTML report locally.
 ```
 
 For a browser-readable visual audit:

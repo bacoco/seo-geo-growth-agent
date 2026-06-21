@@ -19,6 +19,8 @@ REQUIRED_PATHS = [
     "runbooks",
     "evals",
     "scripts/seo_geo_audit.py",
+    "scripts/run_full_audit.py",
+    "scripts/validate_audit_report.py",
     "scripts/generate_html_audit_report.py",
     "scripts/generate_ai_layer_package.py",
     "scripts/generate_owner_data_request.py",

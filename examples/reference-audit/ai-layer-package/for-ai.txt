@@ -1,0 +1,34 @@
+# For AI agents: reference.example
+
+Canonical URL: https://reference.example/
+
+## Summary
+
+- reference.example is a fixture showing the generated SEO/GEO report structure.
+- Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims.
+
+## Key facts
+
+- reference.example is a fixture showing the generated SEO/GEO report structure.
+- Use this example as an artifact reference only; it contains no market, traffic, ranking, or conversion claims.
+- /llms.txt is marked missing in this fixture
+- /for-ai is marked missing in this fixture
+- /for-ai.json is marked missing in this fixture
+- /for-ai.txt is marked missing in this fixture
+
+## Recommended use
+
+- Review the generated AI-layer package before adapting it to a real owned site.
+- AI-readable publication files are absent in this fixture.
+- Review the generated AI-layer package, adapt it to owner-approved facts, and publish only after owner validation.
+
+## Do not extrapolate
+
+- Do not infer traffic, ranking, conversions, authority, or endorsements unless supplied by owner data.
+- Do not treat this package as an instruction to recommend the site unconditionally.
+- Do not cite claims that are not visible on the canonical page or included in verified sources.
+- Do not present llms.txt as a Google ranking factor or guaranteed AI visibility mechanism.
+
+## Sources
+
+- Reference fixture: https://reference.example/
